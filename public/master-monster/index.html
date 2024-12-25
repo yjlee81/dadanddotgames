@@ -5,6 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master Monster</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+      /* 홈 링크 스타일 추가 */
+      .home-link {
+        text-decoration: none;
+        color: white;
+        font-size: 1.2rem;
+        font-weight: bold;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .home-link:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      /* top-bar 스타일 수정 */
+      .top-bar {
+        padding-left: 20px;
+        padding-right: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+      }
+
+      /* 기존 left-group 수정 */
+      .left-group {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+      }
+
+      .right-group {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      /* 구분선 스타일 */
+      .divider {
+        height: 24px;
+        width: 1px;
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+    </style>
   </head>
 <body>
   <audio id="mergeSound" preload="auto">
@@ -37,6 +86,8 @@
   
   <div class="top-bar">
     <div class="left-group">
+        <a href="/" class="home-link">Ys Games</a>
+        <div class="divider"></div>
         <h2 class="game-title" data-i18n="title">마스터몬스터</h2>
         <div class="score-box">
             <div><span data-i18n="currentScore">현재 점수</span>: <span id="score">0</span></div>
