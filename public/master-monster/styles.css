@@ -44,6 +44,10 @@ body {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 10px;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
   }
   
   .tile-placeholder {
@@ -66,26 +70,20 @@ body {
 /* 타일 이동 시 부드러운 애니메이션을 위한 트랜지션 추가 */
 .tile {
   position: absolute;
-  width: min(100px, 20vw);
-  height: min(100px, 20vw);
-  font-family: 'Rubik', sans-serif;
-  font-weight: 600;
-  text-align: center;
-  border-radius: 3px;
-  color: #776e65;
+  width: 25%;
+  height: 25%;
+  margin: 0;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  will-change: left, top, opacity, transform;
-  z-index: 1;
-  transition: left 0.15s ease-in-out, 
-              top 0.15s ease-in-out,
-              opacity 0.15s ease-in-out,
-              transform 0.15s ease-in-out;
+  font-size: 2em;
+  font-weight: bold;
+  transition: transform 0.15s ease;
+  will-change: transform;
+  touch-action: none;
+  user-select: none;
 }
   
   .tile::before {
@@ -194,7 +192,7 @@ body {
     justify-content: center;
     align-items: center;
     position: fixed;
-    z-index: 9999;
+    z-index: 100;
     left: 0;
     top: 0;
     width: 100vw;
@@ -203,6 +201,7 @@ body {
     overflow: hidden;
     margin: 0;
     padding: 0;
+    pointer-events: none;
   }
   
   .modal-content {
@@ -222,6 +221,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    pointer-events: auto;
   }
   
   .modal-content h2 {
@@ -364,8 +364,10 @@ body {
       transform: scale(1);
     }
     50% {
-      transform: scale(1.1);
-      z-index: 2;
+      transform: scale(1.2);
+    }
+    70% {
+      transform: scale(0.95);
     }
     100% {
       transform: scale(1);
@@ -406,7 +408,7 @@ body {
     line-height: 1;
   }
   
-  /* Master 텍스트를 위한 특별 스타일 */
+  /* Master 텍스트 위한 특별 스타일 */
   .tile .level-text:only-child {
     position: static;
     font-size: 24px;
@@ -628,26 +630,32 @@ body {
     margin-right: 10px;
   }
   
+  /* 탑바 스타일 수정 */
   .top-bar {
     width: 100%;
+    height: 60px;
+    background-color: #1a1a1a;
+    color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgba(250, 248, 239, 0.95);
-    padding: 10px 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 0 2rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
   }
   
   .left-group {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 1.5rem;
   }
   
   .right-group {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 1.5rem;
   }
   
   .score-box {
@@ -722,8 +730,195 @@ body {
   }
   
   .tile-level {
-    font-size: 14px;
-    color: #776e65;
+    font-size: 0.8em;
     margin-top: 5px;
+    color: rgba(0, 0, 0, 0.6);
   }
   
+  .home-link {
+    color: #776e65;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: color 0.2s ease;
+  }
+  
+  .home-link:hover {
+    color: #FF6600;
+  }
+  
+  /* 게임 정 스타일만 추가 */
+  .game-title {
+    color: #776e65;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .score-box {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #776e65;
+  }
+  
+  .divider {
+    width: 2px;
+    height: 20px;
+    background-color: #bbada0;
+    margin: 0 0.5rem;
+  }
+  
+  /* 기존의 top-bar 관련 스타일은 제거하고 공통 스타일 사용 */
+  
+/* 홈 링크 스타일 */
+.home-link {
+    text-decoration: none;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: opacity 0.2s;
+}
+
+.home-link:hover {
+    opacity: 0.8;
+}
+
+/* top-bar 스타일 */
+.top-bar {
+    padding-left: 20px;
+    padding-right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* left-group 스타일 */
+.left-group {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.right-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* 구분선 스타일 */
+.divider {
+    height: 24px;
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* 게임 타이틀 스타일 수정 */
+.game-title {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* 점수 스 텍스트도 동일한 컬러로 수정 */
+.score-box {
+    color: white;
+    display: flex;
+    gap: 1rem;
+}
+
+/* 언어 선택기와 리스타트 버튼 스타일 수정 */
+.language-selector select {
+    background-color: transparent;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+#restart-button {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* 게임 컨테이너 위치 조정 */
+#game-container {
+    margin-top: 80px;
+}
+
+/* 탑바 스타일 수정 */
+.home-link {
+    text-decoration: none;
+    color: #F5F5F7 !important;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: opacity 0.2s ease;
+}
+
+.home-link:hover {
+    opacity: 0.85;
+}
+
+/* 게임 타이틀 스타일도 동일한 컬러로 수정 */
+.game-title {
+    color: #F5F5F7;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* 점수 박스 텍스트도 동일한 컬러로 수정 */
+.score-box {
+    color: #F5F5F7;
+}
+
+/* 이동 방향별 애니메이션 클래스 */
+.tile.moving-up {
+    transform: translateY(-100%);
+}
+
+.tile.moving-down {
+    transform: translateY(100%);
+}
+
+.tile.moving-left {
+    transform: translateX(-100%);
+}
+
+.tile.moving-right {
+    transform: translateX(100%);
+}
+
+/* 합쳐지는 타일 애니메이션 */
+.tile.merging {
+    animation: merge 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 2;
+}
+
+@keyframes merge {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    70% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+/* 새로 생성되는 타일 애니메이션 */
+.tile.new {
+    animation: appear 0.15s ease;
+}
+
+@keyframes appear {
+    0% { 
+        transform: scale(0);
+        opacity: 0;
+    }
+    100% { 
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* 게임보드 눌림 효과 */
+.game-board.pressed {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+}

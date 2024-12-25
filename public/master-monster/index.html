@@ -1,59 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master Monster</title>
+    <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="styles.css">
-    <style>
-      /* 홈 링크 스타일 추가 */
-      .home-link {
-        text-decoration: none;
-        color: white;
-        font-size: 1.2rem;
-        font-weight: bold;
-        padding: 0.5rem 1rem;
-        border-radius: 5px;
-        transition: background-color 0.3s;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .home-link:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-
-      /* top-bar 스타일 수정 */
-      .top-bar {
-        padding-left: 20px;
-        padding-right: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-      }
-
-      /* 기존 left-group 수정 */
-      .left-group {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-      }
-
-      .right-group {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-      }
-
-      /* 구분선 스타일 */
-      .divider {
-        height: 24px;
-        width: 1px;
-        background-color: rgba(255, 255, 255, 0.3);
-      }
-    </style>
   </head>
 <body>
   <audio id="mergeSound" preload="auto">
@@ -80,65 +32,45 @@
           <div class="tile tile-4">Lv.2</div>
         </div>
       </div>
-      <button id="start-button" class="start-button" data-i18n="startGame">게임 시작</button>
+      <button id="start-button" class="action-button" data-i18n="startGame">
+        게임 시작 ⏎
+      </button>
     </div>
   </div>
   
   <div class="top-bar">
-    <div class="left-group">
-        <a href="/" class="home-link">Ys Games</a>
-        <div class="divider"></div>
-        <h2 class="game-title" data-i18n="title">마스터몬스터</h2>
-        <div class="score-box">
-            <div><span data-i18n="currentScore">현재 점수</span>: <span id="score">0</span></div>
-            <div><span data-i18n="bestScore">최고점수</span>: <span id="best-score">0</span></div>
+    <div class="top-bar-container">
+        <div class="left-group">
+            <a href="/" class="home-link">Ys Games</a>
+            <div class="divider"></div>
+            <h2 class="game-title" data-i18n="title">마스터몬스터</h2>
+            <div class="score-box">
+                <div><span data-i18n="currentScore">현재 점수</span>: <span id="score">0</span></div>
+                <div><span data-i18n="bestScore">최고점수</span>: <span id="best-score">0</span></div>
+            </div>
         </div>
-    </div>
-    <div class="right-group">
-        <div class="language-selector">
-            <select id="language-select">
+        <div class="right-group">
+            <select class="language-selector" id="language-select">
                 <option value="en">English</option>
-                <option value="ko">한국어</option>
+                <option value="ko" selected>한국어</option>
                 <option value="ja">日本語</option>
                 <option value="zh">中文</option>
             </select>
+            <button id="restart-button" class="action-button" data-i18n="restart">다시하기</button>
         </div>
-        <button id="restart-button" data-i18n="restart">다시하기</button>
     </div>
   </div>
   
   <div id="game-container">
-    <div class="game-controls">
-      <div class="arrow-key up">
-        <span class="key-symbol">↑</span>
-      </div>
-      
-      <div class="game-controls-middle">
-        <div class="arrow-key left">
-          <span class="key-symbol">←</span>
-        </div>
-        
-        <div id="game-board"></div>
-        
-        <div class="arrow-key right">
-          <span class="key-symbol">→</span>
-        </div>
-      </div>
-      
-      <div class="arrow-key down">
-        <span class="key-symbol">↓</span>
-      </div>
-    </div>
+    <div id="game-board"></div>
     <div id="next-tile-box" class="next-tile-box">
         <div class="next-tile-label">NEXT</div>
         <div id="next-tile" class="next-tile">
             <span class="tile-preview" style="background-color: rgb(255, 245, 230);">🥚</span>
-            <span class="tile-level">Lv.1</span>
+            <span class="tile-level">1</span>
         </div>
     </div>
   </div>
-  
-  <button id="reset-best-score-button">Reset Best Score</button>
   
   <script src="script.js"></script>
 <!-- Code injected by live-server -->
@@ -179,6 +111,6 @@
 	}
 	// ]]>
 </script>
-
+<script src="/js/common.js"></script>
 </body>
 </html>
