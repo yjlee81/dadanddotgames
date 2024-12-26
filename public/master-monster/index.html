@@ -12,18 +12,49 @@
     <source src="sounds/merge.mp3" type="audio/mpeg">
   </audio>
   
-  <!-- Modal -->
-  <div id="modal" class="modal" style="display: block;">
-    <div class="modal-content">
-      <h2 data-i18n="welcome">마스터몬스터에 오신 것을 환영합니다!</h2>
+  <!-- GNB -->
+  <div class="top-bar">
+    <div class="top-bar-container">
+        <div class="left-group">
+            <a href="/" class="home-link">Ys Games</a>
+        </div>
+        <div class="right-group">
+            <select class="language-selector" id="language-select">
+                <option value="en">EN</option>
+                <option value="ko" selected>KR</option>
+                <option value="ja">JP</option>
+                <option value="zh">ZH</option>
+            </select>
+            <button id="auth-button" class="action-button">Login / Sign up</button>
+        </div>
+    </div>
+</div>
+  
+  <!-- LNB 수정 -->
+  <div class="lnb">
+    <div class="lnb-container">
+        <div class="left-group">
+            <h2 class="game-title" data-i18n="title">Monster Master</h2>
+            <div class="score-box">
+                <div><span data-i18n="currentScore">현재 점수</span>: <span id="score">0</span></div>
+                <div><span data-i18n="bestScore">최고점수</span>: <span id="best-score">0</span></div>
+            </div>
+        </div>
+        <div class="right-group">
+            <button id="restart-button" class="action-button" data-i18n="restart">다시하기</button>
+        </div>
+    </div>
+  </div>
+
+  <!-- 게임 안내 풀페이지 -->
+  <div id="game-guide" class="game-guide">
+    <div class="guide-content">
+      <h2 data-i18n="welcome">게임방법</h2>
       <div class="instructions">
         <p>
-          <span class="arrow">←</span>
-          <span class="arrow">↑</span>
-          <span class="arrow">→</span>
-          <span class="arrow">↓</span>
+          <span class="arrow">←↑→↓</span>
         </p>
-        <p data-i18n="instructions">몬스터를 합쳐서 마스터 레벨에 도달하세요!</p>
+        <p data-i18n="instructions"> 키로 몬스터를 합쳐 마스터 레벨에 도달하세요!</p>
         <div class="tiles-instruction">
           <div class="tile tile-2">Lv.1</div>
           <div class="plus">+</div>
@@ -38,35 +69,12 @@
     </div>
   </div>
   
-  <div class="top-bar">
-    <div class="top-bar-container">
-        <div class="left-group">
-            <a href="/" class="home-link">Ys Games</a>
-            <div class="divider"></div>
-            <h2 class="game-title" data-i18n="title">마스터몬스터</h2>
-            <div class="score-box">
-                <div><span data-i18n="currentScore">현재 점수</span>: <span id="score">0</span></div>
-                <div><span data-i18n="bestScore">최고점수</span>: <span id="best-score">0</span></div>
-            </div>
-        </div>
-        <div class="right-group">
-            <select class="language-selector" id="language-select">
-                <option value="en">English</option>
-                <option value="ko" selected>한국어</option>
-                <option value="ja">日本語</option>
-                <option value="zh">中文</option>
-            </select>
-            <button id="restart-button" class="action-button" data-i18n="restart">다시하기</button>
-        </div>
-    </div>
-  </div>
-  
   <div id="game-container">
     <div id="game-board"></div>
     <div id="next-tile-box" class="next-tile-box">
         <div class="next-tile-label">NEXT</div>
         <div id="next-tile" class="next-tile">
-            <span class="tile-preview" style="background-color: rgb(255, 245, 230);">🥚</span>
+            <span class="tile-preview">🥚</span>
             <span class="tile-level">1</span>
         </div>
     </div>

@@ -2,8 +2,8 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #faf8ef;
-    color: #776e65;
+    background-color: #1a1a1a;
+    color: #f5f5f7;
     text-align: center;
     margin: 0;
     padding: 0;
@@ -20,12 +20,13 @@ body {
   }
   
   #game-container {
-    width: 500px;
-    margin: auto;
+    width: min(500px, 95vw);
+    margin: 120px auto 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 600px;
+    height: auto;
+    padding: 0;
   }
   
   #score-container {
@@ -34,50 +35,51 @@ body {
   
   #game-board {
     position: relative;
-    width: min(450px, 90vw);
-    height: min(450px, 90vw);
-    background-color: #bbada0;
+    width: min(450px, 92vw);
+    height: min(450px, 92vw);
+    background-color: #2c2c2c;
     border-radius: 6px;
-    margin: 10px 0;
-    padding: 10px;
+    margin: 10px auto;
+    padding: min(10px, 2vw);
     box-sizing: border-box;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 10px;
+    grid-gap: min(10px, 2vw);
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
   
   .tile-placeholder {
     position: absolute;
-    width: min(100px, 20vw);
-    height: min(100px, 20vw);
-    background-color: rgba(204, 192, 179, 0.5);
+    width: calc((100% - min(30px, 6vw)) / 4);
+    height: calc((100% - min(30px, 6vw)) / 4);
+    background-color: rgba(255, 255, 255, 0.1);
     content: "🥚";
-    border-radius: 3px;
+    border-radius: 6px;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: min(40px, 8vw);
+    font-size: min(30px, 6vw);
   }
   
   
 /* 타일 이동 시 부드러운 애니메이션을 위한 트랜지션 추가 */
 .tile {
   position: absolute;
-  width: min(100px, 20vw);
-  height: min(100px, 20vw);
+  width: calc((100% - min(30px, 6vw)) / 4);
+  height: calc((100% - min(30px, 6vw)) / 4);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 5px;
-  font-size: min(40px, 8vw);
+  font-size: min(30px, 6vw);
   color: #776e65;
   background-color: #faf8ef;
   border: 2px solid #bbada0;
@@ -166,15 +168,15 @@ body {
   .tile.tile-2048::before { content: "👑"; }
   
   #restart-button {
-    padding: 6px 16px;
+    padding: 8px 16px;
     height: 35px;
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
     font-size: 14px;
     background-color: #FF6600;
-    color: #f9f6f2;
+    color: #ffffff;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.2s ease;
     display: flex;
@@ -202,15 +204,15 @@ body {
     overflow: hidden;
     margin: 0;
     padding: 0;
-    pointer-events: none;
+    pointer-events: auto;
   }
   
   .modal-content {
-    background-color: #faf8ef;
+    background-color: #2c2c2c;
     padding: 30px;
-    border: 2px solid #bbada0;
-    width: min(400px, 90vw);
-    max-height: 90vh;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: min(350px, 85vw);
+    max-height: 85vh;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     position: fixed;
@@ -222,7 +224,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    pointer-events: auto;
+    color: #f5f5f7;
   }
   
   .modal-content h2 {
@@ -373,31 +375,32 @@ body {
     position: static;
   }
   
-  .language-selector select {
-    padding: 0 12px;
+  .language-selector {
     height: 35px;
-    font-size: 14px;
+    padding: 0 1rem;
     font-family: 'Poppins', sans-serif;
-    border: 2px solid #FF6600;
+    font-size: 14px;
+    border: none;
     border-radius: 4px;
-    background-color: #faf8ef;
-    color: #776e65;
+    background-color: transparent;
+    color: white;
     cursor: pointer;
-    outline: none;
-    width: 150px;
-  }
-  
-  .language-selector select:hover {
-    background-color: #fff0e6;
-  }
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    min-width: 60px;
+}
+
+.language-selector:hover {
+    border-color: #FF6600;
+}
   
   /* 레벨 표스트 스타일 수정 */
   .tile .level-text {
     position: static;
-    font-size: min(12px, 2.5vw);
+    font-size: min(10px, 2.5vw);
     font-weight: 500;
     line-height: 1;
-    margin-top: -5px;
+    margin-top: -2px;
   }
   
   /* Master 텍스트 위한 특별 스타일 */
@@ -584,7 +587,7 @@ body {
   }
   
   
-  /* 반응형 대 */
+  /* 반응형 ��� */
   @media (max-width: 1024px) {
     .side-bar {
       position: static;
@@ -612,7 +615,7 @@ body {
     }
   }
   
-  /* 기존 game-header 관련 스타일 제거 */
+  /* 기존 game-header 관�� ���타일 제거 */
   .game-header {
     display: none;
   }
@@ -622,20 +625,39 @@ body {
     margin-right: 10px;
   }
   
-  /* 탑바 스타일 수정 */
+  
+  /* Global Navigation Bar 스타일 */
   .top-bar {
-    width: 100%;
-    height: 60px;
-    background-color: #1a1a1a;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 2rem;
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 1000;
+    width: 100%;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+  
+  /* top-bar 내부 컨텐츠를 위한 컨테이너 추가 */
+  .top-bar-container {
+    max-width: 1200px;  /* 최대 너비 설정 */
+    width: 100%;
+    margin: 0 auto;  /* 중앙 정렬 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;  /* 좌우 여백 */
+  }
+
+  .top-bar .home-link {
+    color: #f5f5f7;
+    font-size: 1.2rem;
+    font-weight: 500;
   }
   
   .left-group {
@@ -690,8 +712,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #faf8ef;
-    border: 2px solid #bbada0;
+    background-color: #2c2c2c;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     padding: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -700,7 +722,7 @@ body {
   .next-tile-label {
     font-size: 14px;
     margin-bottom: 5px;
-    color: #776e65;
+    color: #f5f5f7;
   }
   
   .tile {
@@ -822,9 +844,14 @@ body {
 
 /* 언어 선택기와 리스타트 버튼 스타일 수정 */
 .language-selector select {
-    background-color: transparent;
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 60px;
+  background-color: transparent;
+  color: #f5f5f7;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  padding: 4px;
+  font-size: 12px;
+  cursor: pointer;
 }
 
 #restart-button {
@@ -834,7 +861,9 @@ body {
 
 /* 게임 컨테이너 위치 조정 */
 #game-container {
-    margin-top: 80px;
+    margin-top: 110px;
+    width: min(500px, 95vw);
+    padding: 0;
 }
 
 /* 탑바 스타일 수정 */
@@ -893,7 +922,7 @@ body {
     100% { transform: scale(1); }
 }
 
-/* 새로 생성되��� 타일 애니메이션 */
+/* 새로 생성되는 타일 애니메이션 */
 .tile.new {
     animation: appear 0.15s ease;
 }
@@ -919,3 +948,273 @@ body {
 .tile.moving {
     transition: all 0.15s ease-in-out;
 }
+
+/* 모바일 화면을 위한 미디어 쿼리 추가 */
+@media screen and (max-width: 500px) {
+    #game-container {
+        margin-top: 110px;
+    }
+
+    #game-board {
+        width: 92vw;
+        height: 92vw;
+        padding: 2vw;
+        grid-gap: 1.5vw;
+    }
+
+    .tile, .tile-placeholder {
+        font-size: min(24px, 5vw);
+    }
+
+    .tile .level-text {
+        font-size: min(10px, 2vw);
+        margin-top: -1px;
+    }
+
+    /* Next 타일 박스 크기 위치 조정 */
+    .next-tile-box {
+        position: absolute;
+        bottom: 2vw;
+        right: 2vw;
+        transform: scale(0.75);
+        padding: 5px;
+    }
+
+    /* 상단 바 조정 */
+    .top-bar {
+        padding: 0 8px;
+        height: 50px;
+    }
+
+    .left-group {
+        gap: 0.8rem;
+    }
+
+    .right-group {
+        gap: 0.5rem;
+    }
+
+    /* 언어 선택기와 리스타트 버튼 크기 조정 */
+    .language-selector select, 
+    #restart-button {
+        height: 30px;
+        font-size: 12px;
+        padding: 0 8px;
+    }
+}
+
+/* 매우 작은 화면을 위한 추가 조정 */
+@media screen and (max-width: 350px) {
+    #game-board {
+        width: 95vw;
+        height: 95vw;
+        padding: 1.5vw;
+        grid-gap: 1vw;
+    }
+
+    .tile .level-text {
+        font-size: min(8px, 1.8vw);
+    }
+
+    .game-title {
+        font-size: 0.9rem;
+    }
+
+    .score-box {
+        font-size: 0.8rem;
+    }
+}
+
+/* 모바일 화면을 위한 미디어 쿼리 */
+@media screen and (max-width: 500px) {
+    .modal-content {
+        width: 85vw;
+        padding: 20px;
+    }
+
+    .modal-content h2 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+
+    .instructions {
+        font-size: 0.9rem;
+    }
+}
+
+/* LNB 스타일 */
+.lnb {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    background-color: rgba(44, 44, 44, 0.95);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+    z-index: 99;
+}
+
+.lnb-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lnb .left-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.lnb .right-group {
+    display: flex;
+    align-items: center;
+}
+
+.game-title {
+    margin: 0;
+    font-size: 1.5em;
+    color: var(--primary-text-color);
+}
+
+.score-box {
+    display: flex;
+    gap: 15px;
+    color: var(--primary-text-color);
+}
+
+/* 모바일 반응형 스타일 */
+@media (max-width: 768px) {
+    .lnb-container {
+        padding: 0 10px;
+    }
+
+    .lnb .left-group {
+        gap: 10px;
+    }
+
+    .game-title {
+        font-size: 1.2em;
+    }
+
+    .score-box {
+        flex-direction: column;
+        gap: 5px;
+        font-size: 0.9em;
+    }
+}
+
+/* NEXT 영역 스타일 수정 */
+.next-tile {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+/* NEXT 타일 레벨별 배경색 적용 */
+.next-tile[data-level="1"] {
+    background-color: #FFF5E6;
+}
+
+.next-tile[data-level="2"] {
+    background-color: #FFE4CC;
+}
+
+.next-tile[data-level="3"] {
+    background-color: #FFD4B3;
+}
+
+.tile-preview {
+    font-size: min(32px, 6vw);
+}
+
+.tile-level {
+    font-size: 12px;
+    color: #776e65;
+    font-weight: 600;
+}
+
+/* 게임 컨테이너 상단 여백 조정 */
+#game-container {
+    margin-top: 130px;
+}
+
+/* 모바일 화면 대응 */
+@media screen and (max-width: 500px) {
+    #game-container {
+        margin-top: 120px;
+    }
+
+    .next-tile-box {
+        bottom: 10px;
+        right: 10px;
+        padding: 8px;
+    }
+
+    .next-tile {
+        padding: 6px;
+    }
+
+    .tile-preview {
+        font-size: min(28px, 5vw);
+    }
+
+    .tile-level {
+        font-size: 10px;
+    }
+}
+
+/* 모바일에서의 간격 조정 */
+@media screen and (max-width: 500px) {
+    .lnb-container,
+    .lnb-left,
+    .lnb-right {
+        gap: 12px;
+    }
+}
+
+/* 게임 안내 풀페이지 스타일 */
+.game-guide {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #1a1a1a;
+    color: #f5f5f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+    padding-top: 110px;
+}
+
+.guide-content {
+    text-align: center;
+    padding: 20px;
+    max-width: 600px;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 내부 요소들을 가운데 정렬 */
+}
+
+/* 시작 버튼 스타일 */
+#start-button {
+    margin-top: 30px;
+    padding: 12px 24px;
+    font-size: 1.1em;
+    width: fit-content; /* 버튼 크기를 내용에 맞게 조정 */
+    margin-left: auto; /* 좌우 마진을 자동으로 설정하여 가운데 정렬 */
+    margin-right: auto;
+}
+
+[Rest of the file remains exactly the same...]

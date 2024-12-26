@@ -92,13 +92,21 @@ function addNewTile() {
 }
 
 function updateNextTileDisplay() {
-  const nextTileElement = document.querySelector('.tile-preview');
+  const nextTileElement = document.querySelector('.next-tile');
   const nextTileLevelElement = document.querySelector('.tile-level');
   const level = Math.log2(nextTileValue);
   const emojis = ["🥚", "🐣", "🐥", "🐤", "🦅", "🦉", "🦇", "🐲", "🐉", "🌟", "👑"];
-  nextTileElement.textContent = emojis[level - 1];
-  nextTileElement.style.backgroundColor = getTileColor(nextTileValue);
+  
+  // 타일 미리보기 업데이트
+  const previewElement = nextTileElement.querySelector('.tile-preview');
+  previewElement.textContent = emojis[level - 1];
+  
+  // 레벨 표시 업데이트
   nextTileLevelElement.textContent = `Lv.${level}`;
+  
+  // 배경색 업데이트
+  nextTileElement.setAttribute('data-level', level);
+  nextTileElement.style.backgroundColor = getTileColor(nextTileValue);
 }
 
 function getTileColor(value) {
@@ -160,7 +168,7 @@ function updateBoard() {
                 const targetLeft = (col * 110 + 10) + 'px';
                 const targetTop = (row * 110 + 10) + 'px';
 
-                // 현재 위치와 목표 위치가 다른 경우에만 이동 클래스 추가
+                // 재 위치와 목표 위치가 다른 경우에만 이동 클래스 추가
                 if (tile.style.left !== targetLeft || tile.style.top !== targetTop) {
                     tile.classList.add('moving');
                 }
@@ -223,7 +231,11 @@ function moveTiles(direction) {
       }
       if (line[k + 1] && line[k].value === line[k + 1].value) {
         let newValue = line[k].value * 2;
-        score += newValue;
+        
+        // 점수 계산을 단순화
+        let points = Math.log2(newValue) - 1; // 2 -> 1점, 4 -> 2점, 8 -> 3점, 16 -> 4점
+        score += points;
+
         mergedLine.push({
           value: newValue,
           merged: true,
@@ -410,38 +422,38 @@ window.onload = () => {
 const translations = {
   en: {
     title: "Monster Master",
-    welcome: "Welcome to Monster Master!",
-    instructions: "Combine monsters to reach the master level!",
-    currentScore: "Current Score",
-    bestScore: "Best Score",
+    currentScore: "Score",
+    bestScore: "Best",
     restart: "Restart",
+    welcome: "How to Play",
+    instructions: "Use arrow keys to merge monsters and reach the master level!",
     startGame: "Start Game ⏎"
   },
   ko: {
-    title: "마스터몬스터",
-    welcome: "마스터몬스터에 오신 것을 환영합니다!",
-    instructions: "몬스터를 합쳐서 마스터 레벨에 도달하세요!",
+    title: "Monster Master",
     currentScore: "현재 점수",
     bestScore: "최고점수",
     restart: "다시하기",
+    welcome: "게임방법",
+    instructions: "키를 이용해 몬스터를 합쳐 마스터 레벨에 도달하세요!",
     startGame: "게임 시작 ⏎"
   },
   ja: {
-    title: "モンスターマスター",
-    welcome: "モンスターマスターへようこそ！",
-    instructions: "モンスターを組み合わせてマスターレベルに到達しよう！",
-    currentScore: "現在のスコア",
-    bestScore: "最高スコア",
-    restart: "��開",
-    startGame: "ゲーム開始 ⏎"
+    title: "Monster Master",
+    currentScore: "スコア",
+    bestScore: "ベスト",
+    restart: "リスタート",
+    welcome: "遊び方",
+    instructions: "キーを使ってモンスターをマージしてマスターレベルに到達しよう！",
+    startGame: "ゲームスタート ⏎"
   },
   zh: {
-    title: "怪物大师",
-    welcome: "欢迎来到怪物大师！",
-    instructions: "合并怪物以达到大师级别！",
+    title: "Monster Master",
     currentScore: "当前分数",
-    bestScore: "最高分数",
+    bestScore: "最高分",
     restart: "重新开始",
+    welcome: "游戏方法",
+    instructions: "使用方向键合并怪物，达到大师级别！",
     startGame: "开始游戏 ⏎"
   }
 };
@@ -475,7 +487,7 @@ function changeLanguage(lang) {
     localStorage.setItem('preferred-language', lang);
 }
 
-// 언어 선택 이벤트 리스너
+// 어 선택 이벤트 리스너
 document.getElementById('language-select').addEventListener('change', (e) => {
     changeLanguage(e.target.value);
 });
@@ -489,6 +501,7 @@ window.addEventListener('load', () => {
 
 // 게임 시작 버튼 이벤트 리너
 document.getElementById('start-button').addEventListener('click', () => {
+    document.getElementById('game-guide').style.display = 'none';
     startGame();
 });
 
@@ -499,7 +512,6 @@ document.addEventListener('keydown', (e) => {
 });
 
 function startGame() {
-    modal.style.display = 'none';
     gameStarted = true;
     difficultyLevel = 'normal'; // 기본 난이도 설정
     init();
@@ -564,3 +576,26 @@ function initSound() {
     }
   }, { once: true });
 }
+
+// 게임 가이드 관련 요소
+const gameGuide = document.getElementById('game-guide');
+const startButton = document.getElementById('start-button');
+
+// 엔터키 이벤트 리스너 추가
+document.addEventListener('keydown', function(event) {
+    // 게임 가이드가 표시되어 있을 때만 엔터키 동작
+    if (gameGuide.style.display !== 'none' && event.key === 'Enter') {
+        startButton.click(); // 시작 버튼 클릭 이벤트 발생
+    }
+});
+
+// 시작 버튼 클릭 이벤트
+startButton.addEventListener('click', function() {
+    gameGuide.style.display = 'none';
+    startGame();
+});
+
+// 페이지 로드 시 시작 버튼에 포커스
+window.addEventListener('load', function() {
+    startButton.focus();
+});
