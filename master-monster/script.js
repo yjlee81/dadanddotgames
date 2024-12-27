@@ -14,6 +14,8 @@ let difficultyLevel = 'normal';
 let currentGameMaxLevel = 1;
 let tileIdCounter = 0; // 타일 ID를 위한 카운터 추가
 let nextTileValue = 2; // 기본값 설정
+let gameStates = []; // 게임 상태 히스토리
+let undoCount = 3; // Undo 가능 횟수
 
 // Initialize the grid with null values
 function initGrid() {
@@ -30,6 +32,8 @@ function init() {
   initGrid();
   score = 0;
   currentGameMaxLevel = 1;
+  undoCount = 3; // Undo 횟수 초기화
+  gameStates = []; // 게임 상태 초기화
   scoreDisplay.innerText = score;
   updateBestScoreDisplay();
   gameBoard.innerHTML = '';
@@ -37,6 +41,13 @@ function init() {
   addStartingTiles();
   updateBoard();
   updateNextTileDisplay();
+  updateUndoButton();
+  
+  // Undo 버튼 이벤트 리스너 추가
+  const undoButton = document.getElementById('undo-button');
+  if (undoButton) {
+    undoButton.addEventListener('click', undoMove);
+  }
 }
 
 function createPlaceholders() {
@@ -207,6 +218,11 @@ function updateBoard() {
 }
 
 function moveTiles(direction) {
+  if (!gameStarted) return;
+  
+  // 이동 전 상태 저장
+  saveGameState();
+  
   let moved = false;
 
   for (let i = 0; i < 4; i++) {
@@ -287,9 +303,32 @@ function moveTiles(direction) {
     if (isGameOver()) {
       // alert('Game Over!') 제거
     }
+  } else {
+    // 이동이 없었다면 저장한 상태 제거
+    gameStates.pop();
   }
 }
 
+// Undo 버튼 업데이트 함수를 전역으로 분리
+function createUndoButton(id = 'undo-button') {
+    const button = document.createElement('button');
+    button.id = id;
+    button.className = 'action-button';
+    updateUndoButtonState(button);
+    
+    button.addEventListener('click', () => {
+        undoMove();
+        updateUndoButtonState(button);
+    });
+    
+    return button;
+}
+
+function updateUndoButtonState(button) {
+    button.textContent = `Undo (${undoCount})`;
+    button.disabled = undoCount === 0;
+    button.style.opacity = undoCount === 0 ? '0.5' : '1';
+}
 
 function isGameOver() {
     // 빈 칸이 있는지 확인
@@ -299,7 +338,7 @@ function isGameOver() {
         }
     }
 
-    // 인접한 타일과 합칠 수 있는지 확인
+    // 인접한 타일과 합칠 수 는지 확인
     for (let row = 0; row < 4; row++) {
         for (let col = 0; col < 4; col++) {
             const currentValue = grid[row][col].value;
@@ -314,14 +353,12 @@ function isGameOver() {
 
     // 게임 오버 처리
     setTimeout(() => {
-        // 모달 생성
         const gameOverModal = document.createElement('div');
         gameOverModal.className = 'modal';
         
         const modalContent = document.createElement('div');
         modalContent.className = 'modal-content';
         
-        // 결과 표시
         modalContent.innerHTML = `
             <h2>Game Over!</h2>
             <p>Score: ${score}</p>
@@ -333,25 +370,40 @@ function isGameOver() {
                      data-ad-format="auto"
                      data-full-width-responsive="true"></ins>
             </div>
-            <button id="restart-button" class="action-button">다시하기</button>
+            <div class="modal-buttons"></div>
         `;
+        
+        // Undo 버튼과 새로시작 버튼 추가
+        const buttonContainer = modalContent.querySelector('.modal-buttons');
+        
+        // Undo 버튼 생성 및 추가
+        const modalUndoButton = createUndoButton('modal-undo-button');
+        buttonContainer.appendChild(modalUndoButton);
+        
+        // 새로시작 버튼 추가
+        const restartButton = document.createElement('button');
+        restartButton.id = 'modal-restart-button';
+        restartButton.className = 'action-button';
+        restartButton.textContent = '새로시작 ⏎';
+        restartButton.autofocus = true;
+        buttonContainer.appendChild(restartButton);
         
         gameOverModal.appendChild(modalContent);
         document.body.appendChild(gameOverModal);
         
-        // 광고 로드 (모달이 DOM에 추가된 후 실행)
-        try {
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        } catch (e) {
-            console.log('AdSense 리프레시 실패:', e);
-        }
+        // 모달의 Undo 버튼 클릭 시 게임오버 상태 체크
+        modalUndoButton.addEventListener('click', () => {
+            if (!isGameOver()) {
+                document.body.removeChild(gameOverModal);
+            }
+        });
         
-        // 다시하기 버튼 이벤트 (init 함수 직접 호출)
-        const restartButton = modalContent.querySelector('#restart-button');
+        // 새로시작 버튼 이벤트
+        restartButton.focus();
         restartButton.addEventListener('click', () => {
             document.body.removeChild(gameOverModal);
-            init(); // 게임 초기화
-            gameStarted = true; // 게임 시작 상태로 설정
+            init();
+            gameStarted = true;
         });
     }, 300);
 
@@ -470,38 +522,38 @@ window.onload = () => {
 // 다국어 지원을 위한 텍스트 데이터
 const translations = {
   en: {
-    title: "Monster Master",
+    title: "Master Monster",
     currentScore: "Score",
     bestScore: "Best",
     restart: "Restart",
-    welcome: "How to Play",
+    welcome: "How to Play Master Monster",
     instructions: "Use arrow keys to merge monsters and reach the master level!",
     startGame: "Start Game ⏎"
   },
   ko: {
-    title: "Monster Master",
+    title: "Master Monster",
     currentScore: "현재 점수",
     bestScore: "최고점수",
     restart: "다시하기",
-    welcome: "게임방법",
+    welcome: "Master Monster 게임방법",
     instructions: "키를 이용해 몬스터를 합쳐 마스터 레벨에 도달하세요!",
     startGame: "게임 시작 ⏎"
   },
   ja: {
-    title: "Monster Master",
+    title: "Master Monster",
     currentScore: "スコア",
     bestScore: "ベスト",
     restart: "リスタート",
-    welcome: "遊び方",
-    instructions: "キーを使ってモンスターをマージしてマスター��ベルに到達しよう！",
+    welcome: "Master Monster 遊び方",
+    instructions: "キーを使ってモンスターをマージしてマスターレベルに到達しよう！",
     startGame: "ゲームスタート ⏎"
   },
   zh: {
-    title: "Monster Master",
+    title: "Master Monster",
     currentScore: "当前分数",
     bestScore: "最高分",
     restart: "重新开始",
-    welcome: "游戏方法",
+    welcome: "Master Monster 游戏方法",
     instructions: "使用方向键合并怪物，达到大师级别！",
     startGame: "开始游戏 ⏎"
   }
@@ -580,7 +632,7 @@ document.querySelectorAll('.arrow-key').forEach(key => {
   });
 });
 
-// 레벨 달성 알림을 위한 ���수 추가
+// 레벨 달성 알림을 위한 함수 추가
 function showLevelAchievement(level) {
     const achievementModal = document.createElement('div');
     achievementModal.className = 'achievement-modal';
@@ -666,3 +718,54 @@ function gameOver() {
         }
     }
 }
+
+// 게임 상태를 저장하는 함수
+function saveGameState() {
+    const currentState = {
+        grid: grid.map(row => row.map(cell => cell ? {...cell} : null)),
+        score: score,
+        nextTileValue: nextTileValue
+    };
+    gameStates.push(currentState);
+    // 메모리 관리를 위해 최대 10개의 상태만 저장
+    if (gameStates.length > 10) {
+        gameStates.shift();
+    }
+}
+
+// Undo 버튼 업데이트 함수
+function updateUndoButton() {
+    const undoButton = document.getElementById('undo-button');
+    undoButton.textContent = `Undo (${undoCount})`;
+    undoButton.disabled = undoCount === 0;
+    undoButton.style.opacity = undoCount === 0 ? '0.5' : '1';
+}
+
+// Undo 기능 구현
+function undoMove() {
+    if (undoCount > 0 && gameStates.length > 0) {
+        const previousState = gameStates.pop();
+        
+        // 이전 상태로 복원
+        grid = previousState.grid.map(row => row.map(cell => cell ? {...cell} : null));
+        score = previousState.score;
+        nextTileValue = previousState.nextTileValue;
+        
+        // Undo 카운트 감소
+        undoCount--;
+        
+        // UI 업데이트
+        updateBoard();
+        updateUndoButton();
+        scoreDisplay.innerText = score;
+        updateNextTileDisplay();
+    }
+}
+
+// 문서 로드 시 이벤트 리스너 추가
+document.addEventListener('DOMContentLoaded', () => {
+    const undoButton = document.getElementById('undo-button');
+    if (undoButton) {
+        undoButton.addEventListener('click', undoMove);
+    }
+});

@@ -640,18 +640,15 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
   }
   
   /* top-bar 내부 컨텐츠를 위한 컨테이너 추가 */
   .top-bar-container {
-    max-width: 1200px;  /* 최대 너비 설정 */
     width: 100%;
     margin: 0 auto;  /* 중앙 정렬 */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 2rem;  /* 좌우 여백 */
   }
 
   .top-bar .home-link {
@@ -671,7 +668,16 @@ body {
     align-items: center;
     gap: 1.5rem;
   }
-  
+
+  .gnb .right-group {
+    margin-right: 20px;  /* LNB와 동일한 여백 적용 */
+  }
+
+  /* 또는 패딩을 사용하는 경우 */
+  .gnb .right-group {
+    padding-right: 20px;
+  }
+
   .score-box {
     display: flex;
     align-items: center;
@@ -980,12 +986,6 @@ body {
         padding: 5px;
     }
 
-    /* 상단 바 조정 */
-    .top-bar {
-        padding: 0 8px;
-        height: 50px;
-    }
-
     .left-group {
         gap: 0.8rem;
     }
@@ -1194,7 +1194,7 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 200;
-    padding-top: 110px;
+    /* padding-top: 110px; */
 }
 
 .guide-content {
@@ -1217,4 +1217,39 @@ body {
     margin-right: auto;
 }
 
-[Rest of the file remains exactly the same...]
+#undo-button {
+  margin: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  transition: opacity 0.3s;
+}
+
+#undo-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+#modal-undo-button {
+  background-color: #4CAF50;  /* 초록색 */
+  color: white;
+}
+
+#modal-undo-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.modal-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;  /* 버튼 사이 간격을 8px로 조정 */
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}

@@ -31,7 +31,7 @@
                 <option value="ja">JP</option>
                 <option value="zh">ZH</option>
             </select>
-            <button id="auth-button" class="action-button">Login / Sign up</button>
+            <button class="action-button" disabled>Login / Sign up</button>
         </div>
     </div>
 </div>
@@ -40,7 +40,7 @@
   <div class="lnb">
     <div class="lnb-container">
         <div class="left-group">
-            <h2 class="game-title" data-i18n="title">Monster Master</h2>
+            <h2 class="game-title" data-i18n="title">Master Monster</h2>
             <div class="score-box">
                 <div><span data-i18n="currentScore">현재 점수</span>: <span id="score">0</span></div>
                 <div><span data-i18n="bestScore">최고점수</span>: <span id="best-score">0</span></div>
@@ -55,7 +55,7 @@
   <!-- 게임 안내 풀페이지 -->
   <div id="game-guide" class="game-guide">
     <div class="guide-content">
-      <h2 data-i18n="welcome">게임방법</h2>
+      <h2 data-i18n="welcome">Master Monster 게임방법</h2>
       <div class="instructions">
         <p>
           <span class="arrow">←↑→↓</span>
@@ -84,6 +84,7 @@
             <span class="tile-level">1</span>
         </div>
     </div>
+    <button id="undo-button" class="action-button">Undo (13)</button>
   </div>
   
   <script src="script.js"></script>

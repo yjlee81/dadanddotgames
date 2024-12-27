@@ -11,7 +11,6 @@ body {
 /* GNB 공통 스타일 */
 .top-bar {
     background-color: #1a1a1a;
-    padding: 0.5rem 1rem;
     color: white;
 }
 
@@ -106,6 +105,12 @@ body {
 .action-button:hover {
     background-color: #FF4D00;
     transform: translateY(-2px);
+}
+
+.action-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 /* 반응형 디자인 */
