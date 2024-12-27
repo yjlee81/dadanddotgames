@@ -160,9 +160,10 @@ body {
     }
 }
 
-/* 광고 컨테이너 스타일 */
+/* 기존 광고 컨테이너 스타일 수정 및 추가 */
 .ad-container-top,
-.ad-container-bottom {
+.ad-container-bottom,
+.ad-container-result {
     width: 100%;
     max-width: 1200px;
     margin: 20px auto;
@@ -170,10 +171,27 @@ body {
     overflow: hidden;
 }
 
+.ad-container-side {
+    position: fixed;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 160px;
+}
+
+.ad-container-result {
+    display: none; /* 기본적으로 숨김 */
+}
+
 /* 모바일 대응 */
 @media screen and (max-width: 768px) {
     .ad-container-top,
-    .ad-container-bottom {
+    .ad-container-bottom,
+    .ad-container-result {
         padding: 0 15px;
     }
-} 
+    
+    .ad-container-side {
+        display: none;
+    }
+}

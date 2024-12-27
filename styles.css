@@ -215,4 +215,27 @@ body {
     .main-content {
         padding: 1rem;
     }
+}
+
+/* 광고 컨테이너 스타일 */
+.ad-container-side {
+    position: fixed;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 160px;
+}
+
+.ad-container-result {
+    width: 100%;
+    max-width: 728px;
+    margin: 20px auto;
+    display: none; /* 기본적으로 숨김 */
+}
+
+/* 모바일에서 사이드바 광고 숨기기 */
+@media screen and (max-width: 768px) {
+    .ad-container-side {
+        display: none;
+    }
 } 

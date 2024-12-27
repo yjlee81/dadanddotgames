@@ -243,7 +243,7 @@ function moveTiles(direction) {
           id: tileIdCounter++ // 병합된 타일에 새로운 ID 할당
         });
         if (mergeSound) {
-          mergeSound.currentTime = 0; // 소리를 처음부터 재생
+          mergeSound.currentTime = 0;
           mergeSound.play().catch(e => console.log('Sound play failed:', e));
         }
         skip = true;
@@ -285,28 +285,77 @@ function moveTiles(direction) {
     updateBestScore();
 
     if (isGameOver()) {
-      setTimeout(() => {
-        alert('Game Over!');
-      }, 300);
+      // alert('Game Over!') 제거
     }
   }
 }
 
 
 function isGameOver() {
-  for (let row = 0; row < 4; row++) {
-    for (let col = 0; col < 4; col++) {
-      if (!grid[row][col]) return false;
-      let currentValue = grid[row][col].value;
-      if (
-        (col < 3 && grid[row][col + 1] && grid[row][col + 1].value === currentValue) ||
-        (row < 3 && grid[row + 1][col] && grid[row + 1][col].value === currentValue)
-      ) {
-        return false;
-      }
+    // 빈 칸이 있는지 확인
+    for (let row = 0; row < 4; row++) {
+        for (let col = 0; col < 4; col++) {
+            if (!grid[row][col]) return false;
+        }
     }
-  }
-  return true;
+
+    // 인접한 타일과 합칠 수 있는지 확인
+    for (let row = 0; row < 4; row++) {
+        for (let col = 0; col < 4; col++) {
+            const currentValue = grid[row][col].value;
+            
+            // 오른쪽 타일 확인
+            if (col < 3 && grid[row][col + 1].value === currentValue) return false;
+            
+            // 아래쪽 타일 확인
+            if (row < 3 && grid[row + 1][col].value === currentValue) return false;
+        }
+    }
+
+    // 게임 오버 처리
+    setTimeout(() => {
+        // 모달 생성
+        const gameOverModal = document.createElement('div');
+        gameOverModal.className = 'modal';
+        
+        const modalContent = document.createElement('div');
+        modalContent.className = 'modal-content';
+        
+        // 결과 표시
+        modalContent.innerHTML = `
+            <h2>Game Over!</h2>
+            <p>Score: ${score}</p>
+            <div class="ad-container-result">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-8718440574316852"
+                     data-ad-slot="5815422742"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
+            <button id="restart-button" class="action-button">다시하기</button>
+        `;
+        
+        gameOverModal.appendChild(modalContent);
+        document.body.appendChild(gameOverModal);
+        
+        // 광고 로드 (모달이 DOM에 추가된 후 실행)
+        try {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        } catch (e) {
+            console.log('AdSense 리프레시 실패:', e);
+        }
+        
+        // 다시하기 버튼 이벤트 (init 함수 직접 호출)
+        const restartButton = modalContent.querySelector('#restart-button');
+        restartButton.addEventListener('click', () => {
+            document.body.removeChild(gameOverModal);
+            init(); // 게임 초기화
+            gameStarted = true; // 게임 시작 상태로 설정
+        });
+    }, 300);
+
+    return true;
 }
 
 function updateBestScore() {
@@ -444,7 +493,7 @@ const translations = {
     bestScore: "ベスト",
     restart: "リスタート",
     welcome: "遊び方",
-    instructions: "キーを使ってモンスターをマージしてマスターレベルに到達しよう！",
+    instructions: "キーを使ってモンスターをマージしてマスター��ベルに到達しよう！",
     startGame: "ゲームスタート ⏎"
   },
   zh: {
@@ -531,7 +580,7 @@ document.querySelectorAll('.arrow-key').forEach(key => {
   });
 });
 
-// 레벨 달성 알림을 위한 함수 추가
+// 레벨 달성 알림을 위한 ���수 추가
 function showLevelAchievement(level) {
     const achievementModal = document.createElement('div');
     achievementModal.className = 'achievement-modal';
@@ -599,3 +648,21 @@ startButton.addEventListener('click', function() {
 window.addEventListener('load', function() {
     startButton.focus();
 });
+
+// 게임 오버 함수에 광고 표시 로직 추가
+function gameOver() {
+    // 기존 게임 오버 로직...
+    
+    // 결과 화면 광고 표시
+    const resultAd = document.getElementById('resultAd');
+    if (resultAd) {
+        resultAd.style.display = 'block';
+        
+        // AdSense 광고 리프레시 (선택사항)
+        try {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        } catch (e) {
+            console.log('AdSense 리프레시 실패:', e);
+        }
+    }
+}
