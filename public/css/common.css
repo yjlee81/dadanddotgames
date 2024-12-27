@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Noto Sans Rounded', 'Noto Sans KR', sans-serif;
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -157,5 +157,23 @@ body {
         height: 30px;
         padding: 0 0.8rem;
         font-size: 12px;
+    }
+}
+
+/* 광고 컨테이너 스타일 */
+.ad-container-top,
+.ad-container-bottom {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* 모바일 대응 */
+@media screen and (max-width: 768px) {
+    .ad-container-top,
+    .ad-container-bottom {
+        padding: 0 15px;
     }
 } 
