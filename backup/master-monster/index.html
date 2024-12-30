@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master Monster - Dad and Dot Games">
+    <meta property="og:title" content="Master Monster - Dad and Dot Games">
+    <meta property="og:description" content="Merge monsters and reach the master level!">
+    <meta property="og:site_name" content="Dad and Dot Games">
+    <title>Master Monster - Dad and Dot Games</title>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="styles.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8718440574316852"
+     crossorigin="anonymous"></script>
+  </head>
+<body>
+  <audio id="mergeSound" preload="auto">
+    <source src="sounds/merge.mp3" type="audio/mpeg">
+  </audio>
+  
+  <!-- GNB -->
+  <div class="top-bar">
+    <div class="top-bar-container">
+        <div class="left-group">
+            <a href="/" class="home-link">Dad and Dot Games</a>
+        </div>
+        <div class="right-group">
+            <select class="language-selector" id="language-select">
+                <option value="en">EN</option>
+                <option value="ko" selected>KR</option>
+                <option value="ja">JP</option>
+                <option value="zh">ZH</option>
+            </select>
+            <button class="action-button" disabled>Login / Sign up</button>
+        </div>
+    </div>
+</div>
+  
+  <!-- LNB 수정 -->
+  <div class="lnb">
+    <div class="lnb-container">
+        <div class="left-group">
+            <h2 class="game-title" data-i18n="title">Master Monster</h2>
+            <div class="score-box">
+                <div><span data-i18n="currentScore">현재 점수</span>: <span id="score">0</span></div>
+                <div><span data-i18n="bestScore">최고점수</span>: <span id="best-score">0</span></div>
+            </div>
+        </div>
+        <div class="right-group">
+          <div class="game-controls">
+            <button id="undo-button" class="action-button primary">Undo (3)</button>
+            <button id="restart-button" class="action-button tertiary">Restart</button>
+            <button onclick="showRankingModal()" class="action-button tertiary">Ranking</button>
+        </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- 게임 안내 풀페이지 -->
+  <div id="game-guide" class="game-guide">
+    <div class="guide-content">
+      <h2 data-i18n="welcome">Master Monster 게임방법</h2>
+      <div class="instructions">
+        <p>
+          <span class="arrow">←↑→↓</span>
+        </p>
+        <p data-i18n="instructions">키를 이용해 몬스터를 합쳐 마스터 레벨에 도달하세요!</p>
+        <div class="tiles-instruction">
+          <div class="tile tile-2">Lv.1</div>
+          <div class="plus">+</div>
+          <div class="tile tile-2">Lv.1</div>
+          <div class="arrow">→</div>
+          <div class="tile tile-4">Lv.2</div>
+        </div>
+      </div>
+      <button id="start-button" class="action-button" data-i18n="startGame">
+        게임 시작 ⏎
+      </button>
+    </div>
+  </div>
+  
+  <div id="game-container">
+    <div id="game-board"></div>
+    <div id="next-tile-box" class="next-tile-box">
+        <div class="next-tile-label">NEXT</div>
+        <div id="next-tile" class="next-tile">
+            <span class="tile-preview">🥚</span>
+            <span class="tile-level">1</span>
+        </div>
+    </div>
+
+  </div>
+  
+  <script src="script.js"></script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<script src="/js/common.js"></script>
+
+    <!-- 측면 광고 -->
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8718440574316852"
+          crossorigin="anonymous"></script>
+      <!-- 마스터몬스터-사이드바 -->
+      <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-8718440574316852"
+          data-ad-slot="1776105383"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+      <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+
+    <!-- 결과 화면 광고 -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8718440574316852"
+    crossorigin="anonymous"></script>
+      <!-- 마스터몬스터-결과화면 -->
+      <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-8718440574316852"
+          data-ad-slot="5815422742"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+      <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+</body>
+</html>

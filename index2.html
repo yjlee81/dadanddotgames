@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8" />
+<head>  
+  <meta charset="UTF-8">
+  <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="1인 개발자 YJ의 토이프로젝트 사이트입니다.">
+  <meta property="og:title" content="Dad and Dot Games">
+  <meta property="og:description" content="1인 개발자 YJ의 창의적이고 재미있는 게임들">
+  <meta property="og:site_name" content="Dad and Dot Games">
   <title>Dad and Dot Games - Main</title>
   <!-- 폰트 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,39 +16,39 @@
     rel="stylesheet"
   />
 
-  <!-- 공통 CSS -->
-  <link rel="stylesheet" href="css/common.css">
+  <!-- 공통 CSS 연결 -->
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/styles.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8718440574316852"
+crossorigin="anonymous"></script>
 </head>
 <body>
   <!-- ===== HEADER (GNB) ===== -->
   <header>
-    <!-- (수정 1) 로고 클릭 시 "/"로 이동, 앵커 스타일 대신 DIV + cursor:pointer -->
-    <div id="logo" onclick="window.location.href='/'" style="cursor: pointer;">
-      Dad and Dot Games
-    </div>
+    <div id="logo">Dad and Dot Games</div>
     <nav>
-     
-      <!-- (수정 2) 언어 선택 드롭다운 추가 -->
       <select class="language-selector" id="language-select">
         <option value="en">EN</option>
         <option value="ko" selected>KR</option>
         <option value="ja">JP</option>
         <option value="zh">ZH</option>
-      </select>
-      <a href="#">Community</a>
-      <a href="#">Login</a>
+    </select>
     </nav>
   </header>
 
-  <!-- ===== 패럴랙스 섹션 ===== -->
+  <!-- ===== 패럴랙스 섹션(메인) ===== -->
   <section class="parallax">
+    <!-- 둥둥 떠다니는 dadanddot.png -->
     <div class="dad-dot-floating"></div>
 
     <div class="hero-content">
       <h1>Welcome to Dad and Dot Games</h1>
-      <p>귀여운 우주 속에서 만나는 집중력·두뇌발달 게임!<br>
-         아빠와 함께 손잡고 떠나 볼까요?</p>
+      <p>
+        귀여운 우주 속에서 만나는 집중력·두뇌발달 게임!  
+        아빠와 함께 손잡고 떠나 볼까요?
+      </p>
       <div class="cta-buttons">
+        <!-- 버튼명을 "무료 게임 시작"으로 변경 -->
         <a href="#carousel-section" id="btnFreeGameStart">무료 게임 시작</a>
       </div>
     </div>
@@ -60,11 +65,13 @@
         <div class="game-card" style="width:300px;">
           <a href="/master-monster" style="display:block; text-decoration:none; color:#fff;">
             <div class="game-preview">
-              <img src="images/master-monster-preview.png" alt="Master Monster Game Preview">
+              <img src="/images/master-monster-preview.png" alt="Master Monster Game Preview">
             </div>
             <div class="game-info">
-              <h3 class="game-title">마스터몬스터</h3>
-              <p class="game-description">몬스터를 합쳐 최강의 마스터를 만들어보세요!</p>
+              <h3 class="game-title" data-i18n="masterMonsterTitle">마스터몬스터</h3>
+              <p class="game-description" data-i18n="masterMonsterDesc">
+                몬스터를 합쳐 최강의 마스터를 만들어보세요!
+              </p>
               <div class="game-features">
                 <span class="feature">퍼즐</span>
                 <span class="feature">전략</span>
@@ -78,7 +85,7 @@
           </a>
         </div>
 
-        <!-- 예시용 다른 게임 카드들 -->
+        <!-- 다른 게임 카드 예시 -->
         <div class="game-card" style="width:300px;">
           <img src="images/game01.png" alt="Game 01" style="width:100%; height:auto;" />
         </div>
@@ -98,7 +105,7 @@
     © 2024 Dad and Dot Games. All rights reserved.
   </footer>
 
-  <!-- 공통 JS -->
+  <!-- 공통 JS 연결 -->
   <script src="js/common.js"></script>
 </body>
 </html>
