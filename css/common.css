@@ -13,11 +13,12 @@ body {
     position: fixed;
     top: 0; left: 0;
     width: 100%;
-    padding: 1rem 2rem;
+    padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 999;
+    box-sizing: border-box;
   }
   #logo {
     font-size: 1.5rem;
@@ -28,6 +29,12 @@ body {
   }
   #logo:hover {
     opacity: 0.8;
+  }
+  nav {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    min-width: 100px;
   }
   nav a {
     margin-left: 1rem;
@@ -40,7 +47,7 @@ body {
     color: #ccc;
   }
   .language-selector {
-    margin-left: 1rem;
+    margin-left: auto;
     font-size: 0.9rem;
     padding: 0.3rem 0.5rem;
     border-radius: 4px;
@@ -113,7 +120,7 @@ body {
   /* dadanddot */
   .dad-dot-floating {
     position: absolute;
-    bottom: 20%;
+    bottom: 10%;
     right: 9%;
     width: 220px;
     height: 220px;

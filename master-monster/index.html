@@ -26,9 +26,13 @@
         Dad and Dot Games
       </div>
       <nav>
-        <!-- 서브 페이지이므로 Community/Login 등은 필요에 맞게 수정 가능 -->
-        <a href="#">Community</a>
-        <a href="#">Login</a>
+        <!-- Undo와 Restart 버튼 추가 -->
+        <button id="undo-button" class="action-button" data-i18n="undo">
+          Undo (3)
+        </button>
+        <button id="restart-button" class="action-button" data-i18n="restart">
+          Restart
+        </button>
         <!-- 언어 선택 드롭다운 -->
         <select class="language-selector" id="language-select">
           <option value="en">EN</option>
@@ -39,16 +43,19 @@
       </nav>
     </header>
 
-    <!-- dad-and-dot 캐릭터를 넣고 싶다면(옵션) 
+    
          <div class="dad-dot-floating"></div>
-    -->
+    
 
     <!-- (2) 서브페이지 본문: LNB + 게임영역 -->
     <div class="lnb">
       <div class="lnb-container">
         <div class="left-group">
           <h2 class="game-title" data-i18n="title">Master Monster</h2>
-          <div class="score-board">
+          
+        </div>
+        <div class="right-group">
+          <div class="score-board"></div>
             <div class="score-item current">
               <div class="score-label" data-i18n="currentScore">현재 점수</div>
               <div class="score-value" id="score">0</div>
@@ -64,16 +71,6 @@
                 <span class="tile-level">1</span>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="right-group">
-          <div class="control-buttons">
-            <button id="undo-button" class="action-button" data-i18n="undo">
-              <span class="button-text">되돌리기 (<span id="undo-count">3</span>)</span>
-            </button>
-            <button id="restart-button" class="action-button" data-i18n="restart">
-              <span class="button-text">새로하기</span>
-            </button>
           </div>
         </div>
       </div>
