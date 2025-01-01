@@ -1,14 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
 
-
 :root {
     --primary-color: #FF6600;
     --background-color: #1a1a1a;
     --text-color: #f5f5f7;
     --border-color: rgba(255, 255, 255, 0.3);
     --tile-base-color: #faf8ef;
-    --font-family: 'Nunito', sans-serif; /* 새 폰트 */
-    
+    --font-family: 'Nunito', sans-serif;
 }
 
 body {
@@ -22,68 +20,222 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    overflow: hidden; /* 스크롤 제거 */
-    font-family: 'Nunito', sans-serif;
-    background-color: #000; /* 배경색상 변경 */
+    overflow: hidden;
+    font-family: var(--font-family);
+    background-color: #000;
     color: #fff;
-  }
-  
-  h1 {
-    display: none;
-  }
-  
-  #game-container {
-    width: min(500px, 95vw);
-    margin: 10px auto 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+}
+
+/* (1) GNB + LNB 통합 디자인 */
+.gnb-lnb {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* 높이 조금 여유있게 */
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* 좌우 패딩 */
+  padding: 0 20px;
+
+  /* 항상 최상단 보이도록 */
+  z-index: 9999;
+  box-sizing: border-box;
+}
+
+/* 왼쪽 그룹 (로고 + 게임 타이틀) */
+.gnb-lnb .left-group {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* 로고, 구분선, 타이틀 간격 */
+}
+
+/* 로고 */
+.gnb-lnb .logo {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* 구분선 */
+.gnb-lnb .divider {
+  width: 1px;
+  height: 24px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* 게임 타이틀 */
+.gnb-lnb .game-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* 오른쪽 그룹 (Undo, Restart, Score, 언어) */
+.gnb-lnb .right-group {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* 버튼/점수/언어 간 간격 */
+}
+
+/* Undo, Restart 등 버튼 개선 */
+.action-button.with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px; /* 아이콘과 텍스트 사이 간격 */
+  font-size: 14px;
+  padding: 8px 12px;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.686);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+.action-button.with-icon:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  transform: scale(1.03);
+}
+.action-button.with-icon:active {
+  transform: scale(0.97);
+}
+
+/* 아이콘 - Undo, Restart */
+.icon-undo::before {
+  /* ↩(엔터키) 대신 ↶(U+21B6) 등 사용 */
+  content: "↶";
+  font-size: 16px;
+}
+.icon-restart::before {
+  /* ⟳(U+27F3) 등 사용 */
+  content: "⟳";
+  font-size: 16px;
+}
+
+/* 점수박스 */
+.score-board {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.score-item {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 4px 8px;
+  text-align: center;
+}
+.score-label {
+  font-size: 10px;
+  color: #ccc;
+}
+.score-value {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* 언어 선택기 */
+.language-selector {
+  height: 32px;
+  padding: 0 8px;
+  font-size: 14px;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.language-selector:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* 반응형 - 모바일에서 버튼, 점수, 언어 등을 2줄 */
+@media (max-width: 768px) {
+  .gnb-lnb {
     height: auto;
-    padding: 0;
-  }
-  
-  #score-container {
-    display: none;
-  }
-  
-  #game-board {
-    position: relative;
-    width: min(450px, 92vw);
-    height: min(450px, 92vw);
-    background-color: #2c2c2c;
-    border-radius: 6px;
-    margin: 10px;
-    padding: min(10px, 2vw);
-    box-sizing: border-box;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: min(10px, 2vw);
-    touch-action: none;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    z-index: 5;
-  }
-  
-  .tile-placeholder {
-    position: absolute;
-    width: calc((100% - min(30px, 6vw)) / 4);
-    height: calc((100% - min(30px, 6vw)) / 4);
-    background-color: rgba(255, 255, 255, 0.1);
-    content: "🥚";
-    border-radius: 6px;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
     justify-content: center;
-    align-items: center;
-    font-size: min(30px, 6vw);
   }
-  
-  
-/* 타일 이동 시 부드러운 애니메이션을 위한 트랜지션 추가 */
+  .gnb-lnb .left-group,
+  .gnb-lnb .right-group {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .gnb-lnb .right-group {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .score-board {
+    gap: 6px;
+  }
+  .score-item {
+    padding: 2px 6px;
+  }
+}
+
+/* 기타 기존 스타일 */
+h1 {
+  display: none;
+}
+
+#game-container {
+  width: min(500px, 95vw);
+  margin: 10px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: auto;
+  padding: 0;
+  margin-top: 110px; /* GNB가 fixed이므로 아래로 살짝 내려줌 */
+}
+
+#score-container {
+  display: none;
+}
+
+#game-board {
+  position: relative;
+  width: min(450px, 92vw);
+  height: min(450px, 92vw);
+  background-color: #2c2c2c;
+  border-radius: 6px;
+  margin: 10px;
+  padding: min(10px, 2vw);
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: min(10px, 2vw);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 5;
+  opacity: 0.8;
+}
+
+.tile-placeholder {
+  position: absolute;
+  width: calc((100% - min(30px, 6vw)) / 4);
+  height: calc((100% - min(30px, 6vw)) / 4);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: min(30px, 6vw);
+}
+
+/* 타일 */
 .tile {
   position: absolute;
   width: calc((100% - min(30px, 6vw)) / 4);
@@ -102,735 +254,136 @@ body {
   transition: all 0.15s ease-in-out;
   will-change: transform, left, top;
 }
-  
-  .tile::before {
-    content: attr(data-emoji);
-    position: static;
-    font-size: min(40px, 8vw);
-    line-height: 1;
-  }
-  
-  .tile.visible {
-    color: inherit;
-  }
-  
-  .tile.tile-2 {
-    background-color: #FFF5E6;
-    color: #776e65;
-  }
-  .tile.tile-2::before { content: "🥚"; }
-  
-  .tile.tile-4 {
-    background-color: #FFE4CC;
-    color: #776e65;
-  }
-  .tile.tile-4::before { content: "🐣"; }
-  
-  .tile.tile-8 {
-    background-color: #FFD4B3;
-    color: #776e65;
-  }
-  .tile.tile-8::before { content: "🐥"; }
-  
-  .tile.tile-16 {
-    background-color: #FFC299;
-    color: #776e65;
-  }
-  .tile.tile-16::before { content: "🐤"; }
-  
-  .tile.tile-32 {
-    background-color: #FFB380;
-    color: #f9f6f2;
-  }
-  .tile.tile-32::before { content: "🦅"; }
-  
-  .tile.tile-64 {
-    background-color: #FFA366;
-    color: #f9f6f2;
-  }
-  .tile.tile-64::before { content: "🦉"; }
-  
-  .tile.tile-128 {
-    background-color: #FF944D;
-    color: #f9f6f2;
-  }
-  .tile.tile-128::before { content: "🦇"; }
-  
-  .tile.tile-256 {
-    background-color: #FF8533;
-    color: #f9f6f2;
-  }
-  .tile.tile-256::before { content: "🐉"; }
-  
-  .tile.tile-512 {
-    background-color: #FF751A;
-    color: #f9f6f2;
-  }
-  .tile.tile-512::before { content: "🐉"; }
-  
-  .tile.tile-1024 {
-    background-color: #FF6600;
-    color: #f9f6f2;
-  }
-  .tile.tile-1024::before { content: "🌟"; }
-  
-  .tile.tile-2048 {
-    background-color: #FF4D00;
-    color: #f9f6f2;
-    box-shadow: 0 0 20px rgba(255, 77, 0, 0.3);
-  }
-  .tile.tile-2048::before { content: "👑"; }
-  
-  #restart-button {
-    padding: 8px 16px;
-    height: 35px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    font-size: 14px;
-    background-color: #FF6600;
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 150px;
-  }
-  
-  #restart-button:hover {
-    background-color: #FF4D00;
-  }
-  
-  /* Modal Styles */
-  .modal {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    z-index: 100;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.7);
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-    pointer-events: auto;
-  }
-  
-  .modal-content {
-    background-color: #2c2c2c;
-    padding: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    width: min(350px, 85vw);
-    max-height: 85vh;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #f5f5f7;
-  }
-  
-  .modal-content h2 {
-    text-align: center;
-    width: 100%;
-    margin-bottom: 20px;
-  }
-  
-  .instructions {
-    width: 100%;
-    text-align: center;
-  }
-  
-  .tiles-instruction {
-    margin: 20px 0;
-  }
-  
-  .start-button {
-    margin-top: 30px;
-  }
-  
-  .instructions .arrow {
-    font-size: 30px;
-    margin: 0 5px;
-  }
-  
-  /* Tiles Instruction Styles */
-  .tiles-instruction {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 20px;
-  }
-  
-  .tiles-instruction .tile {
-    position: relative;
-    width: 60px;
-    height: 60px;
-    margin: 0 5px;
-    font-size: 20px;
-  }
-  
-  .tiles-instruction .tile::before {
-    position: static;
-    font-size: 30px;
-  }
-  
-  .tiles-instruction .tile .level-text,
-  .tiles-instruction .tile .level-number {
-    font-size: 10px;
-    top: 3px;
-    left: 3px;
-  }
-  
-  .tiles-instruction .plus,
-  .tiles-instruction .arrow {
-    font-size: 30px;
-    margin: 0 10px;
-  }
-  
-  .plus {
-    font-weight: bold;
-  }
-  
-  /* Difficulty Selection */
-  .difficulty-selection {
-    margin-top: 20px;
-  }
-  
-  .difficulty-selection p {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  .difficulty-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .difficulty-button {
-    padding: 10px 15px;
-    margin: 5px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    font-size: 16px;
-    background-color: #8f7a66;
-    color: #f9f6f2;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-  
-  .difficulty-button:hover {
-    background-color: #9f8b76;
-  }
-  
-  /* Particle Effects */
-  .particle {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.6);
-    pointer-events: none;
-    animation: particle-animation 0.5s forwards;
-  }
-  
-  @keyframes particle-animation {
-    to {
-      opacity: 0;
-      transform: translateY(-50px);
-    }
-  }
-  
-  /* Animations */
-  .tile.new-tile {
-    animation: appear 0.20s ease-in-out;
-  }
-  
-  @keyframes appear {
-    0% {
-      transform: scale(0);
-      opacity: 0;
-    }
-    50% {
-      transform: scale(1.1);
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-  
-  .tile.merge {
-    z-index: 2;
-    animation: merge 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  
-  @keyframes merge {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    70% { transform: scale(0.95); }
-    100% { transform: scale(1); }
-  }
-  
-  /* Language Selector Styles */
-  .language-selector {
-    height: 35px;
-    padding: 0 1rem;
-    font-family: 'Poppins', sans-serif;
-    font-size: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 4px;
-    background-color: transparent;
-    color: white;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    min-width: 60px;
-  }
-  
-  .language-selector:hover {
-    border-color: #FF6600;
-  }
-  
-  /* 레벨 표스트 스타일 수정 */
-  .tile .level-text {
-    position: static;
-    font-size: min(10px, 2.5vw);
-    font-weight: 500;
-    line-height: 1;
-    margin-top: -2px;
-  }
-  
-  /* Master 텍스트 위한 특별 스타일 */
-  .tile .level-text:only-child {
-    position: static;
-    font-size: 24px;
-    padding-top: 0;
-  }
-  
-  /* 설명 타일의 스타일 수정 */
-  .tiles-instruction .tile .level-text {
-    font-size: 10px;
-    top: 3px;
-    left: 3px;
-  }
-  
-  .start-button {
-    padding: 15px 40px;
-    margin-top: 20px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 600;
-    font-size: 18px;
-    background-color: #FF6600;
-    color: #f9f6f2;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .start-button:hover {
-    background-color: #FF4D00;
-  }
-  
-  .game-controls {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 10px;
-    width: 100%;
-    height: 80px;
-  }
-  
-  .game-controls-middle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: min(20px, 4vw);
-  }
-  
-  .arrow-key {
-    width: 60px;
-    height: 80px;
-    background-color: #faf8ef;
-    border: 2px solid #bbada0;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 24px;
-  }
-  
-  .arrow-key:hover {
-    background-color: #f5f0e6;
-    transform: scale(1.05);
-  }
-  
-  .arrow-key:active {
-    transform: scale(0.95);
-    background-color: #ede0c8;
-  }
-  
-  
-  .best-level {
-    font-size: 0.8em;
-    color: #FF6600;
-    margin-left: 5px;
-  }
-  
-  /* 미디어 쿼리 추가 */
-  @media (max-height: 700px) {
-    h1 {
-        font-size: 6vh;
-        margin: 5px 0;
-    }
-    
-    #game-container {
-        scale: 0.9;
-    }
-  }
-  
-  @media (max-width: 500px) {
-    .game-controls-middle {
-        gap: 10px;
-    }
-    
-    .arrow-key {
-        width: 40px;
-        height: 40px;
-    }
-  }
-  
-  /* 레벨 달성 알림 모달 스일 */
-  .achievement-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.5);
-    z-index: 10000;
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 20px 40px;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+.tile.visible {
+  color: inherit;
+}
+
+.tile::before {
+  content: attr(data-emoji);
+  position: static;
+  font-size: min(40px, 8vw);
+  line-height: 1;
+}
+
+.tile.visible {
+  color: inherit;
+}
+
+.tile.tile-2 {
+  background-color: #FFF5E6;
+  color: #776e65;
+}
+.tile.tile-2::before { content: "🥚"; }
+
+.tile.tile-4 {
+  background-color: #FFE4CC;
+  color: #776e65;
+}
+.tile.tile-4::before { content: "🐣"; }
+
+.tile.tile-8 {
+  background-color: #FFD4B3;
+  color: #776e65;
+}
+.tile.tile-8::before { content: "🐥"; }
+
+.tile.tile-16 {
+  background-color: #FFC299;
+  color: #776e65;
+}
+.tile.tile-16::before { content: "🐤"; }
+
+.tile.tile-32 {
+  background-color: #FFB380;
+  color: #f9f6f2;
+}
+.tile.tile-32::before { content: "🦅"; }
+
+.tile.tile-64 {
+  background-color: #FFA366;
+  color: #f9f6f2;
+}
+.tile.tile-64::before { content: "🦉"; }
+
+.tile.tile-128 {
+  background-color: #FF944D;
+  color: #f9f6f2;
+}
+.tile.tile-128::before { content: "🦇"; }
+
+.tile.tile-256 {
+  background-color: #FF8533;
+  color: #f9f6f2;
+}
+.tile.tile-256::before { content: "🐉"; }
+
+.tile.tile-512 {
+  background-color: #FF751A;
+  color: #f9f6f2;
+}
+.tile.tile-512::before { content: "🐉"; }
+
+.tile.tile-1024 {
+  background-color: #FF6600;
+  color: #f9f6f2;
+}
+.tile.tile-1024::before { content: "🌟"; }
+
+.tile.tile-2048 {
+  background-color: #FF4D00;
+  color: #f9f6f2;
+  box-shadow: 0 0 20px rgba(255, 77, 0, 0.3);
+}
+.tile.tile-2048::before { content: "👑"; }
+
+
+/* 새 타일, 이동, 합체 애니메이션 */
+.tile.new-tile {
+  animation: appear 0.20s ease-in-out;
+}
+@keyframes appear {
+  0% {
+    transform: scale(0);
     opacity: 0;
-    transition: all 0.3s ease-in-out;
   }
-  
-  .achievement-modal.show {
-    transform: translate(-50%, -50%) scale(1);
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
     opacity: 1;
   }
-  
-  .achievement-content {
-    text-align: center;
-  }
-  
-  .achievement-emoji {
-    font-size: 48px;
-    margin-bottom: 10px;
-    animation: bounce 0.5s ease infinite alternate;
-  }
-  
-  .achievement-text {
-    font-family: 'Rubik', sans-serif;
-    font-size: 24px;
-    font-weight: 600;
-    color: #FF6600;
-  }
-  
-  @keyframes bounce {
-    from {
-        transform: translateY(0);
-    }
-    to {
-        transform: translateY(-10px);
-    }
-  }
-  
-  /* 사이드바 스타일 */
-  .side-bar {
-    width: 100%;
-    background-color: rgba(250, 248, 239, 0.95);
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 9000;
-  }
-  
-  .game-title {
-    font-family: 'Rubik', sans-serif;
-    font-weight: 700;
-    font-size: 28px;
-    margin: 0;
-    color: #FF6600;
-    text-align: left;
-  }
-  
-  .score-board {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-  
-  .score-box {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  
-  /* 반응형  */
-  @media (max-width: 1024px) {
-    .side-bar {
-      position: static;
-      width: 100%;
-      padding: 10px 20px;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-    }
-  
-    #game-container {
-      margin-left: 0;
-      margin-top: 80px;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .side-bar {
-      flex-direction: column;
-      padding: 10px;
-    }
-  
-    #game-container {
-      margin-top: 160px;
-    }
-  }
-  
-  /* 기존 game-header 관 타일 제거 */
-  .game-header {
-    display: none;
-  }
-  
-  .level-character {
-    font-size: 28px;
-    margin-right: 10px;
-  }
-  
-  
-  /* Global Navigation Bar 스타일 */
-  .top-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 50px;
-    background-color: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-
-  
-  .left-group {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-  
-  .right-group {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-
-  .score-box {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .language-selector {
-    margin-left: 20px;
-  }
-  
-  #next-tile {
-    width: 80px;
-    height: 30px;
-    font-family: 'Rubik', sans-serif;
-    font-weight: 600;
-    text-align: center;
-    border-radius: 3px;
-    color: #776e65;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    will-change: left, top, opacity, transform;
-    z-index: 1;
-  }
-  
-  .tile-preview {
-    font-size: min(40px, 8vw);
-  }
-  
-.tile-level {
-    font-size: 12px;
-    color: #776e65;
-    font-weight: 600;
 }
-  /* Next Tile 박스 스타일 수정 */
-  
-  .next-tile-box {
-    position: relative;
-    display: flex;
-    flex-direction: row; /* 가로형으로 변경 */
-    align-items: center;
-    justify-content: center;
-    background-color: #2c2c2c;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 5px 10px; /* 패딩 조정 */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-    gap: 10px; /* 요소 간 간격 추가 */
+.tile.merge {
+  animation: merge 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 2;
+}
+@keyframes merge {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+.tile.moving {
+  transition: all 0.15s ease-in-out;
 }
 
-    .next-tile-label {
-        font-size: 14px;
-        color: #f5f5f7;
-    }
-
-    .next-tile {
-        width: 80px;
-        height: 46px;
-        border-radius: 6px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background-color: #FFF5E6;
-    }
-
-    .tile-preview {
-        font-size: 24px;
-    }
-
-    .tile-level {
-        font-size: 10px;
-        color: #776e65;
-        font-weight: 600;
-    }
-
-  .tile {
-    width: min(100px, 20vw);
-    height: min(100px, 20vw);
-    display: flex;
-    justify-content: center;
-    background-color: #FFF5E6;
+/* 파티클(merge 이펙트) */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  animation: particle-animation 0.5s forwards;
+}
+@keyframes particle-animation {
+  to {
+    opacity: 0;
+    transform: translateY(-50px);
   }
-  
-  .tile-preview {
-    font-size: 24px;
-  }
-  
-  .tile-level {
-    font-size: 10px;
-    color: #776e65;
-    font-weight: 600;
-  }
-  
-  .home-link {
-    text-decoration: none;
-    color: #F5F5F7;
-    font-size: 1.2rem;
-    font-weight: bold;
-    transition: opacity 0.2s ease;
-  }
-  
-  .home-link:hover {
-    opacity: 0.8;
-  }
-  
-  /* 게임 정 스타일만 추가 */
-  .game-title {
-    color: #776e65;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  
-  .score-box {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    color: #776e65;
-  }
-  
-  .divider {
-    width: 2px;
-    height: 20px;
-    background-color: #bbada0;
-    margin: 0 0.5rem;
-  }
-  
-  
-/* 홈 링크 스타일 */
-.home-link {
-    text-decoration: none;
-    color: #F5F5F7;
-    font-size: 1.2rem;
-    font-weight: bold;
-    transition: opacity 0.2s ease;
 }
 
-.home-link:hover {
-    opacity: 0.8;
-}
-
-
-/* 구분선 스타일 */
-.divider {
-    height: 24px;
-    width: 1px;
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-/* 게임 타이틀 스타일 수정 */
-.game-title {
-    color: white;
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin: 0;
-}
-
-/* 점수 스 텍스트도 동일한 컬러로 수정 */
-.score-box {
-    color: white;
-    display: flex;
-    gap: 1rem;
-}
-
-/* 언어 선택기와 리스타트 버튼 스타일 수정 */
+/* 언어 셀렉터, 버튼 등 공통 */
 .language-selector select {
   width: 60px;
   background-color: transparent;
@@ -843,473 +396,161 @@ body {
 }
 
 #restart-button {
-    background-color: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #f5f5f7;
 }
 
-/* 게임 컨테이너 위치 조정 */
-#game-container {
-    margin-top: 110px;
-    width: min(500px, 95vw);
-    padding: 0;
-}
-
-/* 탑바 스타일 수정 */
-.home-link {
-    text-decoration: none;
-    color: #F5F5F7 !important;
-    font-size: 1.2rem;
-    font-weight: bold;
-    transition: opacity 0.2s ease;
-}
-
-.home-link:hover {
-    opacity: 0.85;
-}
-
-/* 게임 타이틀 스타일도 동일한 컬러로 수정 */
-.game-title {
-    color: #F5F5F7;
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin: 0;
-}
-
-/* 점수 박스 텍스트도 동일한 컬러로 수정 */
-.score-box {
-    color: #F5F5F7;
-}
-
-/* 이동 방향별 애니메이션 클래스 */
-.tile.moving-up {
-    transform: translateY(-100%);
-}
-
-.tile.moving-down {
-    transform: translateY(100%);
-}
-
-.tile.moving-left {
-    transform: translateX(-100%);
-}
-
-.tile.moving-right {
-    transform: translateX(100%);
-}
-
-/* 합쳐지는 타일 애니메이션 */
-.tile.merging {
-    animation: merge 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
-    z-index: 2;
-}
-
-@keyframes merge {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    70% { transform: scale(0.95); }
-    100% { transform: scale(1); }
-}
-
-/* 새로 생성되는 타일 애니메이션 */
-.tile.new {
-    animation: appear 0.15s ease;
-}
-
-@keyframes appear {
-    0% { 
-        transform: scale(0);
-        opacity: 0;
-    }
-    100% { 
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-/* 게임보드 눌림 효과 */
-.game-board.pressed {
-    transform: scale(0.98);
-    transition: transform 0.1s ease;
-}
-
-/* 이동 방향별 트랜지션 클래스 */
-.tile.moving {
-    transition: all 0.15s ease-in-out;
-}
-
-/* 모바일 화면을 위한 미디어 쿼리 추가 */
-@media screen and (max-width: 500px) {
-    #game-container {
-        margin-top: 110px;
-    }
-
-    #game-board {
-        width: 92vw;
-        height: 92vw;
-        padding: 2vw;
-        grid-gap: 1.5vw;
-    }
-
-    .tile, .tile-placeholder {
-        font-size: min(24px, 5vw);
-    }
-
-    .tile .level-text {
-        font-size: min(10px, 2vw);
-        margin-top: -1px;
-    }
-
-    /* Next 타일 박스 크기 위치 조정 */
-    .next-tile-box {
-        position: absolute;
-        bottom: 2vw;
-        right: 2vw;
-        transform: scale(0.75);
-        padding: 5px;
-    }
-
-    .left-group {
-        gap: 0.8rem;
-    }
-
-    .right-group {
-        gap: 0.5rem;
-    }
-
-    /* 언어 선택기와 리스타트 버튼 크기 조정 */
-    .language-selector select, 
-    #restart-button {
-        height: 30px;
-        font-size: 12px;
-        padding: 0 8px;
-    }
-}
-
-/* 매우 작은 화면을 위한 추가 조정 */
-@media screen and (max-width: 350px) {
-    #game-board {
-        width: 95vw;
-        height: 95vw;
-        padding: 1.5vw;
-        grid-gap: 1vw;
-    }
-
-    .tile .level-text {
-        font-size: min(8px, 1.8vw);
-    }
-
-    .game-title {
-        font-size: 0.9rem;
-    }
-
-    .score-box {
-        font-size: 0.8rem;
-    }
-}
-
-/* 모바일 화면을 위한 미디어 쿼리 */
-@media screen and (max-width: 500px) {
-    .modal-content {
-        width: 85vw;
-        padding: 20px;
-    }
-
-    .modal-content h2 {
-        font-size: 1.2rem;
-        margin-bottom: 15px;
-    }
-
-    .instructions {
-        font-size: 0.9rem;
-    }
-}
-
-/* LNB 스타일 */
-.lnb {
-    margin-top: 50px;
-    width: 100%;
-    height: 60px;
-  
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    box-sizing: border-box;
-}
-
-.lnb-container {
-    max-width: 1200px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 50px;
-}
-
-/* 왼쪽 그룹 스타일 */
-.lnb .left-group {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-/* 게임 타이틀 */
-.game-title {
-    font-size: 20px;
-    color: #fff;
-    margin: 0;
-    white-space: nowrap;
-}
-
-/* 스코어보드 스타일 */
-.score-board {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    height: 100%;
-}
-
-.score-item {
-    padding: 8px 10px;
-    border-radius: 4px;
-    background: #333;
-    width: 80px;
-    height: 30px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.score-label {
-    font-size: 11px;
-    color: #888;
-    margin-bottom: 2px;
-}
-
-.score-value {
-    font-size: 16px;
-    color: #fff;
-}
-
-/* 오른쪽 그룹 스타일 */
-.lnb .right-group {
-    display: flex;
-    align-items: center;
-    height: 100%;
-}
-
-.control-buttons {
-    display: flex;
-    gap: 10px;
-    height: 100%;
-    align-items: center;
-}
-
-.control-buttons .action-button {
-    width: 120px;
-    height: 40px;
-    padding: 0;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-    .lnb-container {
-        padding: 0 10px;
-    }
-
-    .score-board {
-        gap: 5px;
-    }
-
-    .score-item {
-        width: 70px;
-        padding: 6px 8px;
-    }
-
-    .control-buttons {
-        gap: 5px;
-    }
-
-    .control-buttons .action-button {
-        width: 70px;
-        font-size: 12px;
-    }
-}
-
-/* 게임 안내 풀페이지 스타일 */
+/* 풀화면 게임 안내 */
 .game-guide {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: #1a1a1a;
-    color: #f5f5f7;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 200;
-    /* padding-top: 110px; */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #1a1a1a;
+  color: #f5f5f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+  opacity: 0.8;
 }
-
 .guide-content {
-    text-align: center;
-    padding: 20px;
-    max-width: 600px;
-    width: 90%;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 내부 요소들을 가운데 정렬 */
+  text-align: center;
+  padding: 20px;
+  max-width: 600px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-
-/* 시작 버튼 스타일 */
 #start-button {
-    margin-top: 30px;
-    padding: 12px 24px;
-    font-size: 1.1em;
-    width: fit-content; /* 버튼 크기를 내용에 맞게 조정 */
-    margin-left: auto; /* 좌우 마진을 자동으로 설정하여 가운데 정렬 */
-    margin-right: auto;
+  margin-top: 30px;
+  padding: 12px 24px;
+  font-size: 1.1em;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-#undo-button {
-  margin: 10px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
+/* 모달 */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1000;
+  left: 0; 
+  top: 0; 
+  width: 100vw; 
+  height: 100vh; 
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.modal-content {
+  background-color: #2c2c2c;
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: min(350px, 85vw);
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  color: #f5f5f7;
+  text-align: center;
+}
+.modal-content h2 {
+  margin-bottom: 20px;
+}
+.modal-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 20px;
+}
+#modal-undo-button {
   background-color: #4CAF50;
   color: white;
-  cursor: pointer;
-  font-size: 16px;
-  transition: opacity 0.3s;
 }
-
-#undo-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
-
-#modal-undo-button {
-  background-color: #4CAF50;  /* 초록색 */
-  color: white;
-}
-
 #modal-undo-button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
   opacity: 0.5;
 }
-
-.modal-buttons {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;  /* 버튼 사이 간격을 8px로 조정 */
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-
 .action-button {
-    background-color: var(--primary-color);
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  background-color: var(--primary-color);
+  color: #fff;
 }
 
-.tooltip {
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 10px;
-  border-radius: 5px;
-  font-size: 14px;
-  z-index: 1000;
-  transition: opacity 5s;
-  opacity: 0;
-  top: 220px;
+/* dad-dot-floating 등은 common.css 등에서 처리 가정 */
+
+.dad-dot-floating {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 880px;
+  height: 880px;
+  opacity: 0.1;
 }
 
-.tooltip.show {
-  opacity: 1;
+/* "다음 타일"을 감싸는 박스 디자인 */
+.next-tile-box {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 4px 8px;
+  display: flex;
+  flex-direction: column; /* 세로로 라벨+타일 정렬 */
+  align-items: center;
+  justify-content: center;
+  gap: 4px; /* 라벨과 타일 간격 */
 }
 
-/* Primary Button 스타일 */
-.action-button.primary {
-    background: linear-gradient(90deg, #0074E4 0%, #0095FF 100%);
-    color: white;
-    padding: 12px 32px;
-    font-size: 16px;
-    font-weight: 600;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 2px 8px rgba(0, 116, 228, 0.3);
-    min-width: 200px;
-    justify-content: center;
+/* 만약 score-label, score-value와 스타일 일관성을 주려면 */
+.next-tile-box .score-label {
+  font-size: 10px; 
+  color: #ccc;
+  margin-bottom: 2px;
 }
 
-.action-button.primary:hover {
-    background: linear-gradient(90deg, #0095FF 0%, #00A9FF 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 116, 228, 0.4);
+/* 실제 타일 프리뷰 섹션 */
+.next-tile {
+  display: flex;
+  flex-direction: row; /* 이모지와 레벨을 가로 배치 */
+  align-items: center;
+  gap: 4px;
+  background-color: #FFF5E6; /* 2 레벨(🥚)일 때 색상과 동일하게 */
+  border-radius: 4px;
+  padding: 4px 6px;
 }
 
-.action-button.primary:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 116, 228, 0.2);
+/* 이모지 */
+.next-tile .tile-preview {
+  font-size: 20px;
 }
 
-.action-button.primary .button-text {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+/* 레벨 표시 */
+.next-tile .tile-level {
+  font-size: 10px;
+  color: #776e65;
+  font-weight: 600;
 }
 
-/* 모바일 대응 */
+/* 반응형 시 크기 축소 */
 @media (max-width: 768px) {
-    .action-button.primary {
-        padding: 10px 24px;
-        font-size: 14px;
-        min-width: 180px;
-    }
-}
-
-/* 헤더 버튼 스타일 */
-header .action-button {
-    padding: 8px 16px;
-    margin-right: 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: var(--primary-color);
-    color: white;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-}
-
-header .action-button:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
-
-header .action-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-    opacity: 0.5;
-}
-
-/* 언어 선택기 여백 조정 */
-header .language-selector {
-    margin-left: 10px;
+  .next-tile-box {
+    flex-direction: row;
+    padding: 2px 6px;
+  }
+  .next-tile {
+    flex-direction: column; /* 작은 화면에서는 위아래로 */
+  }
+  .next-tile .tile-preview {
+    font-size: 16px;
+  }
+  .next-tile .tile-level {
+    font-size: 8px;
+  }
 }

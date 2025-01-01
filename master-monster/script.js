@@ -16,7 +16,7 @@ const languageSelect   = document.getElementById('language-select');
 // 게임 상태
 let grid            = [];
 let score           = 0;
-let bestScore       = 0;
+let bestScore       = 0;  // 로컬 스토리지에서 불러온 최고 점수
 let gameStarted     = false;
 let difficultyLevel = 'normal';
 let currentGameMaxLevel = 1;
@@ -38,6 +38,9 @@ function initGrid() {
 }
 
 function init() {
+  // 로컬스토리지에서 최고 점수 불러오기
+  bestScore = getBestScore().score;
+
   initGrid();
   score               = 0;
   currentGameMaxLevel = 1;
@@ -56,7 +59,7 @@ function init() {
   updateNextTileDisplay();
   updateUndoButton();
 
-  // Undo 버튼 이벤트 (혹시 중복 방지를 위해 remove 후 add)
+  // Undo 버튼 이벤트
   const undoButton = document.getElementById('undo-button');
   if (undoButton) {
     undoButton.removeEventListener('click', undoMove);
@@ -307,7 +310,7 @@ function moveTiles(direction) {
     addNewTile();
     updateBoard();
     scoreDisplay.innerText = score;
-    updateBestScore();
+    updateBestScore();  // <-- 이동 후에 최고 점수 갱신 체크
     if (isGameOver()) {
       // Game Over 시 모달
     }
@@ -333,16 +336,17 @@ function undoMove() {
   }
 }
 
+// Undo 버튼 상태 업데이트
 function updateUndoButton() {
   const undoButton = document.getElementById('undo-button');
-  const undoCountElement = document.getElementById('undo-count');
-  if (undoButton && undoCountElement) {
-    undoCountElement.textContent = undoCount;
-    undoButton.disabled = undoCount === 0;
+  if (undoButton) {
+    undoButton.textContent = `Undo (${undoCount})`;
+    undoButton.disabled    = (undoCount === 0);
     undoButton.style.opacity = (undoCount === 0) ? '0.5' : '1';
   }
 }
 
+// 이전 상태 저장
 function saveGameState() {
   const currentState = {
     grid: grid.map(row => row.map(cell => cell ? {...cell} : null)),
@@ -408,7 +412,7 @@ function showGameOverModal() {
   const modalUndoButton  = document.createElement('button');
   modalUndoButton.id     = 'modal-undo-button';
   modalUndoButton.className = 'action-button';
-  modalUndoButton.textContent = `Undo (${undoCount})`;
+  modalUndoButton.textContent = `Undo (${undoCount})`; // 남은 Undo 횟수 동기화
 
   modalUndoButton.addEventListener('click', () => {
     undoMove();
@@ -416,7 +420,6 @@ function showGameOverModal() {
       document.body.removeChild(gameOverModal);
     }
   });
-
   buttonContainer.appendChild(modalUndoButton);
 
   const restartButton = document.createElement('button');
@@ -439,14 +442,15 @@ function showGameOverModal() {
   }
 }
 
-// 스코어
+// 스코어 관련 (최고점 갱신)
 function updateBestScore() {
-  const bestRecord = getBestScore();
+  const bestRecord = getBestScore(); 
   if (score > bestRecord.score) {
     let maxLevel = currentGameMaxLevel;  
     const newRecord = { score, level: maxLevel };
     localStorage.setItem('bestScore', JSON.stringify(newRecord));
-    updateBestScoreDisplay(newRecord);
+    bestScore = score; // 전역 변수 갱신
+    updateBestScoreDisplay();
   }
 }
 
@@ -466,6 +470,7 @@ function getBestScore() {
   }
 }
 
+// 화면에 최고 점수 표시
 function updateBestScoreDisplay() {
   if (bestScoreDisplay) {
     bestScoreDisplay.innerText = bestScore; 

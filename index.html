@@ -17,22 +17,32 @@
 <body>
   <!-- ===== HEADER (GNB) ===== -->
   <header>
-    <!-- (수정 1) 로고 클릭 시 "/"로 이동, 앵커 스타일 대신 DIV + cursor:pointer -->
+    <!-- 로고 클릭 시 "/"로 이동 -->
     <div id="logo" onclick="window.location.href='/'" style="cursor: pointer;">
       Dad and Dot Games
     </div>
     <nav style="justify-content: flex-end;">
+      <!-- 메뉴 링크 추가 -->
+      <div class="nav-links">
+        <a href="#carousel-section" class="nav-link">Games</a>
+        <a href="#about-section" class="nav-link">About</a>
+      </div>
       <select class="language-selector" id="language-select">
         <option value="en">EN</option>
         <option value="ko" selected>KR</option>
         <option value="ja">JP</option>
         <option value="zh">ZH</option>
       </select>
+      <!-- 공유하기 버튼(예시) -->
+      <div class="share-section">
+        <a href="#" class="share-link">공유하기</a>
+      </div>
     </nav>
   </header>
 
-  <!-- ===== 패럴랙스 섹션 ===== -->
+  <!-- ===== 패럴랙스 섹션 (Hero) ===== -->
   <section class="parallax">
+    <!-- 캐릭터(아빠+아이) -->
     <div class="dad-dot-floating"></div>
 
     <div class="hero-content">
@@ -45,53 +55,117 @@
     </div>
   </section>
 
-  <!-- ===== Carousel 섹션 ===== -->
-  <section class="carousel-section" id="carousel-section">
+  <!-- Carousel 섹션 -->
+<section class="carousel-section" id="carousel-section">
     <h2>Pick Your Game</h2>
-
+  
     <div class="carousel-container">
-      <button class="carousel-btn prev">&#10094;</button>
-      <div class="carousel-track" id="carouselTrack">
-        <!-- Master Monster 카드 -->
-        <div class="game-card" style="width:300px;">
-          <a href="/master-monster" style="display:block; text-decoration:none; color:#fff;">
-            <div class="game-preview">
-              <img src="images/master-monster-preview.png" alt="Master Monster Game Preview">
+      <!-- (1) 좌우 버튼 (←, →)로 변경 -->
+      <button class="carousel-btn prev">&lt;</button> 
+      <div class="carousel-track" id="carouselTrack" draggable="false">
+        <!-- 예시 카드들 -->
+        <div class="game-card">
+          <a href="/master-monster" class="card-link">
+            <div class="game-placeholder">
+              <div class="placeholder-icon">🎮</div>
             </div>
             <div class="game-info">
-              <h3 class="game-title">마스터몬스터</h3>
-              <p class="game-description">몬스터를 합쳐 최강의 마스터를 만들어보세요!</p>
+              <h3 class="game-title">Master Monster</h3>
+              <p class="game-description">Merge monsters to create the ultimate master!</p>
               <div class="game-features">
-                <span class="feature">퍼즐</span>
-                <span class="feature">전략</span>
-                <span class="feature">캐주얼</span>
+                <span class="feature">Puzzle</span>
+                <span class="feature">Strategy</span>
+                <span class="feature">Casual</span>
               </div>
               <div class="game-stats">
-                <span>플레이 시간: 5-10분</span> /
-                <span>난이도: ★★☆☆☆</span>
+                <span>Play Time: 5-10min</span> /
+                <span>Difficulty: ★★☆☆☆</span>
               </div>
             </div>
           </a>
         </div>
+        <div class="game-card">
+            <a href="/master-monster" class="card-link">
+              <div class="game-placeholder">
+                <div class="placeholder-icon">🎮</div>
+              </div>
+              <div class="game-info">
+                <h3 class="game-title">Master Monster</h3>
+                <p class="game-description">Merge monsters to create the ultimate master!</p>
+                <div class="game-features">
+                  <span class="feature">Puzzle</span>
+                  <span class="feature">Strategy</span>
+                  <span class="feature">Casual</span>
+                </div>
+                <div class="game-stats">
+                  <span>Play Time: 5-10min</span> /
+                  <span>Difficulty: ★★☆☆☆</span>
+                </div>
+              </div>
+            </a>
+          </div><div class="game-card">
+            <a href="/master-monster" class="card-link">
+              <div class="game-placeholder">
+                <div class="placeholder-icon">🎮</div>
+              </div>
+              <div class="game-info">
+                <h3 class="game-title">Master Monster</h3>
+                <p class="game-description">Merge monsters to create the ultimate master!</p>
+                <div class="game-features">
+                  <span class="feature">Puzzle</span>
+                  <span class="feature">Strategy</span>
+                  <span class="feature">Casual</span>
+                </div>
+                <div class="game-stats">
+                  <span>Play Time: 5-10min</span> /
+                  <span>Difficulty: ★★☆☆☆</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        <!-- 다른 카드들... -->
+        <div class="game-card">
+          <div class="game-placeholder">
+            <div class="placeholder-icon">⭐️</div>
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">별샤워</h3>
+            <p class="game-description">우주 속 반짝이는 별들을 모아보세요!</p>
+            <div class="game-features">
+              <span class="feature">리듬</span>
+              <span class="feature">타이밍</span>
+              <span class="feature">운동</span>
+            </div>
+            <div class="game-stats">
+              <span>플레이 시간: 3-5분</span> /
+              <span>난이도: ★★★☆☆</span>
+            </div>
+          </div>
+        </div>
+        <!-- ... -->
+    </div> <!-- carousel-container -->
+  
+    
+  </section>
+  
 
-        <!-- 예시용 다른 게임 카드들 -->
-        <div class="game-card" style="width:300px;">
-          <img src="images/game01.png" alt="Game 01" style="width:100%; height:auto;" />
-        </div>
-        <div class="game-card" style="width:300px;">
-          <img src="images/game02.png" alt="Game 02" style="width:100%; height:auto;" />
-        </div>
-        <div class="game-card" style="width:300px;">
-          <img src="images/game03.png" alt="Game 03" style="width:100%; height:auto;" />
-        </div>
-      </div>
-      <button class="carousel-btn next">&#10095;</button>
-    </div>
+  <!-- ===== About 섹션 ===== -->
+  <section class="about-section" id="about-section">
+    <h2>About Dad and Dot Games</h2>
+    <p>
+      안녕하세요! 저희는 “아빠와 아이가 함께 즐길 수 있는 우주 콘셉트 게임”을 만드는 팀입니다. <br>
+      아이들에게는 **재미**와 **학습**을, 부모님께는 **안심**과 **공감**을 전해드리고 싶어요.
+      <br><br>
+      <strong>[Placeholder Story]</strong><br>
+      \- 먼 옛날, 우주의 한 구석에서 떠돌던 ‘아빠’가 작은 별에서 살던 ‘도트’(dot)를 만났습니다.<br>
+      \- 둘이 함께 우주를 탐험하며 새롭고 기발한 게임들을 만들기 시작했죠!<br>
+      \- 우리의 목표: “우주적 상상력으로 아이들의 뇌와 마음을 성장시키자!”
+    </p>
   </section>
 
   <!-- ===== FOOTER ===== -->
   <footer>
-    © 2024 Dad and Dot Games. All rights reserved.
+    © 2025 Dad and Dot Games. All rights reserved.
   </footer>
 
   <!-- 공통 JS -->

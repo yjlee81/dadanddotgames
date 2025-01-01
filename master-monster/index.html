@@ -10,8 +10,8 @@
   <meta property="og:site_name" content="Dad and Dot Games">
 
   <!-- 공통 CSS + 페이지 전용 CSS -->
-  <link rel="stylesheet" href="/css/common.css">  <!-- 메인 디자인(패럴랙스, 별, 헤더) -->
-  <link rel="stylesheet" href="styles.css">       <!-- 마스터몬스터 전용 스타일 -->
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="styles.css">
   
   <!-- 구글 애드센스 스크립트 -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8718440574316852" crossorigin="anonymous"></script>
@@ -19,59 +19,75 @@
 <body>
   <!-- 별 효과(이미지) 적용을 위해, 패럴랙스 배경을 감쌀 컨테이너 -->
   <section class="parallax">
-    <!-- (1) 헤더 -->
-    <header>
-      <!-- 로고 클릭 시 "/"로 이동 (앵커 형식 X, 밑줄 X, 흰색 폰트) -->
-      <div id="logo" onclick="window.location.href='/'" style="cursor: pointer;">
-        Dad and Dot Games
+
+    <!-- (1) GNB - 헤더와 LNB 통합 -->
+    <header class="gnb-lnb">
+      <div class="left-group">
+        <div id="logo" class="logo" onclick="window.location.href='/'" style="cursor: pointer;">
+          D&D
+        </div>
+        <div class="divider"></div>
+        <h2 class="game-title" data-i18n="title">Master Monster</h2>
       </div>
-      <nav>
-        <!-- Undo와 Restart 버튼 추가 -->
-        <button id="undo-button" class="action-button" data-i18n="undo">
-          Undo (3)
-        </button>
-        <button id="restart-button" class="action-button" data-i18n="restart">
-          Restart
-        </button>
-        <!-- 언어 선택 드롭다운 -->
+
+      <div class="right-group">
+        <div class="next-tile-box">
+          <div class="score-label">다음 타일</div>
+          <div class="next-tile">
+            <span class="tile-preview">🥚</span>
+            <span class="tile-level">Lv.1</span>
+          </div>
+        </div>
+        <!-- Undo 버튼 : 아이콘 + 텍스트 -->
+        <div class="game-controls">
+          <button id="undo-button" class="icon-btn" title="Undo"><span class="icon-undo"></span></button>
+          <button id="restart-button" class="icon-btn" title="Restart"><span class="icon-restart"></span></button>
+        </div>
+        
+        <!-- (B) 게임 상태 (Score/Next Tile) -->
+        <div class="game-status-box">
+          <div class="score-area">
+            <span class="current-score" id="score">0</span> /
+            <span class="best-score" id="best-score">0</span>
+          </div>
+          <div class="next-tile-display">
+            <span class="tile-preview">🥚</span>
+            <span class="tile-level">Lv.1</span>
+          </div>
+        </div>
+        
+
+        <!-- (B) 게임 상태 (Score/Next Tile) -->
+      <div class="game-status-box">
+        <div class="score-area">
+          <span class="current-score" id="score">0</span> /
+          <span class="best-score" id="best-score">0</span>
+        </div>
+        <div class="next-tile-display">
+          <span class="tile-preview">🥚</span>
+          <span class="tile-level">Lv.1</span>
+        </div>
+      </div>
+
+      <div class="lang-dropdown">
+        <!-- 언어 선택 -->
         <select class="language-selector" id="language-select">
           <option value="en">EN</option>
           <option value="ko" selected>KR</option>
           <option value="ja">JP</option>
           <option value="zh">ZH</option>
         </select>
-      </nav>
+      </div>
     </header>
 
-    
-         <div class="dad-dot-floating"></div>
-    
+    <div class="dad-dot-floating"></div>
 
     <!-- (2) 서브페이지 본문: LNB + 게임영역 -->
     <div class="lnb">
       <div class="lnb-container">
-        <div class="left-group">
-          <h2 class="game-title" data-i18n="title">Master Monster</h2>
-          
-        </div>
+
         <div class="right-group">
-          <div class="score-board"></div>
-            <div class="score-item current">
-              <div class="score-label" data-i18n="currentScore">현재 점수</div>
-              <div class="score-value" id="score">0</div>
-            </div>
-            <div class="score-item best">
-              <div class="score-label" data-i18n="bestScore">최고 점수</div>
-              <div class="score-value" id="best-score">0</div>
-            </div>
-            <div class="next-tile">
-              <div class="score-label">다음 타일</div>
-              <div id="score-value">
-                <span class="tile-preview">🥚</span>
-                <span class="tile-level">1</span>
-              </div>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>
