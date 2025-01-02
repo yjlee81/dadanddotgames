@@ -31,41 +31,15 @@
       </div>
 
       <div class="right-group">
-        <div class="next-tile-box">
-          <div class="score-label">다음 타일</div>
-          <div class="next-tile">
-            <span class="tile-preview">🥚</span>
-            <span class="tile-level">Lv.1</span>
-          </div>
-        </div>
-        <!-- Undo 버튼 : 아이콘 + 텍스트 -->
-        <div class="game-controls">
-          <button id="undo-button" class="icon-btn" title="Undo"><span class="icon-undo"></span></button>
-          <button id="restart-button" class="icon-btn" title="Restart"><span class="icon-restart"></span></button>
-        </div>
-        
         <!-- (B) 게임 상태 (Score/Next Tile) -->
         <div class="game-status-box">
           <div class="score-area">
+            <span class="score-label">Score</span>
             <span class="current-score" id="score">0</span> /
+            <span class="score-label">Best</span>
             <span class="best-score" id="best-score">0</span>
           </div>
-          <div class="next-tile-display">
-            <span class="tile-preview">🥚</span>
-            <span class="tile-level">Lv.1</span>
-          </div>
-        </div>
-        
-
-        <!-- (B) 게임 상태 (Score/Next Tile) -->
-      <div class="game-status-box">
-        <div class="score-area">
-          <span class="current-score" id="score">0</span> /
-          <span class="best-score" id="best-score">0</span>
-        </div>
-        <div class="next-tile-display">
-          <span class="tile-preview">🥚</span>
-          <span class="tile-level">Lv.1</span>
+          
         </div>
       </div>
 
@@ -121,6 +95,26 @@
         <source src="sounds/merge.mp3" type="audio/mpeg">
       </audio>
       <div id="game-board"></div>
+      <!-- Undo 버튼 : 아이콘 + 텍스트 -->
+      <div class="game-controls">
+        <div class="next-tile-box">
+          <span class="btn-label">다음 타일</span>
+          <div class="next-tile">
+            <span class="tile-preview">🥚</span>
+            <span class="tile-level">Lv.1</span>
+          </div>
+        </div>
+        <div class="control-buttons">
+          <button id="undo-button" class="control-btn" title="Undo">
+            <span class="icon-undo"></span>
+            <span class="btn-label">되돌리기</span>
+          </button>
+          <button id="restart-button" class="control-btn" title="Restart">
+            <span class="icon-restart"></span>
+            <span class="btn-label">다시시작</span>
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- 하단 광고, 결과화면 광고 등 -->

@@ -506,35 +506,14 @@ restartButton.addEventListener('click', () => {
   init();
 });
 
-// 터치 이벤트
-let touchStartX, touchStartY;
+// 터치/스와이프 이벤트 리스너 제거
+document.removeEventListener('touchstart', handleTouchStart);
+document.removeEventListener('touchend', handleTouchEnd);
 
-document.addEventListener('touchstart', (e) => {
-  if (!gameStarted) return;
-  touchStartX = e.changedTouches[0].screenX;
-  touchStartY = e.changedTouches[0].screenY;
-});
-
-document.addEventListener('touchend', (e) => {
-  if (!gameStarted) return;
-  let touchEndX = e.changedTouches[0].screenX;
-  let touchEndY = e.changedTouches[0].screenY;
-  handleGesture(touchStartX, touchStartY, touchEndX, touchEndY);
-});
-
-function handleGesture(startX, startY, endX, endY) {
-  let dx = endX - startX;
-  let dy = endY - startY;
-  if (Math.abs(dx) > Math.abs(dy)) {
-    // 수평
-    if (dx > 30)       moveTiles('ArrowRight');
-    else if (dx < -30) moveTiles('ArrowLeft');
-  } else {
-    // 수직
-    if (dy > 30)       moveTiles('ArrowDown');
-    else if (dy < -30) moveTiles('ArrowUp');
-  }
-}
+// 캐로셀 관련 함수들 제거
+function handleGesture() {} // 제거
+function handleTouchStart() {} // 제거
+function handleTouchEnd() {} // 제거
 
 // 파티클 이펙트
 function createParticles(x, y) {
