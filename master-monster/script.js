@@ -273,10 +273,7 @@ function moveTiles(direction) {
           id: tileIdCounter++
         });
         // 사운드
-        if (mergeSound) {
-          mergeSound.currentTime = 0;
-          mergeSound.play().catch(e => console.log('Sound play failed:', e));
-        }
+        playMergeSound();
         skip = true;
       } else {
         mergedLine.push({
@@ -647,4 +644,40 @@ function updateBestLevelDisplay() {
   if (bestLevelDisplay) {
     bestLevelDisplay.innerText = bestLevel;
   }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const volumeToggle = document.getElementById('volume-toggle');
+    const iconVolumeOn = volumeToggle.querySelector('.icon-volume-on');
+    const iconVolumeOff = volumeToggle.querySelector('.icon-volume-off');
+    let isMuted = localStorage.getItem('isMuted') === 'true';
+
+    // 초기 상태 설정
+    mergeSound.muted = isMuted;
+    updateVolumeIcon(isMuted);
+
+    volumeToggle.addEventListener('click', function() {
+        isMuted = !isMuted;
+        mergeSound.muted = isMuted;
+        updateVolumeIcon(isMuted);
+        localStorage.setItem('isMuted', isMuted);
+    });
+
+    function updateVolumeIcon(isMuted) {
+        if (isMuted) {
+            iconVolumeOn.style.display = 'none';
+            iconVolumeOff.style.display = 'inline';
+        } else {
+            iconVolumeOn.style.display = 'inline';
+            iconVolumeOff.style.display = 'none';
+        }
+    }
+});
+
+// 사운드 재생 시 음소거 상태 확인
+function playMergeSound() {
+    if (!mergeSound.muted) {
+        mergeSound.currentTime = 0;
+        mergeSound.play().catch(e => console.log('Sound play failed:', e));
+    }
 }

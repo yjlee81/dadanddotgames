@@ -316,3 +316,22 @@ body {
   .game-card:hover {
     transform: translateY(-5px);
   }
+  
+  .volume-control {
+    position: relative;
+    display: inline-block;
+    margin-left: 10px;
+  }
+  
+  .volume-icon {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    padding: 0em 2em;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin: 10px;
+    height: 32px;
+    align-content: center;
+  }
+  

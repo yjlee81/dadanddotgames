@@ -79,7 +79,7 @@ body {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-left: auto;
+  
 }
 
 /* Undo, Restart 등 버튼 개선 */

@@ -26,7 +26,10 @@ let gameStates      = []; // undo를 위한 게임 히스토리
 let undoCount       = 3;  
 let bestLevel       = 1;
 
-// 초기화
+/******************************************************
+ * 초기화
+ ******************************************************/
+
 function initGrid() {
   grid = [];
   for (let row = 0; row < 4; row++) {
@@ -83,10 +86,6 @@ function createPlaceholders() {
 // 시작 타일 배치
 function addStartingTiles() {
   let startingTiles = 2; 
-  if (difficultyLevel === 'easy')   startingTiles = 4;
-  if (difficultyLevel === 'hard')   startingTiles = 2;
-  if (difficultyLevel === 'expert') startingTiles = 1;
-  if (difficultyLevel === 'master') startingTiles = 1;
 
   for (let i = 0; i < startingTiles; i++) {
     addNewTile();
@@ -450,7 +449,10 @@ function showGameOverModal() {
   }
 }
 
-// 스코어 관련 (최고점 갱신)
+/******************************************************
+ * 스코어 관련 (최고점 갱신)
+ ******************************************************/
+
 function updateBestScore() {
   const bestRecord = getBestScore(); 
   if (score > bestRecord.score) {
@@ -462,7 +464,6 @@ function updateBestScore() {
   }
 }
 
-// 로컬 스토리지에서 불러오기
 function getBestScore() {
   try {
     const savedRecord = localStorage.getItem('bestScore');
@@ -478,14 +479,12 @@ function getBestScore() {
   }
 }
 
-// 화면에 최고 점수 표시
 function updateBestScoreDisplay() {
   if (bestScoreDisplay) {
     bestScoreDisplay.innerText = bestScore; 
   }
 }
 
-// 최고 레벨 업데이트
 function updateBestLevelDisplay() {
   const bestLevelDisplay = document.getElementById('best-level');
   if (bestLevelDisplay) {
@@ -493,7 +492,10 @@ function updateBestLevelDisplay() {
   }
 }
 
-// 키보드 이벤트 (화살표)
+/******************************************************
+ * 키보드, 리스타트, 터치/스와이프 등
+ ******************************************************/
+
 document.addEventListener('keydown', (e) => {
   if (!gameStarted) return;
   if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
@@ -515,7 +517,9 @@ function handleGesture() {} // 제거
 function handleTouchStart() {} // 제거
 function handleTouchEnd() {} // 제거
 
-// 파티클 이펙트
+/******************************************************
+ * 파티클 이펙트
+ ******************************************************/
 function createParticles(x, y) {
   for (let i = 0; i < 10; i++) {
     const particle = document.createElement('div');
@@ -533,7 +537,9 @@ function createParticles(x, y) {
   }
 }
 
-// 사운드 초기화 (모바일 대응)
+/******************************************************
+ * 사운드 초기화 (모바일 대응)
+ ******************************************************/
 function initSound() {
   document.addEventListener('touchstart', function() {
     if (mergeSound) {
@@ -545,7 +551,9 @@ function initSound() {
   }, { once: true });
 }
 
-// 언어
+/******************************************************
+ * 다국어 (i18n)
+ ******************************************************/
 const translations = {
   en: {
     title: "Master Monster",
@@ -596,7 +604,9 @@ function updateTranslations(lang) {
   });
 }
 
-// 언어 선택
+/******************************************************
+ * 언어 선택
+ ******************************************************/
 document.getElementById("language-select").addEventListener("change", (event) => {
   const selectedLang = event.target.value;
   updateTranslations(selectedLang);
@@ -616,22 +626,53 @@ window.addEventListener('load', () => {
   updateUndoButton();
 });
 
-// 게임 시작
+/******************************************************
+ * 게임 시작
+ ******************************************************/
 function startGame() {
   gameStarted = true;
   difficultyLevel = 'normal';
   init();
 }
 
-// 엔터키로 게임 시작
+/******************************************************
+ * 엔터키로 게임 시작
+ ******************************************************/
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Enter' && gameGuide.style.display !== 'none') {
     startButton.click();
   }
 });
 
-// start-button 클릭
+/******************************************************
+ * start-button 클릭 시 : 본격 실행 + 볼륨 컨트롤 초기화
+ ******************************************************/
 startButton.addEventListener('click', function() {
+  initVolumeControl();
   gameGuide.style.display = 'none';
   startGame();
 });
+
+/******************************************************
+ * 볼륨 컨트롤 초기화
+ ******************************************************/
+function initVolumeControl() {
+  const volumeToggle = document.getElementById('volume-toggle');
+  let isMuted = localStorage.getItem('isMuted') === 'true';
+  
+  // 초기 상태 설정
+  mergeSound.muted = isMuted;
+  updateVolumeIcon(isMuted);
+
+  volumeToggle.addEventListener('click', () => {
+    isMuted = !isMuted;
+    mergeSound.muted = isMuted;
+    updateVolumeIcon(isMuted);
+    localStorage.setItem('isMuted', isMuted);
+  });
+}
+
+function updateVolumeIcon(isMuted) {
+  const volumeToggle = document.getElementById('volume-toggle');
+  volumeToggle.textContent = isMuted ? '🔇' : '🔈';
+}
