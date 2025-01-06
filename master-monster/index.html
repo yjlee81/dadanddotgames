@@ -15,6 +15,27 @@
   
   <!-- 구글 애드센스 스크립트 -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8718440574316852" crossorigin="anonymous"></script>
+  <script>
+    (function (m, a, z, e) {
+      var s, t;
+      try {
+        t = m.sessionStorage.getItem('maze-us');
+      } catch (err) {}
+    
+      if (!t) {
+        t = new Date().getTime();
+        try {
+          m.sessionStorage.setItem('maze-us', t);
+        } catch (err) {}
+      }
+    
+      s = a.createElement('script');
+      s.src = z + '?apiKey=' + e;
+      s.async = true;
+      a.getElementsByTagName('head')[0].appendChild(s);
+      m.mazeUniversalSnippetApiKey = e;
+    })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '9bed29c9-965e-46af-9f9f-0af175bf4756');
+    </script>
 </head>
 <body>
   <!-- 별 효과(이미지) 적용을 위해, 패럴랙스 배경을 감쌀 컨테이너 -->
