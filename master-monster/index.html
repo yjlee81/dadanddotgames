@@ -40,14 +40,18 @@
             <span class="best-score" id="best-score">0</span>
           </div>
         </div>
-
         
-        <!-- 볼륨 컨트롤 추가 -->
+        <!-- 볼륨 컨트롤 -->
         <div class="volume-control">
           <button class="volume-icon" id="volume-toggle">
             <span class="icon-volume-on">🔊</span>
             <span class="icon-volume-off" style="display: none;">🔇</span>
           </button>
+        </div>
+
+        <!-- 랭킹 버튼 추가 -->
+        <div class="ranking-menu">
+          <button id="ranking-button" class="action-button">랭킹</button>
         </div>
 
         <div class="lang-dropdown">
@@ -63,6 +67,11 @@
     </header>
 
     <div class="dad-dot-floating"></div>
+
+    <!-- 말풍선 안내 요소 추가 -->
+    <div id="tutorial-bubble" class="tutorial-bubble" style="display: none;">
+      키보드의 화살키나 화면을 쓸어내려 타일을 이동해보세요!
+    </div>
 
     <!-- (2) 서브페이지 본문: LNB + 게임영역 -->
     <div class="lnb">
@@ -102,9 +111,32 @@
       <audio id="mergeSound" preload="auto">
         <source src="sounds/merge.mp3" type="audio/mpeg">
       </audio>
-      <div id="game-board"></div>
+      <!-- 실시간 업데이트를 위한 게임 상태 표시 -->
+      <div class="game-stats">
+        <div class="stat-item">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-label">현재 점수</div>
+          <div class="stat-value" id="current-score">0</div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-icon">⏱️</div>
+          <div class="stat-label">소요 시간</div>
+          <div class="stat-value" id="current-play-time">00:00</div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-icon">🏆</div>
+          <div class="stat-label">현재 최고 레벨</div>
+          <div class="stat-value" id="current-best-level">Lv.1</div>
+        </div>
+      </div>
+      <div id="game-board">
+        
+      </div>
       <!-- Undo 버튼 : 아이콘 + 텍스트 -->
       <div class="game-controls">
+        <button id="open-game-over-modal">게임오버모달열기</button>
         <div class="next-tile-box">
           <span class="btn-label">다음 타일</span>
           <div class="next-tile">
@@ -146,5 +178,60 @@
   <script src="script.js"></script>
   <!-- 별/패럴랙스 등 공통 기능 -->
   <script src="/js/common.js"></script>
+
+  <!-- 랭킹 모달 -->
+  <div id="ranking-modal" class="modal">
+    <div class="modal-content">
+      <button class="close-button" onclick="closeRankingModal()">×</button>
+      <h2>전체 랭킹</h2>
+      <table id="ranking-table" class="ranking-table">
+        <thead>
+          <tr>
+            <th>순위</th>
+            <th>점수</th>
+            <th>최고 레벨</th>
+            <th>소요 시간</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- JavaScript에서 자동 생성 -->
+        </tbody>
+      </table>
+      <button id="close-ranking-modal" class="action-button">닫기</button>
+    </div>
+  </div>
+
+  <div id="gameOverModal" class="modal">
+    <div class="modal-content">
+        <button class="close-button" onclick="closeGameOverModal()">×</button>
+        <h2>Game Over!</h2>
+        
+        <!-- 게임 결과 통계 -->
+        <div class="game-stats">
+            <div class="stat-item">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-label">최종 점수</div>
+                <div class="stat-value" id="final-score">0</div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-label">소요 시간</div>
+                <div class="stat-value" id="play-time">00:00</div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-label">현재 최고 레벨</div>
+                <div class="stat-value" id="current-best-level">Lv.1</div>
+            </div>
+        </div>
+
+        <div class="modal-buttons">
+            <button id="modal-undo-button" class="action-button primary">되돌리기</button>
+            <button id="modal-restart-button" class="action-button tertiary">다시하기</button>
+        </div>
+    </div>
+  </div>
 </body>
 </html>

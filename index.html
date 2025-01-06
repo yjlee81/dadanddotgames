@@ -15,6 +15,28 @@
   <link rel="stylesheet" href="css/common.css">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8718440574316852"
      crossorigin="anonymous"></script>
+  <script>
+  (function (m, a, z, e) {
+    var s, t;
+    try {
+      t = m.sessionStorage.getItem('maze-us');
+    } catch (err) {}
+  
+    if (!t) {
+      t = new Date().getTime();
+      try {
+        m.sessionStorage.setItem('maze-us', t);
+      } catch (err) {}
+    }
+  
+    s = a.createElement('script');
+    s.src = z + '?apiKey=' + e;
+    s.async = true;
+    a.getElementsByTagName('head')[0].appendChild(s);
+    m.mazeUniversalSnippetApiKey = e;
+  })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '9bed29c9-965e-46af-9f9f-0af175bf4756');
+  </script>
+      
 </head>
 <body>
   <!-- ===== HEADER (GNB) ===== -->
@@ -44,6 +66,8 @@
 
   <!-- ===== 패럴랙스 섹션 (Hero) ===== -->
   <section class="parallax">
+    <!-- 별들이 배치될 컨테이너 -->
+    <div class="star-container"></div>
     <!-- 캐릭터(아빠+아이) -->
     <div class="dad-dot-floating"></div>
 
@@ -52,10 +76,10 @@
       <p>귀여운 우주 속에서 만나는 집중력·두뇌발달 게임!<br>
          아빠와 함께 손잡고 떠나 볼까요?</p>
       <div class="cta-buttons">
-        <a href="#carousel-section" id="btnFreeGameStart">무료 게임 시작</a>
+        <a href="#carousel-section" id="btnFreeGameStart">무료 게임보기 ↓</a>
       </div>
     </div>
-  </section>
+  </section> 
 
   <!-- 게임 목록 섹션 -->
   <section class="games-section" id="carousel-section">
@@ -111,12 +135,12 @@
   <section class="about-section" id="about-section">
     <h2>About Dad and Dot Games</h2>
     <p>
-      안녕하세요! 저희는 “아빠와 아이가 함께 즐길 수 있는 우주 콘셉트 게임”을 만드는 팀입니다. <br>
+      안녕하세요! 저희는 “아빠와 아이가 함께 즐길 수 있는 게임”을 만드는 팀입니다. <br>
       아이들에게는 재미와 학습을, 부모님께는 안심과 공감을 전해드리고 싶어요.
       <br><br>
       우주적 상상력으로 아이들의 뇌와 마음을 성장시키자!
-      먼 옛날, 우주의 한 구석에서 떠돌던 ‘아빠’가 작은 별에서 살던 ‘도트’(dot)를 만났습니다.<br>
-      둘이 함께 우주를 탐험하며 새롭고 기발한 게임들을 만들기 시작했죠!<br>
+      먼 옛날, 우주의 한 구석에서 떠돌던 ‘아빠’가 작은 별에서 살던 여아이를 만났습니다.<br>
+      그리곤 둘이 함께 손잡고 우주를 탐험하며 새롭고 기발한 게임들을 만들기 시작했죠!<br>
     </p>
   </section>
 

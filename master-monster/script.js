@@ -24,7 +24,12 @@ let tileIdCounter   = 0; // 타일 ID 카운터
 let nextTileValue   = 2; // 기본값
 let gameStates      = []; // undo를 위한 게임 히스토리
 let undoCount       = 3;  
-let bestLevel       = 1;
+let currentBestLevel = 1; // 게임 중 달성한 최고 레벨
+let finalMaxLevel = 1;    // 게임 종료 시점의 최고 레벨
+
+// (1) 게임 진행 시간 측정
+let startTime;  // 게임 시작 시간
+let endTime;    // 게임 종료 시간
 
 // 초기화
 function initGrid() {
@@ -44,7 +49,8 @@ function init() {
   initGrid();
   score               = 0;
   currentGameMaxLevel = 1;
-  bestLevel           = 1; 
+  currentBestLevel   = 1; 
+  finalMaxLevel      = 1;
   undoCount           = 3;
   gameStates          = [];
 
@@ -65,6 +71,9 @@ function init() {
     undoButton.removeEventListener('click', undoMove);
     undoButton.addEventListener('click', undoMove);
   }
+
+  // 게임 시작 시간 기록
+  startTime = Date.now();
 }
 
 // 게임판 placeholder 생성
@@ -261,8 +270,8 @@ function moveTiles(direction) {
         score += points;
 
         const level = Math.log2(newValue);
-        if (level > bestLevel) {
-          bestLevel = level; 
+        if (level > currentBestLevel) {
+          currentBestLevel = level; 
           updateBestLevelDisplay();
         }
 
@@ -376,67 +385,44 @@ function isGameOver() {
   }
   // Game Over 처리
   setTimeout(() => {
-    showGameOverModal();
+    showGameOverModal(score, 0 );
   }, 300);
   return true;
 }
 
-function showGameOverModal() {
-  // 모달 생성
-  const gameOverModal = document.createElement('div');
-  gameOverModal.className = 'modal';
+function showGameOverModal(finalScore, playTime) {
+    const gameOverModal = document.getElementById('gameOverModal');
+    if (!gameOverModal) return;
 
-  const modalContent = document.createElement('div');
-  modalContent.className = 'modal-content';
-  modalContent.innerHTML = `
-    <h2>Game Over!</h2>
-    <p>Score: ${score}</p>
-    <div class="ad-container-result">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-8718440574316852"
-             data-ad-slot="5815422742"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-    </div>
-    <div class="modal-buttons"></div>
-  `;
-  gameOverModal.appendChild(modalContent);
-  document.body.appendChild(gameOverModal);
+    const finalScoreElement = document.getElementById('final-score');
+    const bestLevelElement = document.getElementById('current-best-level');
+    const playTimeElement = document.getElementById('play-time');
 
-  // Undo/Restart 버튼
-  const buttonContainer  = modalContent.querySelector('.modal-buttons');
-  const modalUndoButton  = document.createElement('button');
-  modalUndoButton.id     = 'modal-undo-button';
-  modalUndoButton.className = 'action-button';
-  modalUndoButton.textContent = `Undo (${undoCount})`; // 남은 Undo 횟수 동기화
-
-  modalUndoButton.addEventListener('click', () => {
-    undoMove();
-    if (!isGameOver()) {
-      document.body.removeChild(gameOverModal);
+    if (finalScoreElement) {
+        finalScoreElement.innerText = finalScore || 0;
     }
-  });
-  buttonContainer.appendChild(modalUndoButton);
+    if (bestLevelElement) {
+        bestLevelElement.innerText = `Lv.${currentBestLevel || 1}`;
+    }
+    if (playTimeElement) {
+        playTimeElement.innerText = formatTime(playTime || 0);
+    }
 
-  const restartButton = document.createElement('button');
-  restartButton.id    = 'modal-restart-button';
-  restartButton.className = 'action-button';
-  restartButton.textContent = '새로시작 ⏎';
-  
-  restartButton.addEventListener('click', () => {
-    document.body.removeChild(gameOverModal);
-    init();
-    gameStarted = true;
-  });
-  buttonContainer.appendChild(restartButton);
+    gameOverModal.classList.add('show');
+}
 
-  // AdSense
-  try {
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  } catch (e) {
-    console.log('AdSense refresh failed:', e);
-  }
+function closeGameOverModal() {
+    const gameOverModal = document.getElementById('gameOverModal');
+    if (gameOverModal) {
+        gameOverModal.classList.remove('show');
+    }
+}
+
+function formatTime(milliseconds) {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 }
 
 // 스코어 관련 (최고점 갱신)
@@ -484,7 +470,7 @@ document.addEventListener('keydown', (e) => {
 
 // 리스타트
 restartButton.addEventListener('click', () => {
-  init();
+  init(); // 게임을 다시 시작할 때만 초기화
 });
 
 // 터치 이벤트
@@ -623,6 +609,8 @@ function startGame() {
   gameStarted = true;
   difficultyLevel = 'normal';
   init();
+
+  
 }
 
 // 엔터키로 게임 시작
@@ -640,9 +628,9 @@ startButton.addEventListener('click', function() {
 
 // 최고 레벨 업데이트
 function updateBestLevelDisplay() {
-  const bestLevelDisplay = document.getElementById('best-level');
+  const bestLevelDisplay = document.getElementById('current-best-level');
   if (bestLevelDisplay) {
-    bestLevelDisplay.innerText = bestLevel;
+    bestLevelDisplay.innerText = `Lv.${currentBestLevel}`;
   }
 }
 
@@ -672,6 +660,15 @@ document.addEventListener('DOMContentLoaded', function() {
             iconVolumeOff.style.display = 'none';
         }
     }
+
+    const openGameOverModalButton = document.getElementById('open-game-over-modal');
+    if (openGameOverModalButton) {
+        openGameOverModalButton.addEventListener('click', function() {
+            const finalScore = score;
+            const playTime = Date.now() - startTime;
+            showGameOverModal(finalScore, playTime);
+        });
+    }
 });
 
 // 사운드 재생 시 음소거 상태 확인
@@ -681,3 +678,247 @@ function playMergeSound() {
         mergeSound.play().catch(e => console.log('Sound play failed:', e));
     }
 }
+
+/******************************************************
+ * 랭킹 데이터 저장/로드
+ ******************************************************/
+function saveRanking(score, level, timeSec) {
+  const rankingData = loadRankingData();
+
+  // 새로운 기록
+  const newRecord = {
+    score,
+    level,
+    timeSec
+  };
+  
+  // 랭킹 리스트에 추가
+  rankingData.push(newRecord);
+
+  // 정렬 기준: 스코어(desc), 레벨(desc), 시간(asc)
+  rankingData.sort((a, b) => {
+    if (b.score !== a.score) {
+      return b.score - a.score; // 점수가 크면 상위
+    } else if (b.level !== a.level) {
+      return b.level - a.level; // 레벨이 크면 상위
+    } else {
+      return a.timeSec - b.timeSec; // 시간이 짧을수록 상위
+    }
+  });
+
+  // 상위 50개 정도만 보관 (필요에 따라 조정)
+  rankingData.splice(50);
+
+  // 로컬 스토리지에 저장
+  localStorage.setItem('masterMonsterRanking', JSON.stringify(rankingData));
+}
+
+function loadRankingData() {
+  try {
+    const data = localStorage.getItem('masterMonsterRanking');
+    if (data) {
+      return JSON.parse(data);
+    }
+    return [];
+  } catch (e) {
+    console.error('랭킹 데이터 로드 에러:', e);
+    return [];
+  }
+}
+
+function getMyLatestRank(score, level, timeSec) {
+  const rankingData = loadRankingData();
+  // 현재 저장된 랭킹 기준으로 등수를 계산
+  for (let i = 0; i < rankingData.length; i++) {
+    if (rankingData[i].score === score &&
+        rankingData[i].level === level &&
+        rankingData[i].timeSec === timeSec) {
+      return i + 1; // 인덱스가 0부터 시작하므로 +1
+    }
+  }
+  return -1; 
+}
+
+/******************************************************
+ * 전체 랭킹 표시
+ ******************************************************/
+function showRankingModal() {
+  const rankingModal = document.getElementById('ranking-modal');
+  if (rankingModal) {
+    rankingModal.classList.add('show');
+  }
+}
+
+function closeRankingModal() {
+  const rankingModal = document.getElementById('ranking-modal');
+  if (rankingModal) {
+    rankingModal.classList.remove('show');
+  }
+}
+
+/******************************************************
+ * 이벤트 리스너
+ ******************************************************/
+document.addEventListener('DOMContentLoaded', function() {
+  const rankingButton = document.getElementById('ranking-button');
+  const closeRankingButton = document.getElementById('close-ranking-modal');
+  const originalStartGame = startGame; // 기존 함수 참조
+
+  window.startGame = function() {
+    originalStartGame();  // 원래 startGame 로직 실행
+    showTutorialBubble(); // 말풍선 표시
+  };
+  if (rankingButton) {
+    rankingButton.addEventListener('click', showRankingModal);
+  }
+  if (closeRankingButton) {
+    closeRankingButton.addEventListener('click', closeRankingModal);
+  }
+
+
+    // 튜토리얼 말풍선 표시 함수
+    function showTutorialBubble() {
+      const tutorialBubble = document.getElementById('tutorial-bubble');
+      if (!tutorialBubble) return;
+
+      // (1) 처음에는 투명 상태
+      tutorialBubble.style.opacity = '0';
+      tutorialBubble.style.display = 'block';
+
+      // (1-2) 짧은 딜레이 후 fade-in
+      setTimeout(() => {
+        tutorialBubble.style.transition = 'opacity 0.8s';
+        tutorialBubble.style.opacity = '0.9';
+      }, 50);
+
+      // (2) 5초 뒤에 사라지도록 (fade-out)
+      setTimeout(() => {
+        tutorialBubble.style.transition = 'opacity 0.8s';
+        tutorialBubble.style.opacity = '0';
+        // fade-out이 끝난 뒤 display를 none 처리
+        setTimeout(() => {
+          tutorialBubble.style.display = 'none';
+        }, 800);
+      }, 5000);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const modals = document.querySelectorAll('.modal');
+    const closeButtons = document.querySelectorAll('.close-button');
+
+    modals.forEach(modal => {
+        // 모달 외부 클릭 시 닫기
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.classList.remove('show');
+            }
+        });
+    });
+
+    closeButtons.forEach(button => {
+        // 닫기 버튼 클릭 시 닫기
+        button.addEventListener('click', function() {
+            const modal = button.closest('.modal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const gameOverModal = document.getElementById('gameOverModal');
+    if (gameOverModal) {
+      gameOverModal.classList.remove('show'); // Ensure modal is hidden on load
+    }
+
+    const modalUndoButton = document.getElementById('modal-undo-button');
+    const modalRestartButton = document.getElementById('modal-restart-button');
+    const undoButton = document.getElementById('undo-button');
+    const restartButton = document.getElementById('restart-button');
+
+    if (modalUndoButton && undoButton) {
+        modalUndoButton.addEventListener('click', function() {
+            if (gameOverModal) {
+              gameOverModal.classList.remove('show'); // 모달 닫기
+            }
+            setTimeout(() => {
+                undoButton.click(); // game-controls의 Undo 버튼과 동일한 동작
+            }, 300); // 모달 닫힌 후 실행
+        });
+    }
+
+    if (modalRestartButton && restartButton) {
+        modalRestartButton.addEventListener('click', function() {
+            if (gameOverModal) {
+              gameOverModal.classList.remove('show'); // 모달 닫기
+            }
+            setTimeout(() => {
+                restartButton.click(); // game-controls의 다시하기 버튼과 동일한 동작
+            }, 300); // 모달 닫힌 후 실행
+        });
+    }
+});
+
+// 게임 종료 시 호출
+function endGame() {
+    const finalScore = score;
+    const playTime = Date.now() - startTime;
+
+    updateBestScore();
+    updateBestLevelDisplay();
+
+    showGameOverModal(finalScore, playTime);
+}
+
+// 타일 합치기 로직에서 최고 레벨 업데이트
+function mergeTiles(tile1, tile2) {
+    const newValue = tile1.value + tile2.value;
+    tile1.value = newValue;
+    tile2.value = null;
+    score += newValue;
+
+    const newLevel = Math.log2(newValue);
+    if (newLevel > currentBestLevel) {
+        currentBestLevel = newLevel;
+        updateBestLevelDisplay(); // 최고 레벨 업데이트
+    }
+
+    updateBoard();
+    updateScoreDisplay();
+}
+
+// 점수 및 레벨 업데이트 함수
+function updateScoreDisplay() {
+    scoreDisplay.innerText = score;
+    updateBestScoreDisplay();
+    updateBestLevelDisplay();
+}
+
+function formatTime(milliseconds) {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
+
+function updateRealTimeStats() {
+    const currentScoreElement = document.getElementById('current-score');
+    const currentMaxLevelElement = document.getElementById('current-max-level');
+    const currentPlayTimeElement = document.getElementById('current-play-time');
+
+    if (currentScoreElement) {
+        currentScoreElement.innerText = score;
+    }
+    if (currentMaxLevelElement) {
+        currentMaxLevelElement.innerText = `Lv.${currentGameMaxLevel}`;
+    }
+    if (currentPlayTimeElement) {
+        const playTime = Date.now() - startTime;
+        currentPlayTimeElement.innerText = formatTime(playTime);
+    }
+}
+
+// 게임 루프나 주요 이벤트에서 호출하여 실시간 업데이트
+setInterval(updateRealTimeStats, 1000); // 1초마다 업데이트

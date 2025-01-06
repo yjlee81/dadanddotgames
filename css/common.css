@@ -140,24 +140,19 @@ body {
   /* 별(.star) */
   .star {
     position: absolute;
-    animation: floatStar 5s ease-in-out infinite,
-               twilight 2.5s ease-in-out infinite;
-    opacity: 0.9;
+    background-color: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: twinkle 2s infinite alternate;
   }
   .star img {
     display: block;
     width: 100%;
     height: auto;
   }
-  @keyframes floatStar {
-    0%   { transform: translateY(0); }
-    50%  { transform: translateY(-15px); }
-    100% { transform: translateY(0); }
-  }
-  @keyframes twilight {
-    0%   { opacity: 0.6; }
-    50%  { opacity: 1.0; }
-    100% { opacity: 0.6; }
+  @keyframes twinkle {
+    from { opacity: 0.5; }
+    to { opacity: 1; }
   }
   
   /* 기타 카드 내부 */

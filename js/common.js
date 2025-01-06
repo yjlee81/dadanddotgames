@@ -676,3 +676,21 @@ function updateVolumeIcon(isMuted) {
   const volumeToggle = document.getElementById('volume-toggle');
   volumeToggle.textContent = isMuted ? '🔇' : '🔈';
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    createStars(10); // 원하는 별의 개수
+
+    function createStars(count) {
+        const container = document.querySelector('.star-container');
+        if (!container) return; // Ensure the container exists
+        for (let i = 0; i < count; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.width = `${Math.random() * 3 + 1}px`;
+            star.style.height = star.style.width;
+            container.appendChild(star);
+        }
+    }
+});
