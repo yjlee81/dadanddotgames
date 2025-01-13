@@ -385,7 +385,7 @@ function isGameOver() {
   }
   // Game Over 처리
   setTimeout(() => {
-    showGameOverModal(score, 0 );
+    showGameOverModal(score,  );
   }, 300);
   return true;
 }
@@ -402,7 +402,8 @@ function showGameOverModal(finalScore, playTime) {
         finalScoreElement.innerText = finalScore || 0;
     }
     if (bestLevelElement) {
-        bestLevelElement.innerText = `Lv.${currentBestLevel || 1}`;
+        finalMaxLevel = currentBestLevel;
+        bestLevelElement.innerText = `Lv.${finalMaxLevel}`;
     }
     if (playTimeElement) {
         playTimeElement.innerText = formatTime(playTime || 0);
@@ -922,3 +923,67 @@ function updateRealTimeStats() {
 
 // 게임 루프나 주요 이벤트에서 호출하여 실시간 업데이트
 setInterval(updateRealTimeStats, 1000); // 1초마다 업데이트
+
+// (A) 랭킹 테이블 업데이트 함수
+function updateRankingTable() {
+  const rankingData = loadRankingData(); // localStorage에서 불러오기
+  const rankingTableBody = document
+    .getElementById('ranking-table')
+    .querySelector('tbody');
+  if (!rankingTableBody) return;
+  
+  // 기존 행 모두 삭제
+  rankingTableBody.innerHTML = '';
+
+  // 데이터 렌더링
+  for (let i = 0; i < rankingData.length; i++) {
+    const record = rankingData[i];
+    const rank = i + 1;
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${rank}</td>
+      <td>${record.score}</td>
+      <td>Lv.${record.level}</td>
+      <td>${formatTime(record.timeSec)}</td>
+    `;
+    rankingTableBody.appendChild(row);
+  }
+}
+
+// (B) 랭킹 모달 열기 시 테이블 업데이트
+function showRankingModal() {
+  updateRankingTable(); // <<--- 추가
+  const rankingModal = document.getElementById('ranking-modal');
+  if (rankingModal) {
+    rankingModal.classList.add('show');
+  }
+}
+
+// (C) 게임 종료 시점: endGame() 또는 showGameOverModal()에서 랭킹 저장
+function endGame() {
+  const finalScore = score;
+  const playTime = Date.now() - startTime; // ms 단위
+
+  updateBestScore();
+  updateBestLevelDisplay();
+  
+  // 초 단위 변환하여 저장
+  const timeSec = Math.floor(playTime / 1000);
+  saveRanking(finalScore, currentBestLevel, timeSec);
+
+  // 모달 표시
+  showGameOverModal(finalScore, playTime);
+}
+
+// (D) 랭킹 버튼/닫기 버튼 이벤트 바인딩
+document.addEventListener('DOMContentLoaded', function() {
+  const rankingButton = document.getElementById('ranking-button');
+  const closeRankingButton = document.getElementById('close-ranking-modal');
+
+  if (rankingButton) {
+    rankingButton.addEventListener('click', showRankingModal);
+  }
+  if (closeRankingButton) {
+    closeRankingButton.addEventListener('click', closeRankingModal);
+  }
+});
