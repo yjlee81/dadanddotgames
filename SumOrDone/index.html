@@ -3,260 +3,434 @@
 <head>
   <meta charset="UTF-8" />
   <title>Sum! or Done!</title>
-  <link rel="stylesheet" href="styles.css">
+
+  <!-- iOS 모바일 최적화 -->
+   
+  <meta name="viewport" 
+      content="width=375, height=812, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
   <style>
-    body {
-      margin: 30px;
-      font-family: sans-serif;
-      background: #fdfdfd;
-      background-color: var(--background-color);
-      color: var(--text-color);
-      font-family: var(--font-family);
-    }
-    h1 {
-      margin-bottom: 10px;
-    }
-    .board-container {
-      display: inline-block;
-      position: relative;
-    }
-    #status-bar {
-      margin: 10px 0;
-      font-size: 1.1rem;
-      font-weight: bold;
-      min-height: 24px;
+  :root {
+    --background-color: #fafafa;
+    --text-color: #333;
+    --accent-color: #007AFF;
+    --tile-color: #ffffff;
+    --tile-hover-color: #f8f8f8;
+    --tile-selected-color: #FFE884; 
+    --font-family: -apple-system, BlinkMacSystemFont, 
+                   "San Francisco", "Helvetica Neue", 
+                   Helvetica, Arial, sans-serif;
+  }
+
+  html, body {
+  margin: 0;
+  padding: 0;
+  /* 뷰포트 자체를 375 x 812로 강제 지정 */
+  width: 375px;
+  height: 812px;
+  /* 스크롤이 생기지 않도록 숨기기 (필요시) */
+  overflow: hidden;
+
+  /* 혹은 폰트, 배경 등 기본값 */
+  background-color: #fafafa;
+  color: #333;
+  font-family: -apple-system, BlinkMacSystemFont, 
+               "San Francisco", "Helvetica Neue", sans-serif;
+
+  /* 터치 하이라이트 해제 */
+  -webkit-tap-highlight-color: transparent;
+
+  /* [추가] 텍스트 선택 방지: 드래그 시 텍스트가 선택되지 않도록 */
+  body, .board-container {
+    user-select: none;
+    -webkit-user-select: none; /* 크롬/사파리 */
+    -moz-user-select: none;    /* 파이어폭스 */
+    -ms-user-select: none;     /* 옛날 IE */
+  }
+}
+
+  /* GNB */
+  .gnb-lnb {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-sizing: border-box;
+    background-color: #1a1a1a;
+    z-index: 9999;
+  }
+  .gnb-lnb .logo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+  }
+  .gnb-lnb .game-title {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  /* 정보 바 */
+  #info-bar {
+    margin-top: 80px; /* GNB 높이를 비우기 위해 */
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center; /* 중앙 정렬 (선택) */
+  }
+
+  /* 버튼 스타일 (Ripple 예시) */
+  button {
+    position: relative;
+    overflow: hidden; /* Ripple이 넘치지 않도록 */
+    padding: 8px 14px;
+    margin: 5px 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--accent-color);
+    color: #fff;
+    transition: background-color 0.2s ease;
+  }
+  button:hover {
+    background-color: #0080ff;
+  }
+  button:active {
+    background-color: #005bb5;
+  }
+  /* Ripple 효과 */
+  button .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear forwards;
+    pointer-events: none;
+  }
+  @keyframes ripple-animation {
+    to {
+      transform: scale(2.5);
       opacity: 0;
     }
-    button {
-      padding: 6px 12px;
-      margin: 5px 5px 5px 0;
-      cursor: pointer;
-      font-size: 1rem;
-    }
+  }
 
-    /************************************************************
-     * 상단 정보 표시
-     ************************************************************/
-    #info-bar {
-      margin-bottom: 10px;
-      font-size: 1.1rem;
-      font-weight: bold;
-    }
-    #round-label {
-      color: #555;
-      margin-right: 10px;
-      display: none;
-    }
-    #target-number {
-      font-size: 1.4rem;
-      font-weight: bold;
-      color: #ff4444;
-      margin: 0 12px;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    }
-    #score-label {
-      margin-right: 6px;
-    }
-    #score {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #228b22; /* 진한 녹색 */
-    }
-    /* Timer 표시 */
-    #timer-label {
-      margin-left: 20px;
-    }
-    #timer {
-      font-size: 1.1rem;
-      color: #444;
-      margin-left: 4px;
-    }
+  /* 게임 보드 */
+  #game-board {
+    border-collapse: separate;
+    border-spacing: 8px;
+    margin: 0 auto 20px auto; /* 가운데 정렬 */
+    max-width: 90vw;
+  }
+  #game-board td {
+    width: 44px;
+    height: 44px;
+    background-color: var(--tile-color);
+    border-radius: 12px; 
+    text-align: center;
+    vertical-align: middle;
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    transition: background-color 0.2s ease,
+                transform 0.15s ease,
+                box-shadow 0.15s ease;
+    cursor: pointer;
+    position: relative;
+  }
+  #game-board td:hover {
+    background-color: var(--tile-hover-color);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transform: scale(1.02);
+  }
+  #game-board td:active {
+    transform: scale(0.95);
+    transition: transform 0.05s ease;
+  }
+  /* 선택된 타일 */
+  #game-board td.selected {
+    background-color: var(--tile-selected-color) !important;
+    box-shadow: 0 3px 8px rgba(255, 232, 132, 0.6);
+    transform: scale(1.05);
+  }
 
-    /************************************************************
-     * 8x8 보드 스타일
-     ************************************************************/
-    #game-board {
-      border-collapse: collapse;
-      margin-bottom: 10px;
-      position: relative;
-    }
-    #game-board td {
-      width: 50px;
-      height: 50px;
-      border: 1px solid #ccc;
-      text-align: center;
-      vertical-align: middle;
-      /* 폰트 크게 (28px) */
-      font-size: 28px;
-      font-weight: bold;
-      color: #333;
-      background-color: #fff;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-      user-select: none;
-      position: relative;
-      cursor: pointer;
-    }
+  /* 실패 시 흔들기 */
+  #game-board td.fail-line {
+    animation: shake-fail 0.4s ease;
+  }
+  @keyframes shake-fail {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    50% { transform: translateX(4px); }
+    75% { transform: translateX(-4px); }
+    100% { transform: translateX(0); }
+  }
 
-    /* 첫 번째 클릭(시작칸) 강조 */
-    #game-board td.selected {
-      background-color: #ffe884 !important; /* 연노랑 */
+  /* 성공 시 라인 */
+  #game-board td.success-line {
+    background-color: #90ee90 !important;
+    box-shadow: 0 0 10px #32cd32 inset;
+  }
+
+  /* 제거 애니메이션 */
+  #game-board td.removing {
+    animation: success-remove 0.6s forwards ease;
+  }
+  @keyframes success-remove {
+    0% {
       transform: scale(1.1);
-    }
-
-    /* 성공 라인 -> 초록 */
-    #game-board td.success-line {
-      background-color: #90ee90 !important; /* 연한 초록 */
-      box-shadow: 0 0 10px #32cd32 inset;
-    }
-    /* 실패 라인 -> 빨강 */
-    #game-board td.fail-line {
-      background-color: #f08080 !important; /* 연한 빨강 */
-      box-shadow: 0 0 10px #ff6347 inset;
-    }
-
-    /* 힌트 라인 -> 파란색 */
-    #game-board td.hint-line {
-      background-color: #87cefa !important; /* light sky blue */
-      box-shadow: 0 0 10px #1e90ff inset;
-    }
-
-    /* 제거 중 애니메이션 */
-    #game-board td.removing {
-      animation: fadeout 0.6s forwards ease;
-    }
-    @keyframes fadeout {
-      0%   { opacity: 1; }
-      100% { opacity: 0; transform: scale(0.7); }
-    }
-    /* 제거된 칸 숨기기 */
-    .hidden-tile {
-      visibility: hidden;
-    }
-
-    /* 모달(오버레이) */
-    #overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      z-index: 9999;
-    }
-    #overlay div {
-      background: #fff;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-      font-size: 1.2rem;
-    }
-    #overlay button {
-      margin-top: 20px;
-    }
-
-    /* Floating Score 애니메이션 ( ex) "+12" 표시 ) */
-    .floating-score {
-      position: absolute;
-      left: 0;
-      top: 0;
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #ff0000;
-      animation: floatScore 1.5s forwards ease-out;
-      pointer-events: none;
-      z-index: 999; /* 보드 위로 표시 */
-    }
-    @keyframes floatScore {
-      0% {
-        transform: translate(-50%, 0) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(-50%, -60px) scale(1.5);
-        opacity: 0;
-      }
-    }
-
-    .hint-message {
-      position: absolute;
-      background: #fff;
-      border: 1px solid #ccc;
-      padding: 5px 5px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      font-size: 0.9rem;
-      color: #333;
-      z-index: 10000;
-      pointer-events: none;
-      transform: translate(-50%, -100%);
       opacity: 1;
     }
-
-    /* 타일 클릭 시 애니메이션 */
-    #game-board td:active {
-      transform: scale(0.95);
-      transition: transform 0.1s ease;
+    100% {
+      transform: scale(0.7);
+      opacity: 0;
     }
+  }
 
-    /* GNB 스타일 적용 */
+  /* Floating Score 애니메이션 */
+  .floating-score {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: var(--accent-color);
+    animation: floatScore 1.4s forwards cubic-bezier(0.25, 0.1, 0.25, 1.0);
+    pointer-events: none;
+    z-index: 999;
+  }
+  @keyframes floatScore {
+    0% {
+      transform: translate(-50%, 0) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -60px) scale(1.3);
+      opacity: 0;
+    }
+  }
+
+  /* 반응형: 작은 화면에서 조금씩 축소 */
+  @media (max-width: 600px) {
     .gnb-lnb {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      z-index: 9999;
-      box-sizing: border-box;
-      background-color: #1a1a1a;
+      height: 56px;
+      padding: 0 10px;
     }
-
-    .gnb-lnb .left-group {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .gnb-lnb .logo {
+    .game-title {
       font-size: 1.2rem;
-      font-weight: 700;
-      color: #fff;
     }
+    button {
+      font-size: 0.9rem;
+      padding: 6px 10px;
+      border-radius: 6px;
+    }
+    #game-board td {
+      width: 36px;
+      height: 36px;
+      font-size: 18px;
+      border-radius: 10px;
+    }
+  }
 
-    .gnb-lnb .divider {
-      width: 1px;
-      height: 24px;
-      background-color: rgba(255, 255, 255, 0.3);
-    }
+  /* === [추가] iOS 스타일 메시지/알림 등 UI 효과 === */
+  .ios-toast {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff;
+    color: #333;
+    padding: 14px 20px;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999999;
+  }
+  .ios-toast.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
 
-    .gnb-lnb .game-title {
-      margin: 0;
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #ffffff;
-    }
+  /* === [추가] 드래그 선택 시 강조 효과 === */
+  .drag-select-highlight {
+    background-color: rgba(255, 232, 132, 0.4) !important;
+    box-shadow: 0 0 6px rgba(255,232,132, 0.8);
+  }
 
-    .gnb-lnb .right-group {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-    }
+  /* 성공/실패 시 좀 더 극적인 애니메이션 */
+  #game-board td.success-line {
+    background-color: #bdf0bd !important;
+    box-shadow: 0 0 12px #53d153 inset;
+    animation: success-pop 0.5s ease;
+  }
+  @keyframes success-pop {
+    0%   { transform: scale(0.8); }
+    100% { transform: scale(1.05); }
+  }
+  #game-board td.fail-line {
+    animation: shake-fail 0.4s ease, fail-pulse 0.4s ease;
+  }
+  @keyframes fail-pulse {
+    0%   { box-shadow: 0 0 0 #ff6a6a; }
+    100% { box-shadow: 0 0 10px #ff6a6a inset; }
+  }
+
+  /* 새 라운드 시작 모달을 좀 더 세련되게 */
+  #overlay-message {
+    background-color: rgba(255,255,255,0.88);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    max-width: 300px;
+  }
+  #overlay-message button {
+    margin-top: 12px;
+  }
   </style>
+  <script>
+    const translations = {
+      en: {
+        title: "Sum! or Done!",
+        round: "Round",
+        sum: "Sum",
+        score: "Score",
+        time: "Time",
+        noMore: "Done (Fail: -100 points)",
+        hint: "Hint",
+        startTile: "Start Tile",
+        cancelSelection: "Selection Cancelled",
+        success: "Success",
+        fail: "Fail",
+        hintMessage: "Select the tiles at both ends of the number",
+        overlayClear: "Round Clear! Score=",
+        overlayNext: "Proceed to the next round",
+        overlayFail: "Combinations still exist! Score -100"
+      },
+      ko: {
+        title: "합! or 결!",
+        round: "라운드",
+        sum: "합",
+        score: "점수",
+        time: "시간",
+        noMore: "결 (실패시 -100점)",
+        hint: "힌트",
+        startTile: "시작칸",
+        cancelSelection: "선택 취소",
+        success: "성공",
+        fail: "실패",
+        hintMessage: "숫자 양끝 타일을 선택하세요",
+        overlayClear: "라운드 클리어! 점수=",
+        overlayNext: "다음 라운드 진행",
+        overlayFail: "아직 조합이 남아있습니다! 점수 -100"
+      },
+      // 다른 언어 번역 추가
+      ja: {
+        title: "合計！または完了！",
+        round: "ラウンド",
+        sum: "合計",
+        score: "スコア",
+        time: "時間",
+        noMore: "完了 (失敗時 -100点)",
+        hint: "ヒント",
+        startTile: "開始タイル",
+        cancelSelection: "選択キャンセル",
+        success: "成功",
+        fail: "失敗",
+        hintMessage: "数字の両端のタイルを選択してください",
+        overlayClear: "ラウンドクリア！スコア=",
+        overlayNext: "次のラウンドに進む",
+        overlayFail: "まだ組み合わせが残っています！スコア -100"
+      },
+      zh: {
+        title: "合！或完成！",
+        round: "回合",
+        sum: "合计",
+        score: "得分",
+        time: "时间",
+        noMore: "完成 (失败时 -100分)",
+        hint: "提示",
+        startTile: "起始方块",
+        cancelSelection: "取消选择",
+        success: "成功",
+        fail: "失败",
+        hintMessage: "请选择数字两端的方块",
+        overlayClear: "回合清除！得分=",
+        overlayNext: "进行下一回合",
+        overlayFail: "仍有组合存在！得分 -100"
+      }
+    };
+
+    function updateLanguage(lang) {
+      document.title = translations[lang].title;
+      document.querySelector('.game-title').textContent = translations[lang].title;
+      document.getElementById('round-label').textContent = translations[lang].round + " 1";
+      document.getElementById('score-label').textContent = translations[lang].score + ":";
+      document.getElementById('timer-label').textContent = translations[lang].time + ":";
+      document.getElementById('no-more').textContent = translations[lang].noMore;
+      document.getElementById('hint-btn').textContent = translations[lang].hint;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const languageSelect = document.getElementById('language-select');
+      languageSelect.addEventListener('change', (event) => {
+        const selectedLang = event.target.value;
+        updateLanguage(selectedLang);
+      });
+
+      // 초기 언어 설정
+      updateLanguage(languageSelect.value);
+    });
+
+    // 버튼 Ripple 효과 예시 (선택)
+  document.addEventListener("DOMContentLoaded", () => {
+    const allButtons = document.querySelectorAll("button");
+    allButtons.forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const circle = document.createElement("span");
+        circle.classList.add("ripple");
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        circle.style.left = x + "px";
+        circle.style.top = y + "px";
+
+        btn.appendChild(circle);
+        setTimeout(() => {
+          circle.remove();
+        }, 600);
+      });
+    });
+  });
+  </script>
 </head>
 <body>
   <!-- GNB 추가 -->
   <header class="gnb-lnb">
     <div class="left-group">
-      <div class="logo">D&D</div>
+      <div id="logo" class="logo" onclick="window.location.href='/'" style="cursor: pointer;">
+          D&D
+        </div>
       <div class="divider"></div>
-      <h2 class="game-title">Number Poker</h2>
+      <h2 class="game-title">Sum! or Done!</h2>
     </div>
     <div class="right-group">
-      <!-- 추가적인 GNB 요소들 -->
+      <div class="lang-dropdown">
+        <select class="language-selector" id="language-select">
+          <option value="en">EN</option>
+          <option value="ko" selected>KR</option>
+          <option value="ja">JP</option>
+          <option value="zh">ZH</option>
+        </select>
+      </div>
     </div>
   </header>
 
@@ -286,19 +460,14 @@
   <div id="overlay-message"></div>
 </div>
 
-<!-- 게임 설명 -->
-<div id="game-description">
-  <p>"합"의 숫자가 되는 일렬의 숫자를 선택해주세요. 더 이상 합이 되는 숫자가 없으면 "결" 버튼을 눌러주세요. 긴 숫자 조합이나 멀리 떨어진 조합일 수록 점수가 높아집니다. </p>
-</div>
-
-<script>
-/****************************************************************
- * 1. 전역 설정
- ****************************************************************/
-const BOARD_ROWS = 8;
-const BOARD_COLS = 8;
-const MIN_NUM = 1;
-const MAX_NUM = 9;
+  <script>
+  /****************************************************************
+   * 1. 전역 설정
+   ****************************************************************/
+  const BOARD_ROWS = 8;
+  const BOARD_COLS = 8;
+  const MIN_NUM = 1;
+  const MAX_NUM = 9;
 
 // 라운드 & 타겟
 let currentRound = 1;
@@ -307,10 +476,12 @@ function getTargetForRound(round){
 }
 let targetSum = 10;
 let totalScore = 0;  
-
-let boardData = [];        // 2D array for board
-let startPos = null;       // 첫 칸 선택
-let hintLinePositions = null; // 힌트 표시 중인 라인
+// 2D array for board
+let boardData = [];
+// 첫 칸 선택
+let startPos = null;
+// 힌트 표시 중인 라인
+let hintLinePositions = null;
 
 // 타이머 관련 (한 번만 선언)
 let timerInterval = null;  
@@ -751,6 +922,240 @@ window.onload=()=>{
   // 첫 번째 힌트 자동 표시
   onHintClick(true);
 };
+
+// === [추가] iOS 느낌의 간결 메시지 함수 ===
+function showIOSToastMessage(msg, duration = 1200) {
+  const toast = document.createElement('div');
+  toast.classList.add('ios-toast');
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+
+  // 잠시 후 등장
+  setTimeout(() => {
+    toast.classList.add('show');
+  }, 50);
+
+  // 지정 시간 뒤 자동 제거
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.parentNode.removeChild(toast);
+      }
+    }, 300);
+  }, duration);
+}
+
+// === [추가] 드래그/터치 슬라이드로 타일 선택 기능 ===
+let isDragging = false;
+function startDragSelect(r, c) {
+  isDragging = true;
+  dragPositions = [[r, c]];
+  dragDirection = null; // 'row', 'col', 'diag' 등
+  startPos = null;
+  dragDirection = null;
+  startPos = [r, c];
+  markTileAsDragSelected(r, c);
+}
+
+function continueDragSelect(r, c) {
+  if (!isDragging) return;
+
+  // 이미 동일 칸이면 무시
+  let lastPos = dragPositions[dragPositions.length - 1];
+  if (lastPos[0] === r && lastPos[1] === c) {
+    return;
+  }
+
+  // 최초로 방향을 결정해야 하는 시점(두 번째 칸)
+  if (dragDirection === null) {
+    const dr = r - startPos[0];
+    const dc = c - startPos[1];
+    // 가로(동일 행) / 세로(동일 열) / 대각( |dr| == |dc| ) 체크
+    if (dr === 0 && dc !== 0) {
+      dragDirection = 'row';   // 같은 행
+    } else if (dc === 0 && dr !== 0) {
+      dragDirection = 'col';   // 같은 열
+    } else if (Math.abs(dr) === Math.abs(dc)) {
+      dragDirection = 'diag';  // 대각선
+    } else {
+      // 방향이 확정되지 않으면 중단
+      return;
+    }
+  }
+
+  // 지금 클릭/터치한 (r,c)가 dragDirection에 맞는지 확인
+  if (!isInSameLine(startPos, [r, c], dragDirection)) {
+    return; // 일렬이 아니면 무시
+  }
+
+  // 기존 하이라이트 지우고
+  clearDragSelection();
+  // 새로 (startPos)부터 (r,c)까지 라인 계산 후 하이라이트
+  const linePositions = getLinePositions(startPos, [r, c]);
+  if (!linePositions) return;
+  dragPositions = linePositions; 
+  markDragSelection(linePositions);
+}
+
+function stopDragSelect() {
+  if (!isDragging) return;
+  isDragging = false;
+
+  // 드래그로 선택된 그룹의 합산 체크
+  if (!dragPositions || dragPositions.length < 2) {
+    clearDragSelection();
+  } else {
+    checkDragSelectedTiles();
+  }
+}
+
+/* [추가] 방향 검사 로직(가로/세로/대각) */
+function isInSameLine([r1, c1], [r2, c2], direction) {
+  if (direction === 'row') {
+    return (r1 === r2);
+  } else if (direction === 'col') {
+    return (c1 === c2);
+  } else if (direction === 'diag') {
+    return (Math.abs(r2 - r1) === Math.abs(c2 - c1));
+  }
+  return false;
+}
+
+/* [추가] 드래그 중 라인 강조 */
+function markDragSelection(linePositions) {
+  const trList = boardEl.querySelectorAll("tr");
+  linePositions.forEach(([r, c])=>{
+    const td = trList[r].querySelectorAll("td")[c];
+    td.classList.add('drag-select-highlight');
+  });
+}
+
+/* [수정] 드래그 선택 해제 */
+function clearDragSelection() {
+  const trList = boardEl.querySelectorAll("tr");
+  dragPositions.forEach(([r, c]) => {
+    const td = trList[r].querySelectorAll("td")[c];
+    td.classList.remove('drag-select-highlight');
+  });
+  dragPositions = [];
+}
+
+/* [수정] 드래그된 타일들 합산 체크 */
+function checkDragSelectedTiles() {
+  const start = dragPositions[0];
+  const end = dragPositions[dragPositions.length - 1];
+  clearDragSelection(); 
+  checkLine(start, end);
+}
+
+// === [수정] 보드 렌더링 시 mousedown, mousemove, mouseup(또는 터치 이벤트) 추가 ===
+function renderBoard(){
+  boardEl.innerHTML = "";
+  for(let r=0; r<BOARD_ROWS; r++){
+    let tr = document.createElement("tr");
+    for(let c=0; c<BOARD_COLS; c++){
+      let td = document.createElement("td");
+      // 기존 코드...
+      td.textContent = boardData[r][c] === null ? "" : boardData[r][c];
+
+      // 기존 td.addEventListener("click", ...) ...
+      td.addEventListener("mousedown", () => startDragSelect(r, c));
+      td.addEventListener("mousemove", () => continueDragSelect(r, c));
+      td.addEventListener("mouseup", () => stopDragSelect());
+      // 터치 환경도 처리
+      td.addEventListener("touchstart", () => startDragSelect(r, c), {passive: true});
+      td.addEventListener("touchmove", (e) => {
+        const touch = e.touches[0];
+        const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (targetEl && targetEl.tagName === 'TD') {
+          const rowIndex = [...boardEl.querySelectorAll('tr')].indexOf(targetEl.parentNode);
+          const colIndex = [...targetEl.parentNode.children].indexOf(targetEl);
+          continueDragSelect(rowIndex, colIndex);
+        }
+      }, {passive: true});
+      td.addEventListener("touchend", () => stopDragSelect());
+
+      tr.appendChild(td);
+    }
+    boardEl.appendChild(tr);
+  }
+  if (hintLinePositions) {
+    markLine(hintLinePositions, "hint-line");
+  }
+  // 기존 코드...
+}
+
+// === [수정] checkLine 함수에 성공/실패 시 iOS 스타일 메시지 표시 추가 ===
+function checkLine(start, end) {
+  const linePositions = getLinePositions(start, end);
+  if(!linePositions) {
+    statusBarEl.textContent = "가로/세로/대각 일렬 아님!";
+    showIOSToastMessage("잘못된 경로!");
+    return;
+  }
+  if(hintLinePositions) {
+    markLine(hintLinePositions, null, "hint-line");
+    hintLinePositions = null;
+  }
+  let sumVal=0, gapCount=0;
+  for(const [rr,cc] of linePositions){
+    if(boardData[rr][cc]===null){
+      gapCount++;
+    } else {
+      sumVal+= boardData[rr][cc];
+    }
+  }
+  let length = linePositions.length;
+
+  if(sumVal===targetSum){
+    // 성공
+    markLine(linePositions, "success-line");
+    let gapBonus = gapCount*10, lengthBonus = (length>=3)?(length-2)*5:0;
+    let addScore= sumVal + gapBonus + lengthBonus;
+    totalScore += addScore;
+    updateInfoBar();
+    showIOSToastMessage(`성공! +${addScore}점 획득`);
+
+    setTimeout(()=> {
+      removeLineTiles(linePositions);
+    }, 600);
+  } else {
+    // 실패
+    markLine(linePositions, "fail-line");
+    showIOSToastMessage("실패!", 1500);
+    setTimeout(() => {
+      markLine(linePositions, null, "fail-line");
+    }, 600);
+  }
+}
+
+// === [수정] noMoreBtn 클릭 시 iOS 스타일 메시지 + 모달 표시
+noMoreBtn.addEventListener("click", () => {
+  let found = findAllPossibleLines();
+  if(found.length > 0) {
+    totalScore = Math.max(0, totalScore - 100);
+    updateInfoBar();
+    showIOSToastMessage("아직 조합이 남아있습니다! -100점");
+    showOverlay(`아직 조합이 남아있습니다!<br>점수 -100점`);
+  } else {
+    totalScore += 100;
+    updateInfoBar();
+    showIOSToastMessage(`Round ${currentRound} 클리어! +100점`);
+    showOverlay(`Round ${currentRound} 클리어!<br>Score=${totalScore}<br>다음 라운드 진행`);
+  }
+});
+
+// === [수정] 모달 열릴 때 라운드 정보 iOS 스타일로 멋지게 보이도록
+function showOverlay(msg){
+  overlayMsgEl.innerHTML = 
+    `<div style="font-size:1.2rem; font-weight:600; margin-bottom:8px;">
+        라운드 정보
+     </div>` 
+     + msg 
+     + "<br><button onclick='closeOverlay()'>확인</button>";
+  overlayEl.style.display = "flex";
+}
 </script>
 
 </body>
