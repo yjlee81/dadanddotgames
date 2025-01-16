@@ -22,32 +22,37 @@
                    Helvetica, Arial, sans-serif;
   }
 
+  /* [수정] 스크롤 제거, 화면 꽉 채우기 */
   html, body {
-  margin: 0;
-  padding: 0;
-  /* 뷰포트 자체를 375 x 812로 강제 지정 */
-  width: 375px;
-  height: 812px;
-  /* 스크롤이 생기지 않도록 숨기기 (필요시) */
-  overflow: hidden;
+    margin: 0;
+    padding: 0;
+    /* 뷰포트 자체를 375 x 812로 강제 지정 */
+    width: 375px;
+    height: 812px;
+    /* 스크롤 완전히 제거 및 범위 고정 */
+    overflow: hidden; 
+    overscroll-behavior: none; 
+    /* 모바일 기기에서 375x812를 그대로 강제 표시할 때 */
 
-  /* 혹은 폰트, 배경 등 기본값 */
-  background-color: #fafafa;
-  color: #333;
-  font-family: -apple-system, BlinkMacSystemFont, 
-               "San Francisco", "Helvetica Neue", sans-serif;
+    /* 혹은 폰트, 배경 등 기본값 */
+    background-color: #fafafa;
+    color: #333;
+    font-family: -apple-system, BlinkMacSystemFont, 
+                 "San Francisco", "Helvetica Neue", sans-serif;
 
-  /* 터치 하이라이트 해제 */
-  -webkit-tap-highlight-color: transparent;
+    /* 터치 하이라이트 해제 */
+    -webkit-tap-highlight-color: transparent;
 
-  /* [추가] 텍스트 선택 방지: 드래그 시 텍스트가 선택되지 않도록 */
-  body, .board-container {
-    user-select: none;
-    -webkit-user-select: none; /* 크롬/사파리 */
-    -moz-user-select: none;    /* 파이어폭스 */
-    -ms-user-select: none;     /* 옛날 IE */
+    /* [추가] 텍스트 선택 방지: 드래그 시 텍스트가 선택되지 않도록 */
+    body, .board-container {
+      user-select: none;
+      -webkit-user-select: none; /* 크롬/사파리 */
+      -moz-user-select: none;    /* 파이어폭스 */
+      -ms-user-select: none;     /* 옛날 IE */
+      /* [추가] 터치 드래그 시 스크롤이 일어나지 않도록 */
+      touch-action: none;
+    }
   }
-}
 
   /* GNB */
   .gnb-lnb {
