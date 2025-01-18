@@ -1,16 +1,9 @@
-//
-//  ContentView.swift
-//  SumOrDoneGame
-//
-//  Created by Young Jae Lee on 1/16/25.
-//
-
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        WebView(htmlFileName: "index") // index.html 파일 로드
-            .edgesIgnoringSafeArea(.all) // 화면 전체에 WebView 표시
+        WebView()
+            .edgesIgnoringSafeArea(.all) // WebView를 전체 화면에 표시
     }
 }
 

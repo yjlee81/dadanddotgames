@@ -6,10 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		C6957C042D392DFF007AF6A1 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6957C032D392DF0007AF6A1 /* WebView.swift */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXContainerItemProxy section */
 		C6957BE62D392C15007AF6A1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -31,7 +27,6 @@
 		C6957BD12D392C11007AF6A1 /* SumOrDoneGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SumOrDoneGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6957BE52D392C15007AF6A1 /* SumOrDoneGameTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SumOrDoneGameTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6957BEF2D392C15007AF6A1 /* SumOrDoneGameUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SumOrDoneGameUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C6957C032D392DF0007AF6A1 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -42,6 +37,20 @@
 			);
 			target = C6957BD02D392C11007AF6A1 /* SumOrDoneGame */;
 		};
+		C6957C0B2D3A7FF5007AF6A1 /* Exceptions for "SumOrDoneGame" folder in "SumOrDoneGameTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				index.html,
+			);
+			target = C6957BE42D392C15007AF6A1 /* SumOrDoneGameTests */;
+		};
+		C6957C0C2D3A7FF5007AF6A1 /* Exceptions for "SumOrDoneGame" folder in "SumOrDoneGameUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				index.html,
+			);
+			target = C6957BEE2D392C15007AF6A1 /* SumOrDoneGameUITests */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -49,6 +58,8 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				C6957BF72D392C15007AF6A1 /* Exceptions for "SumOrDoneGame" folder in "SumOrDoneGame" target */,
+				C6957C0B2D3A7FF5007AF6A1 /* Exceptions for "SumOrDoneGame" folder in "SumOrDoneGameTests" target */,
+				C6957C0C2D3A7FF5007AF6A1 /* Exceptions for "SumOrDoneGame" folder in "SumOrDoneGameUITests" target */,
 			);
 			path = SumOrDoneGame;
 			sourceTree = "<group>";
@@ -93,7 +104,6 @@
 		C6957BC82D392C11007AF6A1 = {
 			isa = PBXGroup;
 			children = (
-				C6957C032D392DF0007AF6A1 /* WebView.swift */,
 				C6957BD32D392C11007AF6A1 /* SumOrDoneGame */,
 				C6957BE82D392C15007AF6A1 /* SumOrDoneGameTests */,
 				C6957BF22D392C15007AF6A1 /* SumOrDoneGameUITests */,
@@ -255,7 +265,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C6957C042D392DFF007AF6A1 /* WebView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
