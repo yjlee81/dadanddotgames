@@ -133,7 +133,7 @@
   }
 
   .status-bar {
-    display: block;
+    display: none;
     justify-content: space-between;
     align-items: center;
     width: 100%;
@@ -183,7 +183,7 @@
     display: flex;
     max-width: 100vw;     /* 게임보드와 같은 최대 폭 사용 */
     gap: 12px;
-    margin: 16px;
+    margin: 0px;
   }
 
   .buttons-container button {
@@ -242,15 +242,16 @@
     cursor: pointer;
     position: relative;
   }
-  #game-board td:hover {
+
+  
+  /*#game-board td:hover {
     background-color: lightgrey !important;
     transform: scale(0.9);
   }
   #game-board td:active {
-    
     transition: transform 0.05s ease;
   }
-  /* 선택된 타일 */
+   */
   
 
   /* 실패 시 흔들기 */
@@ -323,7 +324,13 @@
   /* === [추가] 드래그 선택 시 강조 효과 === */
   .drag-select-highlight {
     background-color: lightgrey !important;
-    transform: scale(0.8);
+    transition: button-press 0.2s ease;
+  }
+
+  @keyframes button-press {
+    0%   { transform: scale(1.0); }
+    75% { transform: scale(0.5); };
+    100% { transform: scale(0.7); }
   }
 
   @keyframes success-pop {
@@ -722,6 +729,9 @@
   function initRound(round=1){
     currentRound = round;
     targetSum = getTargetForRound(currentRound);
+
+    // 점수 초기화
+    totalScore = 0;
 
     // 보드 생성
     boardData = [];

@@ -10,489 +10,472 @@
       content="width=375, height=812, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <style>
-  :root {
-    --background-color: #f5f5f5;
-    --text-color: #333;
-    --accent-color: #007AFF;
-    --tile-color: #ffffff;
-    --tile-hover-color: #f8f8f8;
-    --tile-selected-color: #605f5c; 
-    --font-family: 'Nunito', sans-serif;
-  }
+    :root {
+      --background-color: #f5f5f5;
+      --text-color: #333;
+      --accent-color: #007AFF;
+      --tile-color: #ffffff;
+      --tile-hover-color: #f8f8f8;
+      --tile-selected-color: #c3c3c3; 
+      --font-family: 'Nunito', sans-serif;
+    }
 
-  /* [수정] 스크롤 제거, 화면 꽉 채우기 */
-  html, body {
-    justify-self: center;
-    margin-top: 30px;
-    padding: 0;
-    /* 뷰포트 자체를 375 x 812로 강제 지정 */
-    width: 375px;
-    height: 812px;
-    /* 스크롤 완전히 제거 및 범위 고정 */
-    overflow: hidden; 
-    overscroll-behavior: none; 
-    /* 모바일 기기에서 375x812를 그대로 강제 표시할 때 */
-
-    /* 혹은 폰트, 배경 등 기본값 */
-    background-color: #fafafa;
-    color: #333;
-    font-family:  'Nunito', sans-serif;
-
-    /* 터치 하이라이트 해제 */
-    -webkit-tap-highlight-color: transparent;
-
-    /* [추가] 텍스트 선택 방지: 드래그 시 텍스트가 선택되지 않도록 */
-    body, .board-container {
+    html, body {
+      justify-self: center;
+      margin-top: 8px;
+      padding: 0;
+      width: 375px;
+      height: 812px;
+      overflow: hidden; 
+      overscroll-behavior: none; 
+      background-color: #fafafa;
+      color: #333;
+      font-family: 'Nunito', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      
+      /* 텍스트 선택 및 터치 드래그 방지 */
       user-select: none;
-      -webkit-user-select: none; /* 크롬/사파리 */
-      -moz-user-select: none;    /* 파이어폭스 */
-      -ms-user-select: none;     /* 옛날 IE */
-      /* [추가] 터치 드래그 시 스크롤이 일어나지 않도록 */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
       touch-action: none;
     }
-  }
 
-  /* GNB */
-  .gnb-lnb {
-    top: 0; left: 0;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 16px;
-    box-sizing: border-box;
-    z-index: 9999;
-  }
-  .gnb-lnb .logo {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #000;
-    cursor: pointer;
-  }
-  .gnb-lnb .game-title {
-    margin: 0;
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: #000;
-  }
-  .gnb-lnb .right-group {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 8px;
-  }
-  
-  .language-selector {
-    height: 36px;
-    padding: 0px 8px;
-    font-size: 1.2rem;
-    color: #000; 
-    background-color: #fff;
-    border: 1px solid #000;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  .language-selector:hover {
-    background-color: #f0f0f0;
-  }
-  /* 정보 바 */
-  #info-bar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 16px;
-    padding: 8px;
-    background-color: #eaeaea;
-    border-radius: 12px;
-  }
-
-  .info-labels, .info-data {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    margin: 4px 0;
-  }
-
-  .info-labels span {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--text-color);
-  }
-
-  .info-data span {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--accent-color);
-  }
-
-  /* target-number와 score의 숫자 크기를 1.8배로 증가 */
-  #target-number,
-  #score {
-    font-size: 2.16rem; /* 기존 1.2rem의 1.8배 */
-  }
-
-  .status-bar {
-    display: none;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 8px 16px;
-  }
-
-  /* 반응형 디자인 통합 */
-  @media (max-width: 600px) {
-    /* 정보 바 스타일 */
+    /* GNB */
+    .gnb-lnb {
+      top: 0; left: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      box-sizing: border-box;
+      z-index: 9999;
+    }
+    .gnb-lnb .logo {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #000;
+      cursor: pointer;
+    }
+    .gnb-lnb .game-title {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #000;
+    }
+    .gnb-lnb .right-group {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .language-selector {
+      height: 36px;
+      padding: 0 8px;
+      font-size: 1.2rem;
+      color: #000; 
+      background-color: #fff;
+      border: 1px solid #000;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .language-selector:hover {
+      background-color: #f0f0f0;
+    }
+    
+    /* 정보 바 */
     #info-bar {
-      max-width: 100vw;
-      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 16px;
+      padding: 8px;
+      background-color: #eaeaea;
+      border-radius: 12px;
     }
-
-    .info-labels span, .info-data span {
-      font-size: 0.9rem;
+    
+    .info-labels, .info-data {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      margin: 4px 0;
     }
-
+    
+    .info-labels span {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+    
     .info-data span {
-      font-size: 1rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent-color);
     }
-
-    /* 버튼 컨테이너 스타일 */
-    .buttons-container button {
-      height: 50px;
-      font-size: 1rem;
-      border-radius: 6px;
-    }
-
-    /* target-number와 score의 글자 크기 조정 */
+    
+    /* target-number와 score의 숫자 크기 */
     #target-number,
     #score {
-      font-size: 1.8rem; /* 모바일에서는 약간 줄이거나 유지 */
+      font-size: 2.16rem; /* 기존 1.2rem의 1.8배 */
     }
-
-    /* 추가적인 반응형 스타일이 있다면 여기에 추가 */
-  }
-
-  /* 타이머 숨기기 */
-  #timer-label,
-  #timer {
-    display: none; /* 타이머 요소 숨기기 */
-  }
-
-  /* 버튼 컨테이너와 버튼 자체를 크게 조정 */
-  .buttons-container {
-    display: flex;  
-    max-width: 100vw;     /* 게임보드와 같은 최대 폭 사용 */
-    gap: 12px;
-    margin: 16px;
-  }
-
-  .buttons-container button {
-    flex: 1;            /* 버튼이 가로로 균등 분할 */
-    height: 60px;       /* 버튼 높이 크게 */
-    font-size: 1.2rem;  /* 텍스트도 크게 */
-    border: none;
-    border-radius: 10px;
-    background-color: var(--accent-color);
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  .buttons-container button:hover {
-    background-color: #0080ff;
-  }
-  .buttons-container button:active {
-    background-color: #005bb5;
-  }
-  /* Ripple 효과 */
-  .buttons-container button .ripple {
-    position: absolute;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.4);
-    transform: scale(0);
-    animation: ripple-animation 0.6s linear forwards;
-    pointer-events: none;
-  }
-  @keyframes ripple-animation {
-    to {
-      transform: scale(2.5);
-      opacity: 0;
-    }
-  }
-
-  /* 게임 보드 */
-  #game-board {
-    border-collapse: separate;
-    border-spacing: 4px;
-    margin: 16px; /* 가운데 정렬 */
-    max-width: 100vw;
-  }
-  #game-board td {
-    width: 50px;
-    height: 50px;
-    background-color: var(--tile-color);
-    border-radius: 16px;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 28px;
-    font-weight: 600;
-    color: #333;
-    transition: background-color 0.2s ease,
-                transform 0.15s ease,
-                box-shadow 0.15s ease;
-    cursor: pointer;
-    position: relative;
-  }
-  #game-board td:hover {
-    background-color: lightgrey !important;
-    transform: scale(0.9);
-  }
-  #game-board td:active {
     
-    transition: transform 0.05s ease;
-  }
-  /* 선택된 타일 */
-  
-
-  /* 실패 시 흔들기 */
-  #game-board td.fail-line {
-    animation: shake-fail 0.4s ease;
-  }
-  @keyframes shake-fail {
-    0% { transform: translateX(0) scale(1); }
-    25% { transform: translateX(-4px) scale(1); }
-    50% { transform: translateX(4px) scale(1); }
-    75% { transform: translateX(-4px) scale(1); }
-    100% { transform: translateX(0) scale(1.1); }
-  }
-
-  /* 성공 시 라인 */
-  #game-board td.success-line {
-    background-color: #0080ff !important; 
-    color: #fff;
-    animation: shake-success 0.2s ease;
-  }
-/* 실패 시 끄덕끄덕 */
-  @keyframes shake-success {
-    0% { transform: scale(1); }
-    25% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    75% { transform: scale(1.2); }
-    100% { transform: scale(1.1); }
-  }
-
-  /* 제거 애니메이션 */
-  #game-board td.removing {
-    animation: success-remove 0.4s forwards ease;
-  }
-  @keyframes success-remove {
-    0% {
-      transform: scale(1.1);
+    
+    /* 반응형 디자인 */
+    @media (max-width: 600px) {
+      #info-bar {
+        max-width: 100vw;
+        padding: 12px;
+      }
+    
+      .info-labels span, .info-data span {
+        font-size: 0.9rem;
+      }
+    
+      .info-data span {
+        font-size: 1rem;
+      }
+    
+      /* 버튼 컨테이너 스타일 */
+      .buttons-container button {
+        height: 50px;
+        font-size: 1rem;
+        border-radius: 6px;
+      }
+    
+      /* target-number와 score의 글자 크기 조정 */
+      #target-number,
+      #score {
+        font-size: 1.8rem; /* 모바일에서는 약간 줄이거나 유지 */
+      }
+    }
+    
+    /* 타이머 숨기기 */
+    #timer-label,
+    #timer {
+      display: none;
+    }
+    
+    /* 버튼 컨테이너를 하단에 고정 */
+    .buttons-container {
+      position: fixed;
+      bottom: 0px; /* 하단에서 20px 위에 위치 */
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      width: 100%; /* 필요에 따라 너비 조정 */
+      padding: 16px; /* 좌우 여백 */
+      box-sizing: border-box;
+      z-index: 1000; /* 다른 요소들보다 위에 표시되도록 설정 */
+      background-color: rgba(255, 255, 255, 1); /* 배경색 및 투명도 조정 (선택 사항) */
+      border-top-left-radius: 12px; /* 좌상단 모서리 둥글게 */
+      border-top-right-radius: 12px; /* 우상단 모서리 둥글게 */
+    }
+    
+    /* Primary 버튼 */
+    .primary-button {
+      flex: 1;
+      height: 60px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 10px;
+      background-color: var(--accent-color);
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .primary-button:hover {
+      background-color: #0080ff;
+    }
+    .primary-button:active {
+      background-color: #005bb5;
+    }
+    
+    /* Secondary 버튼 */
+    .secondary-button {
+      flex: 1;
+      height: 60px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 10px;
+      background-color: #6c757d; /* secondary 색상 */
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .secondary-button:hover {
+      background-color: #5a6268;
+    }
+    .secondary-button:active {
+      background-color: #545b62;
+    }
+    
+    /* Ripple 효과 */
+    .buttons-container button .ripple,
+    button .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.4);
+      transform: scale(0);
+      animation: ripple-animation 0.6s linear forwards;
+      pointer-events: none;
+    }
+    @keyframes ripple-animation {
+      to {
+        transform: scale(2.5);
+        opacity: 0;
+      }
+    }
+    
+    /* 게임 보드 */
+    #game-board {
+      border-collapse: separate;
+      border-spacing: 4px;
+      margin: 16px;
+      max-width: 100vw;
+    }
+    #game-board td {
+      width: 50px;
+      height: 50px;
+      background-color: var(--tile-color);
+      border-radius: 16px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 28px;
+      font-weight: 600;
+      color: #333;
+      transition: background-color 0.2s ease,
+                  transform 0.15s ease,
+                  box-shadow 0.15s ease;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    
+    /* 실패 시 흔들기 */
+    #game-board td.fail-line {
+      animation: shake-fail 0.4s ease, fail-pulse 0.4s ease;
+    }
+    @keyframes shake-fail {
+      0% { transform: translateX(0) scale(1); }
+      25% { transform: translateX(-4px) scale(1); }
+      50% { transform: translateX(4px) scale(1); }
+      75% { transform: translateX(-4px) scale(1); }
+      100% { transform: translateX(0) scale(1.1); }
+    }
+    @keyframes fail-pulse {
+      0% { background-color: #ff6a6a; }
+      100% { background-color: #ff6a6a; }
+    }
+    
+    /* 성공 시 라인 */
+    #game-board td.success-line {
+      background-color: #0080ff !important; 
+      color: #fff;
+      animation: shake-success 0.2s ease;
+    }
+    @keyframes shake-success {
+      0% { transform: scale(1); }
+      25% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      75% { transform: scale(1.2); }
+      100% { transform: scale(1.1); }
+    }
+    
+    /* 제거 애니메이션 */
+    #game-board td.removing {
+      animation: success-remove 0.4s forwards ease;
+    }
+    @keyframes success-remove {
+      0% {
+        transform: scale(1.1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+    }
+    
+    /* 오버레이 스타일 */
+    #overlay {
+      display: none; /* 기본적으로 숨김 */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7); /* 더 어두운 반투명 검은색 배경 */
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    #overlay-message {
+      background-color: #fff;
+      padding: 20px; /* 여백 확대 */
+      border-radius: 12px; /* 모서리 둥글게 */
+      text-align: center;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* 그림자 효과 추가 */
+      max-width: 80vw;
+      box-sizing: border-box;
+      /* 슬라이드 업 애니메이션 적용 */
+      z-index: 999999;
+      font-size: 1.2rem;
+    }
+    
+    @keyframes slide-up {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0px);
+        opacity: 1;
+      }
+    }
+    
+    #overlay-message button {
+      margin-top: 12px;
+    }
+    
+    /* iOS 스타일 메시지/알림 등 UI 효과 */
+    .ios-toast {
+      position: fixed;
+      bottom: 88px; /* 버튼 컨테이너 하단(20px) + 버튼 높이(60px) + 8px 간격 */
+      left: 50%;
+      transform: translateX(-50%) translateY(20px); /* 초기 위치를 아래로 이동 */
+      background-color: rgba(0, 0, 0, 0.8); /* 검정색 배경에 0.8 투명도 */
+      color: #fff; /* 흰색 폰트 */
+      padding: 14px 20px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      font-size: 0.95rem;
+      width: 240px; /* 너비를 240px로 설정 */
+      transition: transform 0.15s ease-out, opacity 0.15s ease-out; /* 애니메이션 속도 및 타이밍 조정 */
+      opacity: 0;
+      pointer-events: none;
+      z-index: 999999;
+    }
+    
+    .ios-toast.show {
+      transform: translateX(-50%) translateY(0); /* 위로 이동 */
       opacity: 1;
+      /* 배경색과 폰트 색상은 .ios-toast에서 이미 설정됨 */
     }
-    100% {
-      transform: scale(0.8);
-      opacity: 0;
+    
+    /* 드래그 선택 시 강조 효과 */
+    .drag-select-highlight {
+      background-color: var(--tile-selected-color) !important;
+      font-size: 20px;
+      font-weight: 600;
+      background-color: #5a6268;
+      transition: background-color 0.2s ease,
+                  font-size 0.2s ease,
+                  button-press 0.15s ease;
     }
-  }
 
-
-  /* === [추가] iOS 스타일 메시지/알림 등 UI 효과 === */
-  .ios-toast {
-    position: fixed;
-    bottom: 3%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #fff;
-    color: #333;
-    padding: 14px 20px;
-    border-radius: 14px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 999999;
-  }
-  .ios-toast.show {
-    opacity: 1;
-    background-color: #007AFF;
-    color: #fff;
-    pointer-events: auto;
-  }
-
-  /* === [추가] 드래그 선택 시 강조 효과 === */
-  .drag-select-highlight {
-    background-color: lightgrey !important;
-    transform: scale(0.8);
-  }
-
-  @keyframes success-pop {
-    0%   { transform: scale(0.8); }
-    100% { transform: scale(1.05); }
-  }
-  #game-board td.fail-line {
-    animation: shake-fail 0.4s ease, fail-pulse 0.4s ease;
-  }
-  @keyframes fail-pulse {
-    0%   { background-color: #ff6a6a; }
-    100% { background-color: #ff6a6a; }
-  }
-
-  /* 새 라운드 시작 모달을 좀 더 세련되게 */
-  #overlay-message {
-    background-color: rgba(255,255,255,0.88);
-    border-radius: 12px;
-    padding: 16px;
-    text-align: center;
-    max-width: 300px;
-    z-index: 999999;
-    font-size: 1.2rem;
-  }
-  #overlay-message button {
-    margin-top: 12px;
-  }
-
-  /* 힌트 라인 색상을 회색으로 표시 */
-  #game-board td.hint-line {
-    background-color: lightgrey;
-    box-shadow: 0px 0px 10px #DDD;
-  }
-
-  /* 버튼 스타일 (Ripple 예시) */
-  button {
-    position: relative;
-    overflow: hidden; /* Ripple이 넘치지 않도록 */
-    padding: 8px 14px;
-    font-size: 1rem;
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    background-color: var(--accent-color);
-    color: #fff;
-    transition: background-color 0.2s ease;
-  }
-  button:hover {
-    background-color: #0080ff;
-  }
-  button:active {
-    background-color: #005bb5;
-  }
-  /* Ripple 효과 */
-  button .ripple {
-    position: absolute;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.4);
-    transform: scale(0);
-    animation: ripple-animation 0.6s linear forwards;
-    pointer-events: none;
-  }
-  @keyframes ripple-animation {
-    to {
-      transform: scale(2.5);
-      opacity: 0;
+    @keyframes button-press {
+      0% { transform: scale(1.0); }
+      75% { transform: scale(0.5); }
+      100% { transform: scale(0.7); }
     }
-  }
-
-  /* 모달 오버레이 */
-  #overlay {
-    display: none; /* 기본적으로 숨김 */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* 더 어두운 반투명 검은색 배경 */
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  #overlay-message {
-    background-color: #fff;
-    padding: 30px 40px; /* 여백 확대 */
-    border-radius: 20px; /* 모서리 둥글게 */
-    text-align: center;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* 그림자 효과 추가 */
-    max-width: 80vw;
-    box-sizing: border-box;
-    /* 슬라이드 인 애니메이션 적용 */
-    animation: slide-up 0.3s ease-out;
-    z-index: 999999;
-  }
-  
-  /* 버튼 스타일 */
-  .modal-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 8px;
-    background-color: var(--accent-color);
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  .modal-button:hover {
-    background-color: #005bb5;
-  }
-
-  @keyframes slide-up {
-    from {
-      transform: translateY(0px);
-      opacity: 0;
+    @keyframes success-pop {
+      0% { transform: scale(0.8); }
+      100% { transform: scale(1.05); }
     }
-    to {
-      transform: translateY(50px);
+    
+    /* 힌트 라인 색상 */
+    #game-board td.hint-line {
+      background-color: lightgrey;
+      box-shadow: 0px 0px 10px #DDD;
+    }
+    
+    /* 기본 버튼 스타일 */
+    button {
+      position: relative;
+      overflow: hidden;
+      padding: 8px 14px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--accent-color);
+      color: #fff;
+      transition: background-color 0.2s ease;
+    }
+    button:hover {
+      background-color: #0080ff;
+    }
+    button:active {
+      background-color: #005bb5;
+    }
+    
+    /* 모달 버튼 스타일 */
+    .modal-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--accent-color);
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .modal-button:hover {
+      background-color: #005bb5;
+    }
+    
+    /* 다시 시작 버튼 스타일 */
+    #restart-btn {
+      height: 36px;
+      background-color: #6c757d; /* secondary 색상 */
+      color: #fff;
+      border-radius: 8px;
+      padding: 0px 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    #restart-btn:hover {
+      background-color: #5a6268;
+    }
+    #restart-btn:active {
+      background-color: #545b62;
+    }
+
+    /* Floating Score 스타일 */
+    .floating-score {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      font-size: 28px; /* 글자 크기 28px */
+      pointer-events: none;
+      color: #000; /* 기본 폰트 색상 (필요 시 JavaScript에서 변경) */
       opacity: 1;
+      animation: floatUp 1s forwards;
+      z-index: 1000;
     }
-  }
 
-  /* 기본 버튼 스타일 */
-  .buttons-container button {
-    flex: 1;
-    height: 60px;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 10px;
-    background-color: var(--accent-color);
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-
-  /* 힌트 버튼에 secondary 스타일 적용 */
-  #hint-btn {
-    background-color: #6c757d; /* secondary 색상 */
-    color: #fff;
-  }
-
-  #hint-btn:hover {
-    background-color: #5a6268; /* hover 시 색상 */
-  }
-
-  #hint-btn:active {
-    background-color: #545b62; /* active 시 색상 */
-  }
-
-  /* 다시 시작 버튼 스타일 */
-  #restart-btn {
-    height: 36px;
-    background-color: #6c757d; /* secondary 색상 */
-    color: #fff;
-    border-radius: 8px;
-    padding: 0px 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-
-  #restart-btn:hover {
-    background-color: #5a6268; /* hover 시 색상 */
-  }
-
-  #restart-btn:active {
-    background-color: #545b62; /* active 시 색상 */
-  }
+    /* 플로팅 애니메이션: 위로 이동하면서 서서히 사라짐 */
+    @keyframes floatUp {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) translateY(-20px);
+      }
+    }
   </style>
   <script>
     const translations = {
@@ -508,11 +491,13 @@
         cancelSelection: "Selection Cancelled",
         success: "Success",
         fail: "Fail",
+        failSum: "The sum of the numbers does not equal {target}.",
         hintMessage: "Drag to select multiple numbers",
         overlayClear: "Round Clear! Score=",
         overlayNext: "Proceed to the next round",
         overlayFail: "Combinations still exist! Score -100",
-        statusStart: "Round {round} 시작! (Target={target}, 누적점수={score})"
+        statusStart: "Round {round} start! (Target={target}, Score={score})",
+        ok: "OK"
       },
       ko: {
         title: "합! or 결!",
@@ -525,12 +510,14 @@
         startTile: "시작칸",
         cancelSelection: "선택 취소",
         success: "성공",
-        fail: "실패",
+        fail: "실패: 숫자들의 합이 {target} 이 아니예요.",
+        failSum: "숫자들의 합이 {target} 이 아니예요.",
         hintMessage: "드래그해서 여러 숫자들을 선택하세요",
         overlayClear: "라운드 클리어! 점수=",
         overlayNext: "다음 라운드 진행",
-        overlayFail: "아직 조합이 남아있습니다! 점수 -100",
-        statusStart: "Round {round} 시작! (Target={target}, 누적점수={score})"
+        overlayFail: "아직 조합이 남아있어요. Score -100",
+        statusStart: "Round {round} 시작! (Target={target}, 누적점수={score})",
+        ok: "확인"
       },
       ja: {
         title: "合計！または完了！",
@@ -544,11 +531,13 @@
         cancelSelection: "選択キャンセル",
         success: "成功",
         fail: "失敗",
+        failSum: "数の合計が {target} ではありません",
         hintMessage: "ドラッグして複数の数字を選択してください",
         overlayClear: "ラウンドクリア！スコア=",
         overlayNext: "次のラウンドに進む",
         overlayFail: "まだ組み合わせが残っています！スコア -100",
-        statusStart: "Round {round} 開始！ (Target={target}, 累積スコア={score})"
+        statusStart: "Round {round} 開始！ (Target={target}, 累積スコア={score})",
+        ok: "確認"
       },
       zh: {
         title: "合！或完成！",
@@ -562,11 +551,13 @@
         cancelSelection: "取消选择",
         success: "成功",
         fail: "失败",
+        failSum: "数字的总和不等于 {target}",
         hintMessage: "请拖动选择多个数字",
         overlayClear: "回合清除！得分=",
         overlayNext: "进行下一回合",
         overlayFail: "仍有组合存在！得分 -100",
-        statusStart: "Round {round} 开始！ (Target={target}, 累积得分={score})"
+        statusStart: "Round {round} 开始！ (Target={target}, 累积得分={score})",
+        ok: "确认"
       }
     };
 
@@ -626,6 +617,7 @@
           const rect = btn.getBoundingClientRect();
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
+
           circle.style.left = x + "px";
           circle.style.top = y + "px";
 
@@ -636,6 +628,16 @@
         });
       });
     });
+
+    function showIOSToastMessage(message, duration = 2000) {
+      const toastEl = document.getElementById('toast-message');
+      toastEl.textContent = message;
+      toastEl.classList.add('show');
+
+      setTimeout(() => {
+        toastEl.classList.remove('show');
+      }, duration);
+    }
   </script>
 </head>
 <body>
@@ -674,20 +676,21 @@
     <table id="game-board"></table>
   </div>
 
-  <!-- 버튼 컨테이너 -->
-  <div class="buttons-container">
-    <button id="no-more">Done!</button>
-    <button id="hint-btn">Hint</button>
-  </div>
-
-  <div id="status-bar">Enjoy Sum! or Done!</div>
+  
   <div id="timer">00:00</div>
   
-
   <!-- 모달 오버레이 -->
   <div id="overlay">
     <div id="overlay-message"></div>
   </div>
+  <!-- 버튼 컨테이너 -->
+  <div class="buttons-container">
+    <button id="no-more" class="primary-button">Done!</button>
+    <button id="hint-btn" class="secondary-button">Hint</button>
+  </div>
+
+  <!-- 토스트 메시지 요소 -->
+  <div class="ios-toast" id="toast-message"></div>
 
   <script>
   /****************************************************************
@@ -722,6 +725,9 @@
   function initRound(round=1){
     currentRound = round;
     targetSum = getTargetForRound(currentRound);
+
+    // 점수 초기화
+    totalScore = 0;
 
     // 보드 생성
     boardData = [];
@@ -759,7 +765,7 @@
   const noMoreBtn = document.getElementById("no-more");
   const hintBtn = document.getElementById("hint-btn");
 
-  const statusBarEl = document.getElementById("status-bar");
+  
   const overlayEl = document.getElementById("overlay");
   const overlayMsgEl = document.getElementById("overlay-message");
 
@@ -844,64 +850,70 @@
   /****************************************************************
    * 7. 라인 검사
    ****************************************************************/
-  function checkLine(start,end){
-    const linePositions = getLinePositions(start,end);
-    if(!linePositions){
-      statusBarEl.textContent=translations[currentLanguage].fail;
+  function checkLine(start, end) {
+    const linePositions = getLinePositions(start, end);
+    
+    // 선택한 타일이 하나뿐인 경우 토스트 메시지 표시
+    if (linePositions.length === 1) {
+      showIOSToastMessage(translations[currentLanguage].hintMessage);
+      return;
+    }
+
+    if (!linePositions) {
+      showIOSToastMessage("잘못된 경로!");
       return;
     }
 
     // 힌트 표시 중이면 해제
-    if(hintLinePositions){
-      markLine(hintLinePositions,null,"hint-line");
-      hintLinePositions=null;
+    if (hintLinePositions) {
+      markLine(hintLinePositions, null, "hint-line");
+      hintLinePositions = null;
     }
 
     // sumVal: 실제 숫자합, gapCount: null칸
-    let sumVal=0;
-    let gapCount=0;
-    for(const [rr,cc] of linePositions){
-      if(boardData[rr][cc]===null){
+    let sumVal = 0;
+    let gapCount = 0;
+    for (const [rr, cc] of linePositions) {
+      if (boardData[rr][cc] === null) {
         gapCount++;
       } else {
-        sumVal+= boardData[rr][cc];
+        sumVal += boardData[rr][cc];
       }
     }
     let length = linePositions.length;
 
-    // 합이 targetSum?
-    if(sumVal===targetSum){
+    // 합이 targetSum인지 확인
+    if (sumVal === targetSum) {
       // 점수 계산
-      let gapBonus = gapCount*10;
-      let lengthBonus= (length>=3)?(length-2)*5:0;
-      let addScore= sumVal + gapBonus + lengthBonus;
+      let gapBonus = gapCount * 10;
+      let lengthBonus = length >= 3 ? (length - 2) * 5 : 0;
+      let addScore = sumVal + gapBonus + lengthBonus;
 
-      markLine(linePositions,"success-line");
-      statusBarEl.textContent=
-        `${translations[currentLanguage].success}! (${translations[currentLanguage].sum}=${sumVal}, gap=${gapCount}, length=${length}) => +${addScore}`;
-
-      totalScore+= addScore;
+      markLine(linePositions, "success-line");
+      totalScore += addScore;
       updateInfoBar();
 
       showFloatingScore(`+${addScore}`, end[0], end[1]);
 
-      setTimeout(()=>{
+      setTimeout(() => {
         removeLineTiles(linePositions);
-      },600);
+      }, 600);
 
     } else {
-      // 실패
-      statusBarEl.textContent= `${translations[currentLanguage].fail}! (${translations[currentLanguage].sum}=${sumVal}, 목표=${targetSum})`;
-      markLine(linePositions,"fail-line");
-      setTimeout(()=>{
-        markLine(linePositions,null,"fail-line");
-      },600);
+      // 실패 처리: 메시지 수정
+      const failMessage = translations[currentLanguage].failSum.replace("{target}", targetSum);
+      showIOSToastMessage(failMessage, 1500);
+      markLine(linePositions, "fail-line");
 
-      // 타깃 점수만큼 감점
+      setTimeout(() => {
+        markLine(linePositions, null, "fail-line");
+      }, 600);
+
+      // 타겟 점수만큼 감점
       totalScore = Math.max(0, totalScore - targetSum);
       updateInfoBar();
 
-      // 점수 차감 효과 표시
+      // 점수 감점 효과 표시
       showFloatingScore(`-${targetSum}`, end[0], end[1], true);
     }
   }
@@ -918,13 +930,13 @@
 
     let pos=[];
     let curR=r1,curC=c1;
-    pos.push([curR,curC]);
+    pos.push([curR, curC]);
 
-    let steps = Math.max(Math.abs(rd),Math.abs(cd));
+    let steps = Math.max(Math.abs(rd), Math.abs(cd));
     for(let i=0;i<steps;i++){
       curR+=stepR; curC+=stepC;
       if(curR<0||curR>=BOARD_ROWS||curC<0||curC>=BOARD_COLS)return null;
-      pos.push([curR,curC]);
+      pos.push([curR, curC]);
     }
     return pos;
   }
@@ -1020,8 +1032,8 @@
 
     let x = rect.left + rect.width / 2;
     let y = rect.top + rect.height / 2;
-    floatEl.style.left = x + "px";
-    floatEl.style.top = y + "px";
+    floatEl.style.left = `${x}px`;
+    floatEl.style.top = `${y}px`;
 
     setTimeout(() => {
       if (floatEl.parentNode) {
@@ -1062,11 +1074,11 @@
    ****************************************************************/
   function showOverlay(msg){
     overlayMsgEl.innerHTML = 
-      `<div style="font-size:1.2rem; font-weight:600; margin-bottom:16px;">
-          ${translations[currentLanguage].title} ${translations[currentLanguage].round}
+      `<div style="font-size:1.4rem; font-weight:600; margin-bottom:16px;">
+          ${translations[currentLanguage].round} ${currentRound}
        </div>` 
        + msg 
-       + `<br><button class="modal-button" onclick="closeOverlay()">${translations[currentLanguage].success}</button>`;
+       + `<br><button class="modal-button" onclick="closeOverlay()">${translations[currentLanguage].ok}</button>`;
     overlayEl.style.display = "flex";
   }
   function closeOverlay(){
@@ -1111,29 +1123,6 @@
     // 첫 번째 힌트 자동 표시
     onHintClick(true);
   };
-
-  // === [추가] iOS 느낌의 간결 메시지 함수 ===
-  function showIOSToastMessage(msg, duration = 1200) {
-    const toast = document.createElement('div');
-    toast.classList.add('ios-toast');
-    toast.innerHTML = msg;
-    document.body.appendChild(toast);
-
-    // 잠시 후 등장
-    setTimeout(() => {
-      toast.classList.add('show');
-    }, 50);
-
-    // 지정 시간 뒤 자동 제거
-    setTimeout(() => {
-      toast.classList.remove('show');
-      setTimeout(() => {
-        if (toast.parentNode) {
-          toast.parentNode.removeChild(toast);
-        }
-      }, 300);
-    }, duration);
-  }
 
   // === [추가] 드래그 선택 시 강조 효과 ===
   let isDragging = false;
@@ -1195,6 +1184,7 @@
     // 드래그로 선택된 그룹의 합산 체크
     if (!dragPositions || dragPositions.length < 2) {
       clearDragSelection();
+      showIOSToastMessage(translations[currentLanguage].hintMessage);
     } else {
       checkDragSelectedTiles();
     }
@@ -1266,6 +1256,11 @@
         }, {passive: true});
         td.addEventListener("touchend", () => stopDragSelect());
 
+        // 시작칸 강조
+        if(startPos && startPos[0]===r && startPos[1]===c){
+          td.classList.add("selected");
+        }
+
         tr.appendChild(td);
       }
       boardEl.appendChild(tr);
@@ -1274,61 +1269,6 @@
       markLine(hintLinePositions, "hint-line");
     }
     // 기존 코드...
-  }
-
-  // === [수정] checkLine 함수에 성공/실패 시 iOS 스타일 메시지 표시 추가 ===
-  function checkLine(start, end) {
-    const linePositions = getLinePositions(start, end);
-    if(!linePositions) {
-      statusBarEl.textContent = translations[currentLanguage].fail;
-      showIOSToastMessage("잘못된 경로!");
-      return;
-    }
-    if(hintLinePositions) {
-      markLine(hintLinePositions, null, "hint-line");
-      hintLinePositions = null;
-    }
-    let sumVal=0, gapCount=0;
-    for(const [rr,cc] of linePositions){
-      if(boardData[rr][cc]===null){
-        gapCount++;
-      } else {
-        sumVal+= boardData[rr][cc];
-      }
-    }
-    let length = linePositions.length;
-
-    if(sumVal===targetSum){
-      // 성공
-      markLine(linePositions, "success-line");
-      let gapBonus = gapCount*10, lengthBonus = (length>=3)?(length-2)*5:0;
-      let addScore= sumVal + gapBonus + lengthBonus;
-      totalScore += addScore;
-      updateInfoBar();
-      showIOSToastMessage(`${translations[currentLanguage].success}! +${addScore}`);
-
-      setTimeout(()=> {
-        removeLineTiles(linePositions);
-      }, 600);
-    } else {
-      // 실패
-      markLine(linePositions, "fail-line");
-      showIOSToastMessage(translations[currentLanguage].fail, 1500);
-      setTimeout(() => {
-        markLine(linePositions, null, "fail-line");
-      }, 600);
-    }
-  }
-
-  // === [수정] 모달 열릴 때 라운드 정보 iOS 스타일로 멋지게 보이도록
-  function showOverlay(msg){
-    overlayMsgEl.innerHTML = 
-      `<div style="font-size:1.2rem; font-weight:600; margin-bottom:16px;">
-          ${translations[currentLanguage].round} 정보
-       </div>` 
-       + msg 
-       + `<br><button class="modal-button" onclick="closeOverlay()">${translations[currentLanguage].success}</button>`;
-    overlayEl.style.display = "flex";
   }
   </script>
 
