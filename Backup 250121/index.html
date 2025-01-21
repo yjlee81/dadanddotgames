@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dad and Dot Games - Main</title>
+  <!-- 폰트 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- 공통 CSS -->
+  <link rel="stylesheet" href="css/common.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8718440574316852"
+     crossorigin="anonymous"></script>
+  <script>
+  (function (m, a, z, e) {
+    var s, t;
+    try {
+      t = m.sessionStorage.getItem('maze-us');
+    } catch (err) {}
+  
+    if (!t) {
+      t = new Date().getTime();
+      try {
+        m.sessionStorage.setItem('maze-us', t);
+      } catch (err) {}
+    }
+  
+    s = a.createElement('script');
+    s.src = z + '?apiKey=' + e;
+    s.async = true;
+    a.getElementsByTagName('head')[0].appendChild(s);
+    m.mazeUniversalSnippetApiKey = e;
+  })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '9bed29c9-965e-46af-9f9f-0af175bf4756');
+  </script>
+      
+</head>
+<body>
+  <!-- ===== HEADER (GNB) ===== -->
+  <header>
+    <!-- 로고 클릭 시 "/"로 이동 -->
+    <div id="logo" onclick="window.location.href='/'" style="cursor: pointer;">
+      Dad and Dot Games
+    </div>
+    <nav style="justify-content: flex-end;">
+      <!-- 메뉴 링크 추가 -->
+      <div class="nav-links">
+        <a href="#carousel-section" class="nav-link">Games</a>
+        <a href="#about-section" class="nav-link">About</a>
+      </div>
+      <select class="language-selector" id="language-select">
+        <option value="en">EN</option>
+        <option value="ko" selected>KR</option>
+        <option value="ja">JP</option>
+        <option value="zh">ZH</option>
+      </select>
+      <!-- 공유하기 버튼(예시) -->
+      <div class="share-section">
+        <a href="#" class="share-link">공유하기</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ===== 패럴랙스 섹션 (Hero) ===== -->
+  <section class="parallax">
+    <!-- 별들이 배치될 컨테이너 -->
+    <div class="star-container"></div>
+    <!-- 캐릭터(아빠+아이) -->
+    <div class="dad-dot-floating"></div>
+
+    <div class="hero-content">
+      <h1>Welcome to Dad and Dot Games</h1>
+      <p>귀여운 우주 속에서 만나는 집중력·두뇌발달 게임!<br>
+         아빠와 함께 손잡고 떠나 볼까요?</p>
+      <div class="cta-buttons">
+        <a href="#carousel-section" id="btnFreeGameStart">무료 게임보기 ↓</a>
+      </div>
+    </div>
+  </section> 
+
+  <!-- 게임 목록 섹션 -->
+  <section class="games-section" id="carousel-section">
+    <h2>Pick Your Game</h2>
+  
+    <div class="games-grid">
+        <!-- 게임 카드 1 -->
+        <div class="game-card">
+            <a href="/master-monster" class="card-link">
+                <div class="game-placeholder">
+                    <div class="placeholder-icon">🎮</div>
+                </div>
+                <div class="game-info">
+                    <h3 class="game-title">Master Monster</h3>
+                    <p class="game-description">Merge monsters to create the ultimate master!</p>
+                    <div class="game-features">
+                        <span class="feature">Puzzle</span>
+                        <span class="feature">Strategy</span>
+                        <span class="feature">Casual</span>
+                    </div>
+                    <div class="game-stats">
+                        <span>Play Time: 5-10min</span> /
+                        <span>Difficulty: ★★☆☆☆</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- 게임 카드 2 -->
+        <div class="game-card">
+          <a href="/SumOrDone/" class="card-link">
+            <div class="game-placeholder">
+                <div class="placeholder-icon">🔢</div>
+            </div>
+            <div class="game-info">
+                <h3 class="game-title">합! or 결!</h3>
+                <p class="game-description">전략적 요소가 가미된 숫자 퍼즐 게임</p>
+                <div class="game-features">
+                    <span class="feature">숫자퍼즐</span>
+                    <span class="feature">전략</span>
+                    <span class="feature">캐주얼</span>
+                </div>
+                <div class="game-stats">
+                    <span>플레이 시간: 5-10분</span> /
+                    <span>난이도: ★★★☆☆</span>
+                </div>
+            </div>
+          </a>
+        </div>
+    </div>
+  </section>
+  
+
+  <!-- ===== About 섹션 ===== -->
+  <section class="about-section" id="about-section">
+    <h2>About Dad and Dot Games</h2>
+    <p>
+      안녕하세요! 저희는 “아빠와 아이가 함께 즐길 수 있는 게임”을 만드는 팀입니다. <br>
+      아이들에게는 재미와 학습을, 부모님께는 안심과 공감을 전해드리고 싶어요.
+      <br><br>
+      우주적 상상력으로 아이들의 뇌와 마음을 성장시키자!
+      먼 옛날, 우주의 한 구석에서 떠돌던 ‘아빠’가 작은 별에서 살던 여아이를 만났습니다.<br>
+      그리곤 둘이 함께 손잡고 우주를 탐험하며 새롭고 기발한 게임들을 만들기 시작했죠!<br>
+    </p>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    © 2025 Dad and Dot Games. All rights reserved.
+  </footer>
+
+  <!-- 공통 JS -->
+  <script src="js/common.js"></script>
+</body>
+</html>

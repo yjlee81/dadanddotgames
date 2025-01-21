@@ -160,20 +160,17 @@
     
     /* 버튼 컨테이너를 하단에 고정 */
     .buttons-container {
-      position: fixed;
-      bottom: 0px; /* 하단에서 20px 위에 위치 */
+      position: fixed; 
+      top: 590px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
       justify-content: center;
       gap: 12px;
-      width: 100%; /* 필요에 따라 너비 조정 */
+      width: inherit;
       padding: 16px; /* 좌우 여백 */
       box-sizing: border-box;
       z-index: 1000; /* 다른 요소들보다 위에 표시되도록 설정 */
-      background-color: rgba(255, 255, 255, 1); /* 배경색 및 투명도 조정 (선택 사항) */
-      border-top-left-radius: 12px; /* 좌상단 모서리 둥글게 */
-      border-top-right-radius: 12px; /* 우상단 모서리 둥글게 */
     }
     
     /* Primary 버튼 */
@@ -280,13 +277,13 @@
     #game-board td.success-line {
       background-color: #0080ff !important; 
       color: #fff;
-      animation: shake-success 0.2s ease;
+      animation: shake-success 0.15s ease;
     }
     @keyframes shake-success {
       0% { transform: scale(1); }
-      25% { transform: scale(1); }
+      25% { transform: scale(1.03); }
       50% { transform: scale(1.1); }
-      75% { transform: scale(1.2); }
+      75% { transform: scale(1.3); }
       100% { transform: scale(1.1); }
     }
     
@@ -349,8 +346,7 @@
     
     /* iOS 스타일 메시지/알림 등 UI 효과 */
     .ios-toast {
-      position: fixed;
-      bottom: 88px; /* 버튼 컨테이너 하단(20px) + 버튼 높이(60px) + 8px 간격 */
+      position: relative;
       left: 50%;
       transform: translateX(-50%) translateY(20px); /* 초기 위치를 아래로 이동 */
       background-color: rgba(0, 0, 0, 0.8); /* 검정색 배경에 0.8 투명도 */
@@ -359,8 +355,11 @@
       border-radius: 14px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       font-size: 0.95rem;
-      width: 240px; /* 너비를 240px로 설정 */
-      transition: transform 0.15s ease-out, opacity 0.15s ease-out; /* 애니메이션 속도 및 타이밍 조정 */
+      max-width: 240px; /* 최대 너비를 240px로 설정 */
+      width: auto; /* 내용에 맞게 너비 자동 조정 */
+      white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+      text-align: center; /* 텍스트 중앙 정렬 */
+      transition: transform 0.1s ease-out, opacity 0.10s ease-out; /* 애니메이션 속도 및 타이밍 조정 */
       opacity: 0;
       pointer-events: none;
       z-index: 999999;
@@ -485,7 +484,7 @@
         sum: "Sum",
         score: "Score",
         time: "Time",
-        noMore: "Done (Fail: -100 points)",
+        noMore: "Done!",
         hint: "Hint",
         startTile: "Start Tile",
         cancelSelection: "Selection Cancelled",
@@ -525,7 +524,7 @@
         sum: "合計",
         score: "スコア",
         time: "時間",
-        noMore: "完了 (失敗時 -100)",
+        noMore: "完了！",
         hint: "ヒント",
         startTile: "開始タイル",
         cancelSelection: "選択キャンセル",
@@ -545,7 +544,7 @@
         sum: "合计",
         score: "得分",
         time: "时间",
-        noMore: "完成 (失败时 -100)",
+        noMore: "完成!",
         hint: "提示",
         startTile: "起始方块",
         cancelSelection: "取消选择",
@@ -573,11 +572,11 @@
       }
       const scoreLabelEl = document.getElementById('score-label');
       if (scoreLabelEl) {
-        scoreLabelEl.textContent = `${translations[lang].score}:`;
+        scoreLabelEl.textContent = `${translations[lang].score}`;
       }
       const timerLabelEl = document.getElementById('timer-label');
       if (timerLabelEl) {
-        timerLabelEl.textContent = `${translations[lang].time}:`;
+        timerLabelEl.textContent = `${translations[lang].time}`;
       }
       const noMoreEl = document.getElementById('no-more');
       if (noMoreEl) {
@@ -658,39 +657,41 @@
       <div><button id="restart-btn">다시 시작</button></div>
     </div>
   </header>
-
-  <!-- 상단 바: 라운드, 제시숫자, 점수, 타이머 -->
-  <div id="info-bar">
-    <div class="info-labels">
-      <span id="target-label">Goal</span> 
-      <span id="score-label">Score</span> 
-    </div>
-    <div class="info-data">
-      <span id="target-number">10</span>
-      <span id="score">0</span>
-    </div>
-  </div>
-
-  <!-- 보드 -->
-  <div class="board-container">
-    <table id="game-board"></table>
-  </div>
-
   
-  <div id="timer">00:00</div>
-  
-  <!-- 모달 오버레이 -->
-  <div id="overlay">
-    <div id="overlay-message"></div>
-  </div>
-  <!-- 버튼 컨테이너 -->
-  <div class="buttons-container">
-    <button id="no-more" class="primary-button">Done!</button>
-    <button id="hint-btn" class="secondary-button">Hint</button>
-  </div>
+    <!-- 상단 바: 라운드, 제시숫자, 점수, 타이머 -->
+    <div id="info-bar">
+      <div class="info-labels">
+        <span id="target-label">Goal</span> 
+        <span id="score-label">Score</span> 
+      </div>
+      <div class="info-data">
+        <span id="target-number">10</span>
+        <span id="score">0</span>
+      </div>
+    </div>
 
-  <!-- 토스트 메시지 요소 -->
-  <div class="ios-toast" id="toast-message"></div>
+    <!-- 보드 -->
+    <div class="board-container">
+      <table id="game-board"></table>
+    </div>
+
+    
+    <div id="timer">00:00</div>
+    
+    <!-- 모달 오버레이 -->
+    <div id="overlay">
+      <div id="overlay-message"></div>
+    </div>
+    <!-- 버튼 컨테이너 -->
+
+    <!-- 토스트 메시지 요소 -->
+    <div class="ios-toast" id="toast-message"></div>
+
+    <div class="buttons-container">
+      <button id="no-more" class="primary-button">Done!</button>
+      <button id="hint-btn" class="secondary-button">Hint</button>
+    </div>
+  
 
   <script>
   /****************************************************************
@@ -746,11 +747,7 @@
     updateInfoBar();
     renderBoard();
 
-    statusBarEl.textContent = 
-      translations[currentLanguage].statusStart
-        .replace("{round}", currentRound)
-        .replace("{target}", targetSum)
-        .replace("{score}", totalScore);
+    
   }
 
   /****************************************************************
@@ -1063,7 +1060,6 @@
     hintLinePositions = picked;
     // 표시
     markLine(picked, "hint-line");  
-    statusBarEl.textContent = translations[currentLanguage].hint;
 
     // 힌트 메시지를 ios-toast로 표시
     showIOSToastMessage(translations[currentLanguage].hintMessage);
