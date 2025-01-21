@@ -7,19 +7,17 @@ const translations = {
     time: "Time",
     noMore: "Done!",
     hint: "Hint",
-    restart: "Restart",
     startTile: "Start Tile",
     cancelSelection: "Selection Cancelled",
     success: "Success",
-    fail: "The sum of the numbers does not equal {target}.",
+    fail: "Fail",
     failSum: "The sum of the numbers does not equal {target}.",
     hintMessage: "Drag to select multiple numbers",
     overlayClear: "Round Clear! Score=",
     overlayNext: "Proceed to the next round",
     overlayFail: "Combinations still exist! Score -100",
     statusStart: "Round {round} start! (Target={target}, Score={score})",
-    ok: "OK",
-    invalidPath: "Invalid path!"
+    ok: "OK"
   },
   ko: {
     title: "합! or 결!",
@@ -29,19 +27,17 @@ const translations = {
     time: "시간",
     noMore: "결!",
     hint: "힌트",
-    restart: "재시작",
     startTile: "시작칸",
     cancelSelection: "선택 취소",
     success: "성공",
-    fail: "숫자들의 합이 {target} 이 아니예요.",
+    fail: "실패: 숫자들의 합이 {target} 이 아니예요.",
     failSum: "숫자들의 합이 {target} 이 아니예요.",
     hintMessage: "드래그해서 여러 숫자들을 선택하세요",
     overlayClear: "라운드 클리어! 점수=",
     overlayNext: "다음 라운드 진행",
     overlayFail: "아직 조합이 남아있어요. Score -100",
     statusStart: "Round {round} 시작! (Target={target}, 누적점수={score})",
-    ok: "확인",
-    invalidPath: "잘못된 경로!"
+    ok: "확인"
   },
   ja: {
     title: "合計！または完了！",
@@ -51,19 +47,17 @@ const translations = {
     time: "時間",
     noMore: "完了！",
     hint: "ヒント",
-    restart: "再スタート",
     startTile: "開始タイル",
     cancelSelection: "選択キャンセル",
     success: "成功",
-    fail: "数の合計が {target} ではありません",
+    fail: "失敗",
     failSum: "数の合計が {target} ではありません",
     hintMessage: "ドラッグして複数の数字を選択してください",
     overlayClear: "ラウンドクリア！スコア=",
     overlayNext: "次のラウンドに進む",
     overlayFail: "まだ組み合わせが残っています！スコア -100",
     statusStart: "Round {round} 開始！ (Target={target}, 累積スコア={score})",
-    ok: "確認",
-    invalidPath: "無効なパス！"
+    ok: "確認"
   },
   zh: {
     title: "合！或完成！",
@@ -73,63 +67,49 @@ const translations = {
     time: "时间",
     noMore: "完成!",
     hint: "提示",
-    restart: "重新开始",
     startTile: "起始方块",
     cancelSelection: "取消选择",
     success: "成功",
-    fail: "数字的总和不等于 {target}",
+    fail: "失败",
     failSum: "数字的总和不等于 {target}",
     hintMessage: "请拖动选择多个数字",
     overlayClear: "回合清除！得分=",
     overlayNext: "进行下一回合",
     overlayFail: "仍有组合存在！得分 -100",
     statusStart: "Round {round} 开始！ (Target={target}, 累积得分={score})",
-    ok: "确认",
-    invalidPath: "无效路径！"
+    ok: "确认"
   }
 };
 
-let currentLanguage = document.getElementById('language-select').value;
-
 function updateLanguage(lang) {
-  currentLanguage = lang; // 현재 언어 업데이트
   document.title = translations[lang].title;
-  
   const gameTitleEl = document.querySelector('.game-title');
   if (gameTitleEl) {
     gameTitleEl.textContent = translations[lang].title;
   }
-  
   const roundLabelEl = document.getElementById('round-label');
   if (roundLabelEl) {
     roundLabelEl.textContent = `${translations[lang].round} ${currentRound}`;
   }
-  
   const scoreLabelEl = document.getElementById('score-label');
   if (scoreLabelEl) {
     scoreLabelEl.textContent = `${translations[lang].score}`;
   }
-  
   const timerLabelEl = document.getElementById('timer-label');
   if (timerLabelEl) {
     timerLabelEl.textContent = `${translations[lang].time}`;
   }
-  
   const noMoreEl = document.getElementById('no-more');
   if (noMoreEl) {
     noMoreEl.textContent = translations[lang].noMore;
   }
-  
-  // 힌트 버튼 업데이트 (카운트 포함)
+  /* 힌트버튼은 카운트를 포함하여 별도로 처리
+  const hintBtnEl = document.getElementById('hint-btn');
+  if (hintBtnEl) {
+    hintBtnEl.textContent = translations[lang].hint;
+  } */
+  // 추가적인 요소들의 텍스트 설정
   updateHintButton();
-  
-  // 다시 시작 버튼 텍스트 업데이트
-  const restartBtn = document.getElementById('restart-btn');
-  if (restartBtn) {
-    restartBtn.textContent = translations[lang].restart;
-  }
-  
-  // 기타 UI 요소 업데이트가 필요하다면 추가
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -250,6 +230,9 @@ const hintBtn = document.getElementById("hint-btn");
 const overlayEl = document.getElementById("overlay");
 const overlayMsgEl = document.getElementById("overlay-message");
 
+// 현재 언어 저장
+let currentLanguage = document.getElementById('language-select').value;
+
 /****************************************************************
  * 4. 상단 정보 업데이트
  ****************************************************************/
@@ -338,7 +321,7 @@ function checkLine(start, end) {
   }
 
   if (!linePositions) {
-    showIOSToastMessage(translations[currentLanguage].invalidPath);
+    showIOSToastMessage("잘못된 경로!");
     return;
   }
 
@@ -579,7 +562,7 @@ function updateHintButton() {
     hintBtn.textContent = `${translations[currentLanguage].hint} (${hintCount})`;
     hintBtn.classList.remove("ad-mode");
   } else if (hintCount === 1) {
-    hintBtn.textContent = `${translations[currentLanguage].hint} (0)`;
+    hintBtn.textContent = `${translations[currentLanguage].hint} (Ad)`;
     hintBtn.classList.add("ad-mode");
   }
 }
@@ -598,7 +581,8 @@ function showAdAndResetHints() {
     }
     hintCount = maxHints;
     updateHintButton();
-    }, 5000); // 5초 후 리셋 (예시)   
+    alert("힌트가 리셋되었습니다! 힌트를 다시 사용할 수 있습니다.");
+  }, 5000); // 5초 후 리셋 (예시)
 }
 
 

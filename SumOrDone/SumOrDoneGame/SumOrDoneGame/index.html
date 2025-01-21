@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sum! or Done!</title>
+
+  <!-- iOS 모바일 최적화 -->
+  <meta name="viewport" 
+      content="width=375, height=812, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- 외부 CSS 파일 연결 -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- 외부 JavaScript 파일 연결 -->
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <!-- GNB 추가 -->
+  <header class="gnb-lnb">
+    <div class="left-group">
+      <h2 class="game-title">합! or 결! <span id="round-label">Round 1</span></h2>
+    </div>
+    <div class="right-group">
+      <div class="lang-dropdown">
+        <select class="language-selector" id="language-select">
+          <option value="en">EN</option>
+          <option value="ko" selected>KR</option>
+          <option value="ja">JP</option>
+          <option value="zh">ZH</option>
+        </select>
+      </div>
+      <div><button id="restart-btn">다시 시작</button></div>
+    </div>
+  </header>
+  
+  <!-- 상단 바: 라운드, 제시숫자, 점수, 타이머 -->
+  <div id="info-bar">
+    <div class="info-labels">
+      <span id="target-label">Goal</span> 
+      <span id="score-label">Score</span> 
+    </div>
+    <div class="info-data">
+      <span id="target-number">10</span>
+      <span id="score">0</span>
+    </div>
+  </div>
+
+  <!-- 보드 -->
+  <div class="board-container">
+    <table id="game-board"></table>
+  </div>
+  
+  <div id="timer">00:00</div>
+  
+  <!-- 모달 오버레이 -->
+  <div id="overlay">
+    <div id="overlay-message"></div>
+  </div>
+  
+  <!-- 토스트 메시지 요소 -->
+  <div class="ios-toast" id="toast-message"></div>
+
+  <div class="buttons-container">
+    <button id="no-more" class="primary-button">Done!</button>
+    <button id="hint-btn" class="secondary-button">Hint (3)</button>
+  </div>
+</body>
+</html>

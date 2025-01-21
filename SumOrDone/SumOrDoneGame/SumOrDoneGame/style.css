@@ -301,7 +301,7 @@ button .ripple {
   background-color: rgba(0, 0, 0, 0.7); /* 더 어두운 반투명 검은색 배경 */
   justify-content: center;
   align-items: center;
-  z-index: 1001;
+  z-index: 1000;
 }
 
 #overlay-message {
@@ -343,7 +343,7 @@ button .ripple {
   border-radius: 14px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   font-size: 0.95rem;
-  max-width: 280px; /* 최대 너비를 280px로 설정 */
+  max-width: 240px; /* 최대 너비를 240px로 설정 */
   width: auto; /* 내용에 맞게 너비 자동 조정 */
   white-space: nowrap; /* 텍스트를 한 줄로 유지 */
   text-align: center; /* 텍스트 중앙 정렬 */
@@ -371,11 +371,9 @@ button .ripple {
 @keyframes shrink-font {
   0% {
     font-size: 28px;
-    transform: scale(1.0);
   }
   100% {
     font-size: 24px;
-    transform: scale(0.9);
   }
 }
 
@@ -483,6 +481,6 @@ button:active {
 /* 힌트 버튼 비활성화 스타일 */
 #hint-btn:disabled {
   cursor: not-allowed;
-  opacity: 0.3;
-  color: #a7a7a7;
+  opacity: 0.5;
+  color: #5d5a5a;
 } 
