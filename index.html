@@ -1,68 +1,147 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <title>Sum! or Done!</title>
 
-  <!-- iOS 모바일 최적화 -->
-  <meta name="viewport" 
-      content="width=375, height=812, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- 반응형 뷰포트 설정 -->
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no">
 
-  <!-- 외부 CSS 파일 연결 -->
+  <!-- 내부 스타일 -->
   <link rel="stylesheet" href="style.css">
 
-  <!-- 외부 JavaScript 파일 연결 -->
-  <script src="script.js" defer></script>
+
+  <!-- 외부 JavaScript(아래 script 태그로 직접 삽입) -->
+  <script src="script.js"></script>
 </head>
 <body>
-  <!-- GNB 추가 -->
-  <header class="gnb-lnb">
-    <div class="left-group">
-      <h2 class="game-title">합! or 결! <span id="round-label">Round 1</span></h2>
-    </div>
-    <div class="right-group">
-      <div class="lang-dropdown">
-        <select class="language-selector" id="language-select">
-          <option value="en">EN</option>
-          <option value="ko" selected>KR</option>
-          <option value="ja">JP</option>
-          <option value="zh">ZH</option>
-        </select>
+
+  <!-- [1] 첫화면 -->
+  <div id="titleScreen">
+    <header class="gnb-lnb">
+      <div class="left-group">
+        <h2 class="game-title">합!결!</h2>
       </div>
-      <div><button id="restart-btn">재시작</button></div>
-    </div>
-  </header>
-  
-  <!-- 상단 바: 라운드, 제시숫자, 점수, 타이머 -->
-  <div id="info-bar">
-    <div class="info-labels">
-      <span id="target-label">Goal</span> 
-      <span id="score-label">Score</span> 
-    </div>
-    <div class="info-data">
-      <span id="target-number">10</span>
-      <span id="score">0</span>
-    </div>
+      <div class="right-group">
+        <!-- 언어 선택 -->
+        <div class="lang-dropdown">
+          <select class="language-selector" id="language-select">
+            <option value="en">EN</option>
+            <option value="ko" selected>KR</option>
+            <option value="ja">JP</option>
+            <option value="zh">ZH</option>
+          </select>
+        </div>
+        
+      </div>
+    </header>
+    <h1 id="titleLabel">결!합!</h1>
+    <label id="roundSelectLabel" for="round-select">시작 라운드 선택</label>
+    <select id="round-select" class="selector">
+      <option value="1">Round 1 (Goal:10)</option>
+      <option value="2">Round 2 (Goal:11)</option>
+      <option value="3">Round 3 (Goal:12)</option>
+      <option value="4">Round 4 (Goal:13)</option>
+      <option value="5">Round 5 (Goal:14)</option>
+      <option value="6">Round 6 (Goal:15)</option>
+      <option value="7">Round 7 (Goal:16)</option>
+      <option value="8">Round 8 (Goal:17)</option>
+      <option value="9">Round 9 (Goal:18)</option>
+      <option value="10">Round 10 (Goal:19)</option>
+    </select>
+    <button id="start-game-btn">게임 시작</button>
   </div>
 
-  <!-- 보드 -->
-  <div class="board-container">
-    <table id="game-board"></table>
+  <!-- [2] 카운트다운 오버레이 -->
+  <div id="countdownOverlay">
+    <div id="countdownNumber">3</div>
+    <div id="guideMessage" class="guide-message">드래그하여 목표점수를 만들어보세요!</div>
   </div>
-  
-  <div id="timer">00:00</div>
-  
-  <!-- 모달 오버레이 -->
+
+  <!-- [3] 게임화면 -->
+  <div id="gameContainer">
+
+    <!-- GNB 헤더 -->
+    <header class="gnb-lnb">
+      <div class="left-group">
+        <h2 class="game-title">결!합!</h2>
+        <span id="round-label">Round 1</span>
+      </div>
+      <div class="right-group">
+        <!-- 언어 선택 -->
+        <div class="lang-dropdown">
+          <select class="language-selector" id="language-select">
+            <option value="en">EN</option>
+            <option value="ko" selected>KR</option>
+            <option value="ja">JP</option>
+            <option value="zh">ZH</option>
+          </select>
+        </div>
+        <!-- 3dot 메뉴 버튼 -->
+        <button id="menu-button">⋮</button>
+      </div>
+
+      <!-- 플로팅 메뉴 -->
+      <div id="menu-popup">
+        <ul>
+          <li id="menu-restart">다시 시작하기</li>
+          <li id="menu-backToTitle">첫화면으로 돌아가기</li>
+          <li id="menu-policy">개인정보 취급방침</li>
+        </ul>
+      </div>
+    </header>
+
+    <!-- 상단 바: 목표점수, 내 점수, 남은 시간 -->
+    <div id="info-bar">
+      <div class="info-box">
+        <span class="label" id="target-label">Goal</span>
+        <span class="data" id="target-number">10</span>
+      </div>
+      <div class="info-box">
+        <span class="label" id="score-label">Score</span>
+        <span class="data" id="score">0</span>
+      </div>
+      <div class="info-box">
+        <span class="label" id="timer-label">Time</span>
+        <span class="data" id="timer">03:00</span>
+      </div>
+    </div>
+
+    <!-- 보드 -->
+    <div class="board-container">
+      <table id="game-board"></table>
+    </div>
+
+    <!-- 토스트 메시지 -->
+    <div class="ios-toast" id="toast-message"></div>
+
+    <!-- 하단 버튼 -->
+    <div class="buttons-container">
+      <button id="no-more" class="primary-button">Done!</button>
+      <button id="hint-btn" class="secondary-button">Hint</button>
+    </div>
+
+  </div> <!-- /gameContainer -->
+
+  <!-- [4] 모달 오버레이 -->
   <div id="overlay">
     <div id="overlay-message"></div>
   </div>
-  
-  <!-- 토스트 메시지 요소 -->
-  <div class="ios-toast" id="toast-message"></div>
 
-  <div class="buttons-container">
-    <button id="no-more" class="primary-button">Done!</button>
-    <button id="hint-btn" class="secondary-button">Hint (3)</button>
+
+  <!-- 게임 끝(타이머 종료) 오버레이 추가 -->
+  <div id="gameOverOverlay" style="display: none;">
+    <div id="gameOverMessage"></div>
   </div>
+  
+  <!-- [5] 광고 모달 (힌트 버튼 누르면 노출) -->
+  <div id="ad-modal">
+    <div class="ad-content">
+      <p>광고 재생 중...</p>
+      <button id="ad-close-btn">광고 닫기</button>
+    </div>
+  </div>
+
 </body>
 </html>

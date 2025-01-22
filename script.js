@@ -1,805 +1,923 @@
+/***************************************************
+ * 0. i18n 번역
+ ***************************************************/
 const translations = {
-  en: {
-    title: "Sum! or Done!",
-    round: "Round",
-    sum: "Sum",
-    score: "Score",
-    time: "Time",
-    noMore: "Done!",
-    hint: "Hint",
-    restart: "Restart",
-    startTile: "Start Tile",
-    cancelSelection: "Selection Cancelled",
-    success: "Success",
-    fail: "The sum of the numbers does not equal {target}.",
-    failSum: "The sum of the numbers does not equal {target}.",
-    hintMessage: "Drag to select multiple numbers",
-    overlayClear: "Round Clear! Score=",
-    overlayNext: "Proceed to the next round",
-    overlayFail: "Combinations still exist! Score -100",
-    statusStart: "Round {round} start! (Target={target}, Score={score})",
-    ok: "OK",
-    invalidPath: "Invalid path!"
-  },
-  ko: {
-    title: "합! or 결!",
-    round: "라운드",
-    sum: "합",
-    score: "점수",
-    time: "시간",
-    noMore: "결!",
-    hint: "힌트",
-    restart: "재시작",
-    startTile: "시작칸",
-    cancelSelection: "선택 취소",
-    success: "성공",
-    fail: "숫자들의 합이 {target} 이 아니예요.",
-    failSum: "숫자들의 합이 {target} 이 아니예요.",
-    hintMessage: "드래그해서 여러 숫자들을 선택하세요",
-    overlayClear: "라운드 클리어! 점수=",
-    overlayNext: "다음 라운드 진행",
-    overlayFail: "아직 조합이 남아있어요. Score -100",
-    statusStart: "Round {round} 시작! (Target={target}, 누적점수={score})",
-    ok: "확인",
-    invalidPath: "잘못된 경로!"
-  },
-  ja: {
-    title: "合計！または完了！",
-    round: "ラウンド",
-    sum: "合計",
-    score: "スコア",
-    time: "時間",
-    noMore: "完了！",
-    hint: "ヒント",
-    restart: "再スタート",
-    startTile: "開始タイル",
-    cancelSelection: "選択キャンセル",
-    success: "成功",
-    fail: "数の合計が {target} ではありません",
-    failSum: "数の合計が {target} ではありません",
-    hintMessage: "ドラッグして複数の数字を選択してください",
-    overlayClear: "ラウンドクリア！スコア=",
-    overlayNext: "次のラウンドに進む",
-    overlayFail: "まだ組み合わせが残っています！スコア -100",
-    statusStart: "Round {round} 開始！ (Target={target}, 累積スコア={score})",
-    ok: "確認",
-    invalidPath: "無効なパス！"
-  },
-  zh: {
-    title: "合！或完成！",
-    round: "回合",
-    sum: "合计",
-    score: "得分",
-    time: "时间",
-    noMore: "完成!",
-    hint: "提示",
-    restart: "重新开始",
-    startTile: "起始方块",
-    cancelSelection: "取消选择",
-    success: "成功",
-    fail: "数字的总和不等于 {target}",
-    failSum: "数字的总和不等于 {target}",
-    hintMessage: "请拖动选择多个数字",
-    overlayClear: "回合清除！得分=",
-    overlayNext: "进行下一回合",
-    overlayFail: "仍有组合存在！得分 -100",
-    statusStart: "Round {round} 开始！ (Target={target}, 累积得分={score})",
-    ok: "确认",
-    invalidPath: "无效路径！"
-  }
-};
-
-let currentLanguage = document.getElementById('language-select').value;
-
-function updateLanguage(lang) {
-  currentLanguage = lang; // 현재 언어 업데이트
-  document.title = translations[lang].title;
+    en: {
+      title: "Sum! or Done!",
+      startGame: "Start Game",
+      selectRound: "Select Round",
+      round: "Round",
+      goal: "Goal",
+      score: "Score",
+      myScore: "Score",
+      time: "Time",
+      noMore: "Done!",
+      hint: "Hint",
+      restartMenu: "Restart Round",
+      backToTitle: "Go to Title",
+      policy: "Privacy Policy",
+      policyLink: "pp.html",
+      noCombinationToast: "No more combinations, please press 'Done!' button.",
+      cancelSelection: "Selection Cancelled",
+      success: "Success",
+      failSum: "Sum of numbers is not {target}",
+      hintMessage: "Drag to select multiple numbers",
+      overlayClear: "Round Clear! Score=",
+      overlayNext: "Go to next round",
+      overlayFail: "There are still combinations! Score -100",
+      statusStart: "Round {round} Start! (Target={target}, Score={score})",
+      ok: "OK",
+      invalidPath: "Invalid path!",
+      countdownGuide: "Drag tiles to make the target sum!",
+      timeOverMsg: "Time Over!",
+      finalScoreMsg: "Your final score:"
+    },
+    ko: {
+      title: "결!합!",
+      startGame: "게임 시작",
+      selectRound: "시작 라운드 선택",
+      round: "라운드",
+      goal: "목표점수",
+      score: "점수",
+      myScore: "내 점수",
+      time: "남은 시간",
+      noMore: "결!",
+      hint: "힌트",
+      restartMenu: "다시 시작하기",
+      backToTitle: "첫화면으로 돌아가기",
+      policy: "개인정보 취급방침",
+      policyLink: "pp.html",
+      noCombinationToast: "더 이상의 조합이 없으니 '결!' 버튼을 누르세요.",
+      cancelSelection: "선택 취소",
+      success: "성공",
+      failSum: "숫자들의 합이 {target} 이 아니예요.",
+      hintMessage: "드래그하여 여러 숫자를 선택하세요",
+      overlayClear: "라운드 클리어! 점수=",
+      overlayNext: "다음 라운드 진행",
+      overlayFail: "아직 조합이 남아있어요! 점수 -100",
+      statusStart: "Round {round} 시작! (Target={target}, 누적점수={score})",
+      ok: "확인",
+      invalidPath: "잘못된 경로!",
+      countdownGuide: "드래그하여 목표점수를 만들어보세요!",
+      timeOverMsg: "시간 종료!",
+      finalScoreMsg: "최종 점수:"
+    },
+    ja: {
+      title: "合計！または完了！",
+      startGame: "ゲーム開始",
+      selectRound: "ラウンド選択",
+      round: "ラウンド",
+      goal: "目標スコア",
+      score: "スコア",
+      myScore: "スコア",
+      time: "残り時間",
+      noMore: "完了！",
+      hint: "ヒント",
+      restartMenu: "再スタート",
+      backToTitle: "タイトルに戻る",
+      policy: "プライバシーポリシー",
+      policyLink: "pp.html",
+      noCombinationToast: "これ以上の組み合わせがないので「完了！」を押してください。",
+      cancelSelection: "選択キャンセル",
+      success: "成功",
+      failSum: "数の合計が {target} ではありません",
+      hintMessage: "ドラッグして複数の数字を選択してください",
+      overlayClear: "ラウンドクリア！ スコア=",
+      overlayNext: "次のラウンドに進む",
+      overlayFail: "まだ組み合わせが残っています！ スコア -100",
+      statusStart: "Round {round} 開始 (Target={target}, Score={score})",
+      ok: "確認",
+      invalidPath: "無効なパス!",
+      countdownGuide: "ドラッグして目標スコアを作りましょう！",
+      timeOverMsg: "時間切れ！",
+      finalScoreMsg: "最終スコア:"
+    },
+    zh: {
+      title: "合！或完成！",
+      startGame: "开始游戏",
+      selectRound: "选择回合",
+      round: "回合",
+      goal: "目标分数",
+      score: "得分",
+      myScore: "我的分数",
+      time: "剩余时间",
+      noMore: "完成！",
+      hint: "提示",
+      restartMenu: "重新开始",
+      backToTitle: "返回首页",
+      policy: "隐私政策",
+      policyLink: "pp.html",
+      noCombinationToast: "没有其他组合，请按“完成”按钮",
+      cancelSelection: "取消选择",
+      success: "成功",
+      failSum: "数字的总和不等于 {target}",
+      hintMessage: "拖动选择多个数字",
+      overlayClear: "回合完成！ 得分=",
+      overlayNext: "进入下一回合",
+      overlayFail: "仍有组合存在！得分 -100",
+      statusStart: "Round {round} 开始 (Target={target}, Score={score})",
+      ok: "确认",
+      invalidPath: "无效路径！",
+      countdownGuide: "拖动方块来组成目标分数！",
+      timeOverMsg: "时间到！",
+      finalScoreMsg: "最终得分:"
+    }
+  };
   
-  const gameTitleEl = document.querySelector('.game-title');
-  if (gameTitleEl) {
-    gameTitleEl.textContent = translations[lang].title;
-  }
+  /***************************************************
+   * 전역 변수 & DOM 참조
+   ***************************************************/
+  let currentLanguage = "ko";  // 기본 한국어
+  let currentRound = 1;
+  let totalScore = 0;
+  let targetSum = 10;
+  const BOARD_ROWS = 6;
+  const BOARD_COLS = 6;
+  const MIN_NUM = 1;
+  const MAX_NUM = 9;
   
-  const roundLabelEl = document.getElementById('round-label');
-  if (roundLabelEl) {
-    roundLabelEl.textContent = `${translations[lang].round} ${currentRound}`;
-  }
+  let boardData = [];
+  let startPos = null;
+  let hintLinePositions = null;
+  let remainingSeconds = 180; // 3분(180초)
+  let timerInterval = null;
+  let isTimerPaused = false;
   
-  const scoreLabelEl = document.getElementById('score-label');
-  if (scoreLabelEl) {
-    scoreLabelEl.textContent = `${translations[lang].score}`;
-  }
+  // DOM 변수
+  let titleScreenEl,
+      countdownOverlayEl,
+      countdownNumberEl,
+      guideMessageEl,
+      gameContainerEl,
+      roundLabelEl,
+      targetNumberEl,
+      scoreEl,
+      timerEl,
+      boardEl,
+      noMoreBtn,
+      hintBtn,
+      overlayEl,
+      overlayMsgEl,
+      menuButtonEl,
+      menuPopupEl,
+      adModalEl,
+      toastEl,
+      gameOverOverlayEl,
+      gameOverMessageEl;
   
-  const timerLabelEl = document.getElementById('timer-label');
-  if (timerLabelEl) {
-    timerLabelEl.textContent = `${translations[lang].time}`;
-  }
+  /***************************************************
+   * 초기 DOM 로드 후
+   ***************************************************/
+  document.addEventListener("DOMContentLoaded", () => {
+    // HTML 내 요소 참조
+    titleScreenEl = document.getElementById("titleScreen");
+    countdownOverlayEl = document.getElementById("countdownOverlay");
+    countdownNumberEl = document.getElementById("countdownNumber");
+    guideMessageEl = document.getElementById("guideMessage");
+    gameContainerEl = document.getElementById("gameContainer");
   
-  const noMoreEl = document.getElementById('no-more');
-  if (noMoreEl) {
-    noMoreEl.textContent = translations[lang].noMore;
-  }
+    roundLabelEl = document.getElementById("round-label");
+    targetNumberEl = document.getElementById("target-number");
+    scoreEl = document.getElementById("score");
+    timerEl = document.getElementById("timer");
+    boardEl = document.getElementById("game-board");
   
-  // 힌트 버튼 업데이트 (카운트 포함)
-  updateHintButton();
+    noMoreBtn = document.getElementById("no-more");
+    hintBtn = document.getElementById("hint-btn");
+    overlayEl = document.getElementById("overlay");
+    overlayMsgEl = document.getElementById("overlay-message");
   
-  // 다시 시작 버튼 텍스트 업데이트
-  const restartBtn = document.getElementById('restart-btn');
-  if (restartBtn) {
-    restartBtn.textContent = translations[lang].restart;
-  }
+    menuButtonEl = document.getElementById("menu-button");
+    menuPopupEl = document.getElementById("menu-popup");
   
-  // 기타 UI 요소 업데이트가 필요하다면 추가
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const languageSelect = document.getElementById('language-select');
-  languageSelect.addEventListener('change', (event) => {
-    const selectedLang = event.target.value;
-    updateLanguage(selectedLang);
-  });
-
-  // 초기 언어 설정
-  updateLanguage(languageSelect.value);
-
-  // 다시 시작 버튼 이벤트 리스너 추가
-  const restartBtn = document.getElementById('restart-btn');
-  restartBtn.addEventListener('click', () => {
-    initRound(1); // 게임을 처음부터 다시 시작
-  });
-});
-
-// 버튼 Ripple 효과 예시 (선택)
-document.addEventListener("DOMContentLoaded", () => {
-  const allButtons = document.querySelectorAll("button");
-  allButtons.forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      const circle = document.createElement("span");
-      circle.classList.add("ripple");
-      const rect = btn.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      circle.style.left = x + "px";
-      circle.style.top = y + "px";
-
-      btn.appendChild(circle);
-      setTimeout(() => {
-        circle.remove();
-      }, 600);
+    adModalEl = document.getElementById("ad-modal");
+    toastEl = document.getElementById("toast-message");
+  
+    // 게임오버 오버레이 (타이머 종료 시 표시)
+    gameOverOverlayEl = document.getElementById("gameOverOverlay");
+    gameOverMessageEl = document.getElementById("gameOverMessage");
+  
+    // 언어 셀렉트
+    const languageSelect = document.getElementById("language-select");
+    languageSelect.addEventListener("change", (event) => {
+      setLanguage(event.target.value);
+    });
+    setLanguage(languageSelect.value); // 초기 언어 설정
+  
+    // 첫화면 “게임 시작” 버튼
+    const startGameBtn = document.getElementById("start-game-btn");
+    startGameBtn.addEventListener("click", onStartGame);
+  
+    // 3-dot 메뉴 버튼
+    menuButtonEl.addEventListener("click", toggleMenuPopup);
+  
+    // 서브메뉴 항목
+    menuPopupEl.querySelector("#menu-restart").addEventListener("click", () => {
+      toggleMenuPopup();
+      initRound(currentRound);
+    });
+    menuPopupEl.querySelector("#menu-backToTitle").addEventListener("click", () => {
+      toggleMenuPopup();
+      backToTitleScreen();
+    });
+    menuPopupEl.querySelector("#menu-policy").addEventListener("click", () => {
+    toggleMenuPopup();
+      location.href = translations[currentLanguage].policyLink;
+    });
+  
+    // 결(“Done!”) 버튼
+    noMoreBtn.addEventListener("click", onNoMoreClick);
+  
+    // 힌트 버튼
+    hintBtn.addEventListener("click", onHintClick);
+  
+    // 광고 모달 닫기 버튼(있다면)
+    const adCloseBtn = document.getElementById("ad-close-btn");
+    if (adCloseBtn) {
+      adCloseBtn.addEventListener("click", () => {
+        adModalEl.style.display = "none";
+        resumeTimer(); // 광고 종료 후 타이머 재개
+      });
+    }
+  
+    // Ripple 효과 등
+    initRippleEffect();
+  
+    // 첫화면 기본 노출
+    titleScreenEl.style.display = "flex";
+    gameContainerEl.style.display = "none";
+    countdownOverlayEl.style.display = "none";
+  
+    // 라운드 선택 초기값
+    const roundSelect = document.getElementById("round-select");
+    roundSelect.value = "1";
+  
+    // "홈" 버튼 클릭 시 첫화면으로 이동
+    document.getElementById('home-button').addEventListener('click', function() {
+      document.getElementById('gameOverOverlay').style.display = 'none';
+      document.getElementById('titleScreen').style.display = 'flex';
+      document.getElementById('gameContainer').style.display = 'none';
+      document.getElementById('countdownOverlay').style.display = 'none';
+      // 추가적으로 필요하다면 게임 상태 초기화
+    });
+  
+    // "다시 시작하기" 버튼 클릭 시 게임을 재시작
+    document.getElementById('menu-restart').addEventListener('click', function() {
+      document.getElementById('gameOverOverlay').style.display = 'none';
+      resetGame(); // 기존의 게임 초기화 함수 호출
     });
   });
-});
-
-function showIOSToastMessage(message, duration = 2000) {
-  const toastEl = document.getElementById('toast-message');
-  toastEl.textContent = message;
-  toastEl.classList.add('show');
-
-  setTimeout(() => {
-    toastEl.classList.remove('show');
-  }, duration);
-}
-
-/****************************************************************
- * 1. 전역 설정
- ****************************************************************/
-const BOARD_ROWS = 6;
-const BOARD_COLS = 6;
-const MIN_NUM = 1;
-const MAX_NUM = 9;
-
-// 라운드 & 타겟
-let currentRound = 1;
-function getTargetForRound(round){
-  return 10 + (round-1); // Round1=10, Round2=11,...
-}
-let targetSum = 10;
-let totalScore = 0;  
-// 2D array for board
-let boardData = [];
-// 첫 칸 선택
-let startPos = null;
-// 힌트 표시 중인 라인
-let hintLinePositions = null;
-
-// 타이머 관련 (한 번만 선언)
-let timerInterval = null;  
-let elapsedSeconds = 0;
-
-/****************************************************************
- * 2. 라운드 초기화
- ****************************************************************/
-function initRound(round=1){
-  currentRound = round;
-  targetSum = getTargetForRound(currentRound);
-
-  // 점수 초기화
-  totalScore = 0;
-
-  // 보드 생성
-  boardData = [];
-  for(let r=0;r<BOARD_ROWS;r++){
-    let rowArr=[];
-    for(let c=0;c<BOARD_COLS;c++){
-      let val= Math.floor(Math.random()*(MAX_NUM - MIN_NUM +1))+MIN_NUM;
-      rowArr.push(val);
-    }
-    boardData.push(rowArr);
-  }
-
-  startPos=null;
-  hintLinePositions=null;
-
-  updateInfoBar();
-  renderBoard();
-}
-
-/****************************************************************
- * 3. DOM 참조
- ****************************************************************/
-const roundLabelEl = document.getElementById("round-label");
-const targetNumberEl = document.getElementById("target-number");
-const scoreEl = document.getElementById("score");
-const timerEl = document.getElementById("timer");
-
-const boardEl = document.getElementById("game-board");
-const noMoreBtn = document.getElementById("no-more");
-const hintBtn = document.getElementById("hint-btn");
-
-const overlayEl = document.getElementById("overlay");
-const overlayMsgEl = document.getElementById("overlay-message");
-
-/****************************************************************
- * 4. 상단 정보 업데이트
- ****************************************************************/
-function updateInfoBar(){
-  roundLabelEl.textContent = `${translations[currentLanguage].round} ${currentRound}`;
-  targetNumberEl.textContent = targetSum;
-  scoreEl.textContent = totalScore;
-}
-
-/****************************************************************
- * 5. 보드 렌더링
- ****************************************************************/
-function renderBoard(){
-  boardEl.innerHTML="";
-  for(let r=0;r<BOARD_ROWS;r++){
-    let tr = document.createElement("tr");
-    for(let c=0;c<BOARD_COLS;c++){
-      let td=document.createElement("td");
-      let val= boardData[r][c];
-      if(val===null){
-        td.textContent="";
-        td.classList.add("hidden-tile");
-      } else {
-        td.textContent=val;
-      }
-
-      // 클릭 이벤트
-      td.addEventListener("click", ()=> onTileClick(r,c));
-
-      // 시작칸 강조
-      if(startPos && startPos[0]===r && startPos[1]===c){
-        td.classList.add("selected");
-      }
-
-      tr.appendChild(td);
-    }
-    boardEl.appendChild(tr);
-  }
-
-  // 힌트 라인이 있으면 다시 표시
-  if(hintLinePositions){
-    markLine(hintLinePositions, "hint-line");
-  }
-}
-
-/****************************************************************
- * 6. 타일 클릭 로직
- ****************************************************************/
-function onTileClick(r,c){
-  // 첫 클릭
-  if(!startPos){
-    startPos=[r,c];
-    statusBarEl.textContent=`${translations[currentLanguage].startTile}: (${r},${c}) val=${
-      boardData[r][c]===null?0:boardData[r][c]
-    }`;
-    renderBoard();
-    return;
-  }
-
-  // 같은 칸 클릭->취소
-  if(startPos[0]===r && startPos[1]===c){
-    startPos=null;
-    statusBarEl.textContent=translations[currentLanguage].cancelSelection;
-    renderBoard();
-    return;
-  }
-
-  // 두 번째 클릭
-  const endPos=[r,c];
-  checkLine(startPos,endPos);
-
-  startPos=null;
-  renderBoard();
-}
-
-/****************************************************************
- * 7. 라인 검사
- ****************************************************************/
-function checkLine(start, end) {
-  const linePositions = getLinePositions(start, end);
   
-  // 선택한 타일이 하나뿐인 경우 토스트 메시지 표시
-  if (linePositions.length === 1) {
-    showIOSToastMessage(translations[currentLanguage].hintMessage);
-    return;
+  /***************************************************
+   * 언어 설정
+   ***************************************************/
+  function setLanguage(lang) {
+    currentLanguage = lang;
+    document.title = translations[lang].title;
+  
+    // 첫화면 텍스트
+    const titleLabelEl = document.getElementById("titleLabel");
+    const startBtnEl = document.getElementById("start-game-btn");
+    const roundSelectLabelEl = document.getElementById("roundSelectLabel");
+  
+    if (titleLabelEl) titleLabelEl.textContent = translations[lang].title;
+    if (startBtnEl) startBtnEl.textContent = translations[lang].startGame;
+    if (roundSelectLabelEl) roundSelectLabelEl.textContent = translations[lang].selectRound;
+  
+    // GNB 헤더
+    const gameTitleEl = document.querySelector(".game-title");
+    if (gameTitleEl) gameTitleEl.textContent = translations[lang].title;
+  
+    // 3-dot 메뉴
+    if (menuPopupEl) {
+      const elRestart = menuPopupEl.querySelector("#menu-restart");
+      const elBackToTitle = menuPopupEl.querySelector("#menu-backToTitle");
+      const elPolicy = menuPopupEl.querySelector("#menu-policy");
+      if (elRestart) elRestart.textContent = translations[lang].restartMenu;
+      if (elBackToTitle) elBackToTitle.textContent = translations[lang].backToTitle;
+      if (elPolicy) elPolicy.textContent = translations[lang].policy;
+    }
+  
+    // 상단바 레이블
+    const targetLabelEl = document.getElementById("target-label");
+    const scoreLabelEl = document.getElementById("score-label");
+    const timerLabelEl = document.getElementById("timer-label");
+    if (targetLabelEl) targetLabelEl.textContent = translations[lang].goal;
+    if (scoreLabelEl) scoreLabelEl.textContent = translations[lang].myScore;
+    if (timerLabelEl) timerLabelEl.textContent = translations[lang].time;
+  
+    // 하단 버튼
+    if (noMoreBtn) noMoreBtn.textContent = translations[lang].noMore;
+    if (hintBtn) hintBtn.textContent = translations[lang].hint;
+  
+    // 카운트다운 가이드 메시지
+    if (guideMessageEl) guideMessageEl.textContent = translations[lang].countdownGuide;
   }
-
-  if (!linePositions) {
-    showIOSToastMessage(translations[currentLanguage].invalidPath);
-    return;
+  
+  /***************************************************
+   * [A] 첫화면 → “게임 시작” 버튼
+   ***************************************************/
+  function onStartGame() {
+    const roundSelect = document.getElementById("round-select");
+    const selectedRound = parseInt(roundSelect.value, 10) || 1;
+    currentRound = selectedRound;
+  
+    // 첫화면 숨기고 카운트다운
+    titleScreenEl.style.display = "none";
+    countdownOverlayEl.style.display = "flex";
+    gameContainerEl.style.display = "none";
+  
+    // 3,2,1 카운트다운
+    let count = 3;
+    countdownNumberEl.textContent = count;
+    const countdownTimer = setInterval(() => {
+      count--;
+      countdownNumberEl.textContent = count;
+      if (count <= 0) {
+        clearInterval(countdownTimer);
+        // 카운트다운 끝 -> 게임화면 표시 + 라운드 시작
+        countdownOverlayEl.style.display = "none";
+        gameContainerEl.style.display = "flex";
+        initRound(currentRound);
+        startTimer();
+      }
+    }, 1000);
   }
-
-  // 힌트 표시 중이면 해제
-  if (hintLinePositions) {
-    markLine(hintLinePositions, null, "hint-line");
-    hintLinePositions = null;
+  
+  /***************************************************
+   * [B] 첫화면으로 돌아가기
+   ***************************************************/
+  function backToTitleScreen() {
+    gameContainerEl.style.display = "none";
+    titleScreenEl.style.display = "flex";
+    stopTimer();
+  
+    currentRound = 1;
+    totalScore = 0;
   }
-
-  // sumVal: 실제 숫자합, gapCount: null칸
-  let sumVal = 0;
-  let gapCount = 0;
-  for (const [rr, cc] of linePositions) {
-    if (boardData[rr][cc] === null) {
-      gapCount++;
+  
+  /***************************************************
+   * [C] 메뉴 팝업 토글
+   ***************************************************/
+  function toggleMenuPopup() {
+    if (menuPopupEl.style.display === "block") {
+      menuPopupEl.style.display = "none";
     } else {
-      sumVal += boardData[rr][cc];
+      menuPopupEl.style.display = "block";
     }
   }
-  let length = linePositions.length;
-
-  // 합이 targetSum인지 확인
-  if (sumVal === targetSum) {
-    // 점수 계산
-    let gapBonus = gapCount * 10;
-    let lengthBonus = length >= 3 ? (length - 2) * 5 : 0;
-    let addScore = sumVal + gapBonus + lengthBonus;
-
-    markLine(linePositions, "success-line");
-    totalScore += addScore;
+  
+  /***************************************************
+   * 라운드 초기화
+   ***************************************************/
+  function initRound(round) {
+    currentRound = round;
+    totalScore = 0;
+    targetSum = getTargetForRound(round);
+  
+    // 보드 생성
+    boardData = [];
+    for (let r = 0; r < BOARD_ROWS; r++) {
+      let rowArr = [];
+      for (let c = 0; c < BOARD_COLS; c++) {
+        let val = Math.floor(Math.random() * (MAX_NUM - MIN_NUM + 1)) + MIN_NUM;
+        rowArr.push(val);
+      }
+      boardData.push(rowArr);
+    }
+  
+    // UI 업데이트
     updateInfoBar();
-
-    showFloatingScore(`+${addScore}`, end[0], end[1]);
-
-    setTimeout(() => {
-      removeLineTiles(linePositions);
-    }, 600);
-
-  } else {
-    // 실패 처리: 메시지 수정
-    const failMessage = translations[currentLanguage].failSum.replace("{target}", targetSum);
-    showIOSToastMessage(failMessage, 1500);
-    markLine(linePositions, "fail-line");
-
-    setTimeout(() => {
-      markLine(linePositions, null, "fail-line");
-    }, 600);
-
-    // 타겟 점수만큼 감점
-    totalScore = Math.max(0, totalScore - targetSum);
-    updateInfoBar();
-
-    // 점수 감점 효과 표시
-    showFloatingScore(`-${targetSum}`, end[0], end[1], true);
-  }
-}
-
-/** 일렬(가로/세로/대각) or null */
-function getLinePositions([r1,c1],[r2,c2]){
-  let rd=r2-r1, cd=c2-c1;
-  if(rd===0 && cd===0)return null;
-  if(!(rd===0||cd===0||Math.abs(rd)===Math.abs(cd)))return null;
-
-  function gcd(a,b){return b===0?a:gcd(b,a%b);}
-  let g= gcd(Math.abs(rd),Math.abs(cd));
-  let stepR= rd/g, stepC= cd/g;
-
-  let pos=[];
-  let curR=r1,curC=c1;
-  pos.push([curR, curC]);
-
-  let steps = Math.max(Math.abs(rd), Math.abs(cd));
-  for(let i=0;i<steps;i++){
-    curR+=stepR; curC+=stepC;
-    if(curR<0||curR>=BOARD_ROWS||curC<0||curC>=BOARD_COLS)return null;
-    pos.push([curR, curC]);
-  }
-  return pos;
-}
-
-/** 특정 라인에 클래스 부여/제거 */
-function markLine(positions, addClass=null, removeClass=null){
-  let trList=boardEl.querySelectorAll("tr");
-  positions.forEach(([r,c])=>{
-    let td= trList[r].querySelectorAll("td")[c];
-    if(removeClass){
-      td.classList.remove(removeClass);
-    }
-    if(addClass){
-      td.classList.add(addClass);
-    }
-  });
-}
-
-/** 타일 제거 */
-function removeLineTiles(linePositions){
-  let trList=boardEl.querySelectorAll("tr");
-  for(const [r,c] of linePositions){
-    let td=trList[r].querySelectorAll("td")[c];
-    td.classList.remove("success-line");
-    td.classList.add("removing");
-  }
-  setTimeout(()=>{
-    for(const [r,c] of linePositions){
-      boardData[r][c]=null;
-    }
     renderBoard();
-  },600);
-}
-
-/****************************************************************
- * 8. "결" 버튼
- ****************************************************************/
-noMoreBtn.addEventListener("click", () => {
-  let found = findAllPossibleLines();
-  if (found.length > 0) {
-    // 실패 -> -100
-    totalScore = Math.max(0, totalScore - 100);
-    updateInfoBar();
-    showOverlay(`${translations[currentLanguage].overlayFail}`);
-  } else {
-    // 라운드 클리어 -> 다음 라운드
-    totalScore += 100; // 성공 시 +100점
-    updateInfoBar();
-    showOverlay(`${translations[currentLanguage].overlayClear}${totalScore}<br>${translations[currentLanguage].overlayNext}`);
+  
+    // 타이머 재설정(3분)
+    remainingSeconds = 180;
+    updateTimerDisplay();
+  
+    // 힌트 라인, 시작칸 해제
+    hintLinePositions = null;
+    startPos = null;
   }
-});
-
-/** 남은 라인 찾기 (합만 비교) */
-function findAllPossibleLines(){
-  let results=[];
-  for(let r=0;r<BOARD_ROWS;r++){
-    for(let c=0;c<BOARD_COLS;c++){
-      for(let dr=-1;dr<=1;dr++){
-        for(let dc=-1;dc<=1;dc++){
-          if(dr===0 && dc===0) continue;
-          let linePos=[[r,c]];
-          let sumVal= boardData[r][c]===null?0:boardData[r][c];
-          let nr=r,nc=c;
-          for(let step=1;step<8;step++){
-            nr+=dr;nc+=dc;
-            if(nr<0||nr>=BOARD_ROWS||nc<0||nc>=BOARD_COLS) break;
-            sumVal+= (boardData[nr][nc]===null?0:boardData[nr][nc]);
-            linePos.push([nr,nc]);
-            if(sumVal===targetSum){
-              results.push([...linePos]);
+  
+  function getTargetForRound(round) {
+    // 1라운드=10, 2라운드=11, ...
+    return 10 + (round - 1);
+  }
+  
+  /***************************************************
+   * 상단 정보 업데이트
+   ***************************************************/
+  function updateInfoBar() {
+    roundLabelEl.textContent = translations[currentLanguage].round + " " + currentRound;
+    targetNumberEl.textContent = targetSum;
+    scoreEl.textContent = totalScore;
+  }
+  
+  /***************************************************
+   * 보드 렌더링
+   ***************************************************/
+  function renderBoard() {
+    boardEl.innerHTML = "";
+    for (let r = 0; r < BOARD_ROWS; r++) {
+      let tr = document.createElement("tr");
+      for (let c = 0; c < BOARD_COLS; c++) {
+        let td = document.createElement("td");
+        let val = boardData[r][c];
+        if (val === null) {
+          td.textContent = "";
+          td.classList.add("hidden-tile");
+        } else {
+          td.textContent = val;
+        }
+  
+        // 마우스 이벤트
+        td.addEventListener("mousedown", () => startDragSelect(r, c));
+        td.addEventListener("mousemove", () => continueDragSelect(r, c));
+        td.addEventListener("mouseup", () => stopDragSelect());
+  
+        // 터치 이벤트
+        td.addEventListener("touchstart", (e) => {
+          // 화면 스크롤 방지
+          e.preventDefault();
+          startDragSelect(r, c);
+        }, { passive: false });
+  
+        td.addEventListener("touchmove", (e) => {
+          // 화면 스크롤 방지
+          e.preventDefault();
+          const touch = e.touches[0];
+          const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+          if (targetEl && targetEl.tagName === "TD") {
+            const rowIndex = [...boardEl.querySelectorAll("tr")].indexOf(targetEl.parentNode);
+            const colIndex = [...targetEl.parentNode.children].indexOf(targetEl);
+            continueDragSelect(rowIndex, colIndex);
+          }
+        }, { passive: false });
+  
+        td.addEventListener("touchend", (e) => {
+          e.preventDefault();
+          stopDragSelect();
+        }, { passive: false });
+  
+        // 시작칸 표시
+        if (startPos && startPos[0] === r && startPos[1] === c) {
+          td.classList.add("selected");
+        }
+        tr.appendChild(td);
+      }
+      boardEl.appendChild(tr);
+    }
+  
+    // 힌트 라인 표시
+    if (hintLinePositions) {
+      markLine(hintLinePositions, "hint-line");
+    }
+  }
+  
+  /***************************************************
+   * 드래그 선택 로직
+   ***************************************************/
+  let isDragging = false;
+  let dragPositions = [];
+  
+  function startDragSelect(r, c) {
+    isDragging = true;
+    dragPositions = [[r, c]];
+    startPos = [r, c];
+    markDragSelection(dragPositions);
+  }
+  
+  function continueDragSelect(r, c) {
+    if (!isDragging) return;
+  
+    // 새로운 라인(가로/세로/대각) 계산
+    const newLinePositions = getLinePositions(startPos, [r, c]);
+    if (newLinePositions) {
+      // 이전 하이라이트 제거
+      clearDragSelection();
+      // 새 라인 표시
+      dragPositions = newLinePositions;
+      markDragSelection(dragPositions);
+    }
+  }
+  
+  function stopDragSelect() {
+    if (!isDragging) return;
+    isDragging = false;
+  
+    if (!dragPositions || dragPositions.length < 2) {
+      clearDragSelection();
+      showIOSToastMessage(translations[currentLanguage].hintMessage);
+    } else {
+      const start = dragPositions[0];
+      const end = dragPositions[dragPositions.length - 1];
+      clearDragSelection();
+      checkLine(start, end);
+    }
+  }
+  
+  /** 기존 하이라이트 지우기 */
+  function clearDragSelection() {
+    const trList = boardEl.querySelectorAll("tr");
+    dragPositions.forEach(([r, c]) => {
+      const td = trList[r].querySelectorAll("td")[c];
+      td.classList.remove("drag-select-highlight");
+    });
+    dragPositions = [];
+  }
+  
+  /** 새 하이라이트 적용 */
+  function markDragSelection(linePositions) {
+    const trList = boardEl.querySelectorAll("tr");
+    linePositions.forEach(([r, c]) => {
+      const td = trList[r].querySelectorAll("td")[c];
+      td.classList.add("drag-select-highlight");
+    });
+  }
+  
+  /***************************************************
+   * 라인 검사(checkLine)
+   ***************************************************/
+  function checkLine(start, end) {
+    const linePositions = getLinePositions(start, end);
+    if (!linePositions || linePositions.length < 2) {
+      showIOSToastMessage(translations[currentLanguage].invalidPath);
+      return;
+    }
+  
+    if (hintLinePositions) {
+      markLine(hintLinePositions, null, "hint-line");
+      hintLinePositions = null;
+    }
+  
+    let sumVal = 0;
+    let gapCount = 0;
+    for (const [rr, cc] of linePositions) {
+      if (boardData[rr][cc] === null) {
+        gapCount++;
+      } else {
+        sumVal += boardData[rr][cc];
+      }
+    }
+  
+    if (sumVal === targetSum) {
+      let gapBonus = gapCount * 10;
+      let lengthBonus = (linePositions.length >= 3) ? (linePositions.length - 2) * 5 : 0;
+      let addScore = sumVal + gapBonus + lengthBonus;
+  
+      markLine(linePositions, "success-line");
+      totalScore += addScore;
+      updateInfoBar();
+  
+      showFloatingScore("+" + addScore, end[0], end[1], false);
+      setTimeout(() => {
+        removeLineTiles(linePositions);
+      }, 600);
+    } else {
+      const failMessage = translations[currentLanguage].failSum.replace("{target}", targetSum);
+      showIOSToastMessage(failMessage, 1500);
+      markLine(linePositions, "fail-line");
+  
+      setTimeout(() => {
+        markLine(linePositions, null, "fail-line");
+      }, 600);
+  
+      // 감점
+      totalScore = Math.max(0, totalScore - targetSum);
+      updateInfoBar();
+      showFloatingScore("-" + targetSum, end[0], end[1], true);
+    }
+  }
+  
+  /** (r1,c1)~(r2,c2)가 일렬(가로, 세로, 대각)인지 확인 후 라인 좌표 반환 */
+  function getLinePositions([r1, c1], [r2, c2]) {
+    let rd = r2 - r1;
+    let cd = c2 - c1;
+    if (rd === 0 && cd === 0) return null;
+    // 가로/세로/대각 검사
+    if (!(rd === 0 || cd === 0 || Math.abs(rd) === Math.abs(cd))) return null;
+  
+    // 최대공약수
+    function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+    let g = gcd(Math.abs(rd), Math.abs(cd));
+    let stepR = rd / g;
+    let stepC = cd / g;
+  
+    let pos = [];
+    let curR = r1, curC = c1;
+    pos.push([curR, curC]);
+  
+    let steps = Math.max(Math.abs(rd), Math.abs(cd));
+    for (let i = 0; i < steps; i++) {
+      curR += stepR;
+      curC += stepC;
+      if (curR < 0 || curR >= BOARD_ROWS || curC < 0 || curC >= BOARD_COLS) return null;
+      pos.push([curR, curC]);
+    }
+    return pos;
+  }
+  
+  /** 특정 라인에 클래스 추가/제거 */
+  function markLine(positions, addClass = null, removeClass = null) {
+    let trList = boardEl.querySelectorAll("tr");
+    positions.forEach(([r, c]) => {
+      let td = trList[r].querySelectorAll("td")[c];
+      if (removeClass) {
+        td.classList.remove(removeClass);
+      }
+      if (addClass) {
+        td.classList.add(addClass);
+      }
+    });
+  }
+  
+  /** 라인 타일 제거 */
+  function removeLineTiles(linePositions) {
+    let trList = boardEl.querySelectorAll("tr");
+    for (const [r, c] of linePositions) {
+      let td = trList[r].querySelectorAll("td")[c];
+      td.classList.remove("success-line");
+      td.classList.add("removing");
+    }
+    setTimeout(() => {
+      for (const [r, c] of linePositions) {
+        boardData[r][c] = null;
+      }
+      renderBoard();
+    }, 600);
+  }
+  
+  /***************************************************
+   * Done! (결) 버튼
+   ***************************************************/
+  function onNoMoreClick() {
+    let found = findAllPossibleLines();
+    if (found.length > 0) {
+      // 조합 남음 -> -100
+      totalScore = Math.max(0, totalScore - 100);
+      updateInfoBar();
+      showOverlay(translations[currentLanguage].overlayFail);
+    } else {
+      // 라운드 클리어
+      totalScore += 100;
+      updateInfoBar();
+      showOverlay(translations[currentLanguage].overlayClear + totalScore + "<br>" + translations[currentLanguage].overlayNext);
+    }
+  }
+  
+  /** 남은 가능한 라인 전체 찾기 */
+  function findAllPossibleLines() {
+    let results = [];
+    for (let r = 0; r < BOARD_ROWS; r++) {
+      for (let c = 0; c < BOARD_COLS; c++) {
+        for (let dr = -1; dr <= 1; dr++) {
+          for (let dc = -1; dc <= 1; dc++) {
+            if (dr === 0 && dc === 0) continue;
+            let linePos = [[r, c]];
+            let sumVal = (boardData[r][c] === null ? 0 : boardData[r][c]);
+            let nr = r, nc = c;
+            for (let step = 1; step < 8; step++) {
+              nr += dr;
+              nc += dc;
+              if (nr < 0 || nr >= BOARD_ROWS || nc < 0 || nc >= BOARD_COLS) break;
+              sumVal += (boardData[nr][nc] === null ? 0 : boardData[nr][nc]);
+              linePos.push([nr, nc]);
+              if (sumVal === targetSum) {
+                results.push([...linePos]);
+              }
             }
           }
         }
       }
     }
+    return results;
   }
-  return results;
-}
-
-/****************************************************************
- * 9. Floating Score
- ****************************************************************/
-function showFloatingScore(txt, r, c, isPenalty = false) {
-  const trList = boardEl.querySelectorAll("tr");
-  const td = trList[r].querySelectorAll("td")[c];
-  let rect = td.getBoundingClientRect();
-
-  let floatEl = document.createElement("div");
-  floatEl.classList.add("floating-score");
-  floatEl.textContent = txt;
-  floatEl.style.color = isPenalty ? "#ff0000" : "#0000ff"; // 감점 시 빨간색, 점수 추가 시 파란색
-  document.body.appendChild(floatEl);
-
-  let x = rect.left + rect.width / 2;
-  let y = rect.top + rect.height / 2;
-  floatEl.style.left = `${x}px`;
-  floatEl.style.top = `${y}px`;
-
-  setTimeout(() => {
-    if (floatEl.parentNode) {
-      floatEl.parentNode.removeChild(floatEl);
-    }
-  }, 1000);
-}
-
-/****************************************************************
- * 10. 힌트 버튼
- ****************************************************************/
-let hintCount = 4;
-const maxHints = 3;
-
-hintBtn.addEventListener("click", onHintClick);
-
-function onHintClick(isInitialHint = false) {
-  // 힌트 버튼 비활성화
-  hintBtn.disabled = true;
-  let lines = findAllPossibleLines();
-  if (lines.length === 0) {
-    statusBarEl.textContent = translations[currentLanguage].hintMessage;
-    return;
-  }
-  // 기존 힌트 있으면 제거
-  if (hintLinePositions) {
-    markLine(hintLinePositions, null, "hint-line");
-    hintLinePositions = null;
-  }
-  // 하나 선택 (예: 첫 번째)
-  let picked = lines[0];
-  hintLinePositions = picked;
-  // 표시
-  markLine(picked, "hint-line");  
   
-  useHint();
-  // 힌트 메시지를 ios-toast로 표시
-  showIOSToastMessage(translations[currentLanguage].hintMessage);
-
-  setTimeout(() => {
-    hintBtn.disabled = false;
-  }, 3000); // 3초
-}
-
-/**
- * 힌트 사용 함수
- */
-function useHint() {
-  if (hintCount > 1) {
-    hintCount--;
-    updateHintButton();
-  } else if (hintCount === 1) {
-    // 광고 보기 모드로 변경
-    showAdAndResetHints();
-    hintCount = maxHints;
-    updateHintButton();
+  /***************************************************
+   * Floating Score
+   ***************************************************/
+  function showFloatingScore(txt, r, c, isPenalty = false) {
+    const trList = boardEl.querySelectorAll("tr");
+    const td = trList[r].querySelectorAll("td")[c];
+    let rect = td.getBoundingClientRect();
+  
+    let floatEl = document.createElement("div");
+    floatEl.classList.add("floating-score");
+    floatEl.textContent = txt;
+    floatEl.style.color = isPenalty ? "red" : "blue";
+    document.body.appendChild(floatEl);
+  
+    let x = rect.left + rect.width / 2;
+    let y = rect.top + rect.height / 2;
+    floatEl.style.left = x + "px";
+    floatEl.style.top = y + "px";
+  
+    setTimeout(() => {
+      if (floatEl.parentNode) {
+        floatEl.parentNode.removeChild(floatEl);
+      }
+    }, 1000);
   }
-}
-
-/**
- * 힌트 버튼 레이블 업데이트
- */
-function updateHintButton() {
-  if (hintCount > 1) {
-    hintBtn.textContent = `${translations[currentLanguage].hint} (${hintCount})`;
-    hintBtn.classList.remove("ad-mode");
-  } else if (hintCount === 1) {
-    hintBtn.textContent = `${translations[currentLanguage].hint} (0)`;
-    hintBtn.classList.add("ad-mode");
-  }
-}
-function showAdAndResetHints() {
-  // 실제 Google AdSense 광고 통합 필요
-  // 여기서는 모의로 광고 시청을 구현합니다.
-  const adModal = document.getElementById("ad-modal");
-  if (adModal) {
-    adModal.style.display = "flex";
-  }
-
-  // 광고 시청이 완료되면 힌트 카운트 리셋
-  setTimeout(() => {
-    if (adModal) {
-      adModal.style.display = "none";
-    }
-    hintCount = maxHints;
-    updateHintButton();
-    }, 5000); // 5초 후 리셋 (예시)   
-}
-
-
-/****************************************************************
- * 11. 모달
- ****************************************************************/
-function showOverlay(msg){
-  overlayMsgEl.innerHTML = 
-    `<div style="font-size:1.4rem; font-weight:600; margin-bottom:16px;">
-        ${translations[currentLanguage].round} ${currentRound}
-     </div>` 
-     + msg 
-     + `<br><button class="modal-button" onclick="closeOverlay()">${translations[currentLanguage].ok}</button>`;
-  overlayEl.style.display = "flex";
-}
-function closeOverlay(){
-  overlayEl.style.display = "none";
-  let lines= findAllPossibleLines();
-  if(lines.length===0){
-    // 라운드 클리어 -> 다음 라운드
-    currentRound++;
-    initRound(currentRound);
-  }
-}
-
-/****************************************************************
- * 12. 타이머(HH:MM:SS)
- ****************************************************************/
-function startTimer(){
-  timerInterval = setInterval(()=>{
-    elapsedSeconds++;
-    timerEl.textContent = formatTime(elapsedSeconds);
-  },1000);
-}
-function formatTime(sec){
-  let h = Math.floor(sec/3600);
-  let m = Math.floor((sec%3600)/60);
-  let s = sec%60;
-  let hh = (h<10)?"0"+h:h;
-  let mm = (m<10)?"0"+m:m;
-  let ss = (s<10)?"0"+s:s;
-  return `${hh}:${mm}:${ss}`;
-}
-
-/****************************************************************
- * 13. 게임 시작
- ****************************************************************/
-window.onload=()=>{
-  // 타이머 시작(중복 선언 없이 한번만)
-  startTimer();
-
-  // 첫 라운드 시작
-  initRound(1);
-
-  // 첫 번째 힌트 자동 표시
-  onHintClick(true);
-};
-
-// === [추가] 드래그 선택 시 강조 효과 ===
-let isDragging = false;
-let dragPositions = [];
-let dragDirection = null;
-
-function startDragSelect(r, c) {
-  isDragging = true;
-  dragPositions = [[r, c]];
-  dragDirection = null; // 'row', 'col', 'diag' 등
-  startPos = [r, c];
-  markDragSelection(dragPositions);
-}
-
-function continueDragSelect(r, c) {
-  if (!isDragging) return;
-
-  // 이미 동일 칸이면 무시
-  let lastPos = dragPositions[dragPositions.length - 1];
-  if (lastPos[0] === r && lastPos[1] === c) {
-    return;
-  }
-
-  // 최초로 방향을 결정해야 하는 시점(두 번째 칸)
-  if (dragDirection === null) {
-    const dr = r - startPos[0];
-    const dc = c - startPos[1];
-    // 가로(동일 행) / 세로(동일 열) / 대각( |dr| == |dc| ) 체크
-    if (dr === 0 && dc !== 0) {
-      dragDirection = 'row';   // 같은 행
-    } else if (dc === 0 && dr !== 0) {
-      dragDirection = 'col';   // 같은 열
-    } else if (Math.abs(dr) === Math.abs(dc)) {
-      dragDirection = 'diag';  // 대각선
-    } else {
-      // 방향이 확정되지 않으면 중단
+  
+  /***************************************************
+   * 힌트 버튼
+   ***************************************************/
+  let hintCount = 3;
+  const maxHints = 3;
+  function onHintClick() {
+    // 이미 힌트가 표시되어 있다면
+    if (hintLinePositions) {
+      showIOSToastMessage(translations[currentLanguage].noCombinationToast);
       return;
     }
+    // 광고 모달 표시 -> 타이머 일시정지
+    pauseTimer();
+    showAdModal();
   }
-
-  // 지금 클릭/터치한 (r,c)가 dragDirection에 맞는지 확인
-  if (!isInSameLine(startPos, [r, c], dragDirection)) {
-    return; // 일렬이 아니면 무시
+  
+  function showAdModal() {
+    adModalEl.style.display = "flex";
+    // 5초 뒤 자동 종료(예시)
+    setTimeout(() => {
+      adModalEl.style.display = "none";
+      resumeTimer();
+      useHint();
+    }, 1000);
   }
-
-  // 기존 하이라이트 지우고
-  clearDragSelection();
-  // 새로 (startPos)부터 (r,c)까지 라인 계산 후 하이라이트
-  const linePositions = getLinePositions(startPos, [r, c]);
-  if (!linePositions) return;
-  dragPositions = linePositions; 
-  markDragSelection(dragPositions);
-}
-
-function stopDragSelect() {
-  if (!isDragging) return;
-  isDragging = false;
-
-  // 드래그로 선택된 그룹의 합산 체크
-  if (!dragPositions || dragPositions.length < 2) {
-    clearDragSelection();
-    showIOSToastMessage(translations[currentLanguage].hintMessage);
-  } else {
-    checkDragSelectedTiles();
-  }
-}
-
-/* [추가] 방향 검사 로직(가로/세로/대각) */
-function isInSameLine([r1, c1], [r2, c2], direction) {
-  if (direction === 'row') {
-    return (r1 === r2);
-  } else if (direction === 'col') {
-    return (c1 === c2);
-  } else if (direction === 'diag') {
-    return (Math.abs(c2 - c1) === Math.abs(r2 - r1));
-  }
-  return false;
-}
-
-/* [추가] 드래그 중 라인 강조 */
-function markDragSelection(linePositions) {
-  const trList = boardEl.querySelectorAll("tr");
-  linePositions.forEach(([r, c]) => {
-    const td = trList[r].querySelectorAll("td")[c];
-    td.classList.add('drag-select-highlight', 'shrink'); // 'shrink' 클래스 추가
-  });
-}
-
-/* [수정] 드래그 선택 해제 */
-function clearDragSelection() {
-  const trList = boardEl.querySelectorAll("tr");
-  dragPositions.forEach(([r, c]) => {
-    const td = trList[r].querySelectorAll("td")[c];
-    td.classList.remove('drag-select-highlight');
-  });
-  dragPositions = [];
-}
-
-/* [수정] 드래그된 타일들 합산 체크 */
-function checkDragSelectedTiles() {
-  const start = dragPositions[0];
-  const end = dragPositions[dragPositions.length - 1];
-  clearDragSelection(); 
-  checkLine(start, end);
-}
-
-// === [수정] 보드 렌더링 시 mousedown, mousemove, mouseup(또는 터치 이벤트) 추가 ===
-function renderBoard(){
-  boardEl.innerHTML = "";
-  for(let r=0; r<BOARD_ROWS; r++){
-    let tr = document.createElement("tr");
-    for(let c=0; c<BOARD_COLS; c++){
-      let td = document.createElement("td");
-      
-      td.textContent = boardData[r][c] === null ? "" : boardData[r][c];
-
-      // 기존 td.addEventListener("click", ...) ...
-      td.addEventListener("mousedown", () => startDragSelect(r, c));
-      td.addEventListener("mousemove", () => continueDragSelect(r, c));
-      td.addEventListener("mouseup", () => stopDragSelect());
-      // 터치 환경도 처리
-      td.addEventListener("touchstart", () => startDragSelect(r, c), {passive: true});
-      td.addEventListener("touchmove", (e) => {
-        const touch = e.touches[0];
-        const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
-        if (targetEl && targetEl.tagName === 'TD') {
-          const rowIndex = [...boardEl.querySelectorAll('tr')].indexOf(targetEl.parentNode);
-          const colIndex = [...targetEl.parentNode.children].indexOf(targetEl);
-          continueDragSelect(rowIndex, colIndex);
-        }
-      }, {passive: true});
-      td.addEventListener("touchend", () => stopDragSelect());
-
-      // 시작칸 강조
-      if(startPos && startPos[0]===r && startPos[1]===c){
-        td.classList.add("selected");
-      }
-
-      tr.appendChild(td);
+  
+  function useHint() {
+    let lines = findAllPossibleLines();
+    if (lines.length === 0) {
+      showIOSToastMessage(translations[currentLanguage].noCombinationToast);
+      return;
     }
-    boardEl.appendChild(tr);
+    let picked = lines[0];
+    hintLinePositions = picked;
+    markLine(picked, "hint-line");
+    showIOSToastMessage(translations[currentLanguage].hintMessage);
+  
+    hintCount--;
+    if (hintCount <= 0) {
+      hintCount = maxHints;
+    }
   }
-  if (hintLinePositions) {
-    markLine(hintLinePositions, "hint-line");
+  
+  /***************************************************
+   * 오버레이 (라운드 종료, 실패 등)
+   ***************************************************/
+  function showOverlay(msg) {
+    overlayMsgEl.innerHTML = `
+      <div style="font-size:1.4rem; font-weight:600; margin-bottom:16px;">
+      ${translations[currentLanguage].noMore} - ${translations[currentLanguage].round} ${currentRound}
+      </div>
+    ` + msg + `
+      <br>
+      <button class="modal-button" onclick="closeOverlay()">
+        ${translations[currentLanguage].ok}
+      </button>`;
+    overlayEl.style.display = "flex";
   }
-  // 기존 코드...
-} 
+  function closeOverlay() {
+    overlayEl.style.display = "none";
+    let lines = findAllPossibleLines();
+    if (lines.length === 0) {
+      // 라운드 클리어 -> 다음 라운드
+      currentRound++;
+      initRound(currentRound);
+    }
+  }
+  
+  /***************************************************
+   * 토스트 메시지
+   ***************************************************/
+  function showIOSToastMessage(message, duration = 2000) {
+    toastEl.textContent = message;
+    toastEl.classList.add("show");
+    setTimeout(() => {
+      toastEl.classList.remove("show");
+    }, duration);
+  }
+  
+  /***************************************************
+   * 타이머 (3분 카운트다운)
+   ***************************************************/
+  function startTimer() {
+    stopTimer(); // 혹시 이전 타이머 있으면 중단
+    remainingSeconds = 180;
+    isTimerPaused = false;
+    timerEl.classList.remove("time-warning"); // 혹시 남아있을 수 있는 클래스 제거
+  
+    timerInterval = setInterval(() => {
+      if (!isTimerPaused) {
+        remainingSeconds--;
+        updateTimerDisplay();
+  
+        // 1분(60초) 남았을 때 경고 애니메이션 부여
+        if (remainingSeconds === 30) {
+          timerEl.classList.add("time-warning");
+        }
+  
+        // 시간 다 됨
+        if (remainingSeconds <= 0) {
+          stopTimer();
+          remainingSeconds = 0;
+          updateTimerDisplay();
+          timerEl.classList.remove("time-warning"); // 깜빡임 해제
+          showGameOver(); // 게임 종료 처리
+        }
+      }
+    }, 1000);
+  }
+  
+  function stopTimer() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+  }
+  
+  function pauseTimer() {
+    isTimerPaused = true;
+  }
+  
+  function resumeTimer() {
+    isTimerPaused = false;
+  }
+  
+  function updateTimerDisplay() {
+    timerEl.textContent = formatTime(remainingSeconds);
+  }
+  
+  function formatTime(sec) {
+    let m = Math.floor(sec / 60);
+    let s = sec % 60;
+    let mm = (m < 10) ? "0" + m : m;
+    let ss = (s < 10) ? "0" + s : s;
+    return mm + ":" + ss;
+  }
+  
+  /***************************************************
+   * 게임 종료 (타이머 종료 시)
+   ***************************************************/
+  function showGameOver() {
+    // 최종 점수 표시
+    gameOverMessageEl.innerHTML = `
+      <h2>${translations[currentLanguage].timeOverMsg}</h2>
+      <p>${translations[currentLanguage].finalScoreMsg} <strong>${totalScore}</strong></p>
+      <div class="game-over-buttons">
+        <button id="home-button" class="primary-button">홈</button>
+      </div>
+    `;
+    gameOverOverlayEl.style.display = "flex";
+    gameOverMessageEl.style.display = "flex";
+
+    // 버튼 기능 추가
+    document.getElementById('home-button').addEventListener('click', function() {
+      gameOverOverlayEl.style.display = 'none';
+      document.getElementById('titleScreen').style.display = 'flex';
+      document.getElementById('gameContainer').style.display = 'none';
+      document.getElementById('gameOverOverlay').style.display = 'none';
+      document.getElementById('gameOverMessage').style.display = 'none';
+      document.getElementById('buttons-container').style.display = 'none';
+      
+    });
+
+  }
+  
+  // 게임 초기화 함수 예시
+  function resetGame() {
+    // 게임 상태를 초기화하는 로직
+    document.getElementById('score').textContent = '0';
+    document.getElementById('timer').textContent = '03:00';
+    // 기타 필요한 초기화 작업
+    document.getElementById('gameContainer').style.display = 'block';
+    gameOverOverlayEl.style.display = 'none';
+    
+    initRound(currentRound);
+
+  }
+  
+  /***************************************************
+   * 버튼 Ripple 효과
+   ***************************************************/
+  function initRippleEffect() {
+    const allButtons = document.querySelectorAll("button");
+    allButtons.forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const circle = document.createElement("span");
+        circle.classList.add("ripple");
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        circle.style.left = x + "px";
+        circle.style.top = y + "px";
+        btn.appendChild(circle);
+        setTimeout(() => {
+          circle.remove();
+        }, 600);
+      });
+    });
+  }
+  
+  
+
