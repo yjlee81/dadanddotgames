@@ -32,7 +32,7 @@ html, body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    height: 100vh;
+    height: 90vh;
     width: 100vw;
     background-color: #f0f0f0;
   }
@@ -78,25 +78,40 @@ html, body {
   
   /* 단일 카드 스타일 */
   .score-card {
-    background: #fff;
-    width: 200px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    border-radius: 12px;
-    padding: 16px;
-    text-align: left;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
-    transition: transform 0.2s ease;
+    text-align: center;
+    margin: 20px;
   }
-  .score-card:hover {
-    transform: translateY(-4px);
-  }
+  
   .score-card h3 {
-    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.5em;
   }
+  
+  .score-icon {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+  
   .score-info {
-    margin: 8px 0;
-    font-size: 1rem;
-    color: #555;
+    font-size: 2.5em;
+    font-weight: bold;
+    margin: 10px 0;
+  }
+  
+  .additional-info {
+    position: static;
+    bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    font-size: 0.9em;
+    color: #666;
+
   }
   
   /***************************************************
@@ -124,10 +139,10 @@ html, body {
     text-align: center;
   }
   #countdownOverlay img {
-    width: 256px;
-    height: 256px;
+    width: 128px;
+    height: 128px;
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -100%);
   }
@@ -148,10 +163,9 @@ html, body {
   /* GNB 헤더 */
   header.gnb-lnb {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;;
     align-items: center;
     background: #f3f3f3;
-    padding: 0px 10px;
     border-bottom: 1px solid #ccc;
     width: 100%;
   }
@@ -441,6 +455,7 @@ html, body {
     color: #fff;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    min-width: 240px;
   }
   .modal-button:hover {
     background-color: #005bb5;
@@ -509,4 +524,18 @@ html, body {
     display: flex;
     justify-content: center;
     gap: 10px;
+  }
+  
+  #titleLabel {
+    margin-top: 140px;
+    margin-bottom: 0px;
+  }
+
+  #footer {
+    width: 100%;
+    text-align: center;
+  }
+
+  #game-board:visible + #footer {
+    display: none;
   }

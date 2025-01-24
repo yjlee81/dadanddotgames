@@ -7,6 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="style.css">
   <script src="script.js"></script>
+    <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K80MGC9BLN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-K80MGC9BLN');
+  </script>
 </head>
 <body>
 
@@ -15,6 +24,7 @@
     <header class="gnb-lnb">
       <div class="left-group">
         <h2 class="game-title">숫자 결!합!</h2>
+        <h3 class="game-version">v1.0.0</h3>
       </div>
       <div class="right-group">
         <!-- 언어 선택 -->
@@ -30,22 +40,18 @@
     </header>
 
     <h1 id="titleLabel">숫자 결!합!</h1>
+    <p> Free Simple Summing Game for Everyone </p>
 
-    <!-- 카드 UI로 ‘오늘의 최고 기록’ & ‘내 최고 기록’ 표시 -->
+    <!-- 카드 UI로 '오늘의 최고 기록' & '내 최고 기록' 표시 -->
     <div class="score-cards-container">
-      <!-- 오늘의 최고 기록 카드 -->
-      <div class="score-card" id="today-best-score-card">
-        <h3>오늘의 최고 기록</h3>
-        <p class="score-info" id="today-best-score">점수: -</p>
-        <p class="score-info" id="today-best-difficulty">난이도: -</p>
-        <p class="score-info" id="today-best-target">목표점수: -</p>
-      </div>
       <!-- 내 최고 기록(전체 누적) 카드 -->
       <div class="score-card" id="my-best-score-card">
         <h3>내 최고 기록</h3>
-        <p class="score-info" id="my-best-score">점수: -</p>
-        <p class="score-info" id="my-best-difficulty">난이도: -</p>
-        <p class="score-info" id="my-best-target">목표점수: -</p>
+        <div class="score-icon">🏆</div>
+        <p class="score-info" id="my-best-score">100</p>
+        <div class="additional-info">
+          <span id="my-best-target">Goal 10</span> | <span id="my-best-difficulty">Diff. 6x6</span>
+        </div>
       </div>
     </div>
 
@@ -146,6 +152,12 @@
       <button id="ad-close-btn">광고 닫기</button>
     </div>
   </div>
+
+  <!-- 푸터를 페이지 본문의 가장 마지막에 위치 -->
+  <footer id="footer">
+    <a href="pp.html" id="privacy-policy-link">Privacy Policy</a>
+    <p>&copy; 2023 Dadanddot.com</p>
+  </footer>
 
 </body>
 </html>
