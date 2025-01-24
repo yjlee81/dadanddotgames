@@ -39,23 +39,12 @@
       </div>
     </header> 
     --> 
-    <p> Free Summing Game for Everyone </p>
+    <h4> Free Summing Game for Everyone </h4>
     <h1 id="titleLabel">숫자 결!합!</h1>
 
 
-    <!-- 카드 UI로 '오늘의 최고 기록' & '내 최고 기록' 표시 -->
-    <div class="score-cards-container">
-      <!-- 내 최고 기록(전체 누적) 카드 -->
-      <div class="score-card" id="my-best-score-card">
-        <h3>My Best Record</h3>
-        <div class="score-icon">🏆</div>
-        <p class="score-info" id="my-best-score">100</p>
-        <div class="additional-info">
-          <span id="my-best-target">Goal 10</span> | <span id="my-best-difficulty">Diff. 6x6</span>
-        </div>
-      </div>
-    </div>
-
+    
+    <div class="options-title"><h3>Options</h3></div>
     <div class="options-container">
       <div class="option-group">
         <label id="roundSelectLabel" for="round-select">목표점수</label>
@@ -82,6 +71,29 @@
         </select>
       </div>
       <button id="start-game-btn">게임 시작</button>
+    </div>
+
+    <!-- 카드 UI로 '오늘의 최고 기록' & '내 최고 기록' 표시 -->
+    <div class="options-title"><h3>My Records</h3></div>
+    <div class="score-cards-container">
+      <!-- 내 최고 기록(전체 누적) 카드 -->
+      <div class="score-card" id="my-best-score-card">
+        <h3>My Best Record</h3>
+        <div class="score-icon">🏆</div>
+        <p class="score-info" id="my-best-score">100</p>
+        <div class="additional-info">
+          <span id="my-best-target">Goal 10</span>  <span id="my-best-difficulty">Diff. 6x6</span>
+        </div>
+      </div>
+      <!-- 오늘의 최고 기록(전체 누적) 카드 -->
+      <div class="score-card" id="today-best-score-card" style="display: none;">
+        <h3>Today's Best</h3>
+        <div class="score-icon">🏆</div>
+        <p class="score-info" id="today-best-score">100</p>
+        <div class="additional-info">
+          <span id="today-best-target">Goal 10</span>  <span id="today-best-difficulty">Diff. 6x6</span>
+        </div>
+      </div>
     </div>
     <!-- 푸터를 페이지 본문의 가장 마지막에 위치 -->
     <footer id="footer">
