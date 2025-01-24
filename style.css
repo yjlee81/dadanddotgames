@@ -32,9 +32,8 @@ html, body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    height: 90vh;
+
     width: 100vw;
-    background-color: #f0f0f0;
   }
   
   .game-title {
@@ -45,7 +44,6 @@ html, body {
   }
   
   .selector {
-    width: 200px;
     padding: 10px;
     margin: 10px 0;
     border-radius: 8px;
@@ -62,6 +60,7 @@ html, body {
     font-size: 1.2rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    height: 60px;
   }
   #start-game-btn:hover {
     background-color: #005bb5;
@@ -103,12 +102,18 @@ html, body {
     margin: 10px 0;
   }
   
+  .score-info-small {
+    font-size: 1.0em;
+    margin: 10px 0;
+  }
+
+
   .additional-info {
     position: static;
     bottom: 10px;
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     font-size: 0.9em;
     color: #666;
 
@@ -131,6 +136,7 @@ html, body {
     font-size: 3rem;
   }
   #countdownNumber {
+    margin-top: 20px;
     margin-bottom: 20px;
   }
   .guide-message {
@@ -142,7 +148,7 @@ html, body {
     width: 128px;
     height: 128px;
     position: absolute;
-    top: 40%;
+    top: 30%;
     left: 50%;
     transform: translate(-50%, -100%);
   }
@@ -190,7 +196,7 @@ html, body {
   .home-icon-button {
     background: none;
     border: none;
-    font-size: 1.6rem;
+    font-size: 1rem;
     padding: 8px;
     cursor: pointer;
     color: var(--text-color);
@@ -216,7 +222,7 @@ html, body {
   .info-box {
     display: inline-block;
     text-align: center;
-    width: 100px;
+    width: 140px;
   }
   .info-box .label {
     font-size: 14px;
@@ -526,16 +532,34 @@ html, body {
     gap: 10px;
   }
   
-  #titleLabel {
-    margin-top: 140px;
-    margin-bottom: 0px;
-  }
 
   #footer {
-    width: 100%;
     text-align: center;
-  }
+    padding: 10px;
+    
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
 
   #game-board:visible + #footer {
     display: none;
   }
+
+.options-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.option-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 10px;
+}
+
+#start-game-btn {
+    margin-left: 10px;
+}

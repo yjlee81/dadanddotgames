@@ -5,7 +5,7 @@ const translations = {
   en: {
     title: "Number Gyeol!Hab!",
     startGame: "Start Game",
-    selectRound: "Select Target Sum",
+    selectRound: "Goal",
     round: "Difficulty",
     goal: "Goal",
     score: "Score",
@@ -35,7 +35,7 @@ const translations = {
   ko: {
     title: "숫자 결!합!",
     startGame: "게임 시작",
-    selectRound: "목표점수 선택",
+    selectRound: "목표점수",
     round: "난이도",
     goal: "목표점수",
     score: "점수",
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
   guideMessageEl = document.getElementById("guideMessage");
   gameContainerEl = document.getElementById("gameContainer");
 
-  difficultyLabelEl = document.getElementById("difficulty-label");
+  difficultyLabelEl = document.getElementById("difficultyLabel");
   targetNumberEl = document.getElementById("target-number");
   scoreEl = document.getElementById("score");
   timerEl = document.getElementById("timer");
@@ -187,9 +187,12 @@ function setLanguage(lang) {
   const titleLabelEl = document.getElementById("titleLabel");
   const startBtnEl = document.getElementById("start-game-btn");
   const roundSelectLabelEl = document.getElementById("roundSelectLabel");
+  const difficultyLabelEl = document.getElementById("difficultyLabel");
+  
   if (titleLabelEl) titleLabelEl.textContent = translations[lang].title;
   if (startBtnEl) startBtnEl.textContent = translations[lang].startGame;
   if (roundSelectLabelEl) roundSelectLabelEl.textContent = translations[lang].selectRound;
+  if (difficultyLabelEl) difficultyLabelEl.textContent = translations[lang].round;
 
   // 상단바
   const targetLabelEl = document.getElementById("target-label");
@@ -212,7 +215,7 @@ function setLanguage(lang) {
  ***************************************************/
 function initBestScoresUI() {
   // 간단히 localStorage로부터 'myBestScore' 등 가져와서 설정 가능
-  // 여기서는 예시로 ‘myBestScore’, ‘myBestDiff’, ‘myBestTarget’ 값만
+  // 여기서는 예시로 'myBestScore', 'myBestDiff', 'myBestTarget' 값만
   let savedMyBestScore = parseInt(localStorage.getItem("myBestScore") || "0", 10);
   let savedMyBestDiff = localStorage.getItem("myBestDifficulty") || "-";
   let savedMyBestTarget = localStorage.getItem("myBestTarget") || "-";
@@ -583,16 +586,16 @@ function findAllPossibleLines() {
 function showOverlay(msg, isSuccess) {
   // isSuccess = true → 성공 모달, false → 실패 모달
   // 여기에 간단한 카드 모양을 띄워주거나, 현재 난이도/목표/점수 등을 표시
-  // 예: “카드 획득!” 느낌
+  // 예: "카드 획득!" 느낌
   overlayMsgEl.innerHTML = `
     <div class="modal-header" style="margin-bottom:16px;">
-      ${isSuccess ? "✨ 카드 획득! ✨" : "카드 획득 실패..."}
+      ${isSuccess ? "✨ 결 성공 ! ✨" : "아직 조합이 안되었어요..."}
     </div>
     <div class="score-card">
       <h3>현재 기록</h3>
       <p class="score-info">점수: ${totalScore}</p>
-      <p class="score-info">난이도: ${BOARD_ROWS}x${BOARD_COLS}</p>
-      <p class="score-info">목표점수: ${targetSum}</p>
+      <p class="score-info-small">난이도: ${BOARD_ROWS}x${BOARD_COLS}</p>
+      <p class="score-info-small">목표점수: ${targetSum}</p>
     </div>
     <button class="modal-button" onclick="closeOverlay()">
       ${translations[currentLanguage].ok}

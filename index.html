@@ -21,13 +21,13 @@
 
   <!-- [1] 첫화면 -->
   <div id="titleScreen">
-    <header class="gnb-lnb">
+    <!-- <header class="gnb-lnb">
       <div class="left-group">
         <h2 class="game-title">숫자 결!합!</h2>
         <h3 class="game-version">v1.0.0</h3>
       </div>
       <div class="right-group">
-        <!-- 언어 선택 -->
+        
         <div class="lang-dropdown">
           <select class="language-selector" id="language-select">
             <option value="en">EN</option>
@@ -37,16 +37,17 @@
           </select>
         </div>
       </div>
-    </header>
-
+    </header> 
+    --> 
+    <p> Free Summing Game for Everyone </p>
     <h1 id="titleLabel">숫자 결!합!</h1>
-    <p> Free Simple Summing Game for Everyone </p>
+
 
     <!-- 카드 UI로 '오늘의 최고 기록' & '내 최고 기록' 표시 -->
     <div class="score-cards-container">
       <!-- 내 최고 기록(전체 누적) 카드 -->
       <div class="score-card" id="my-best-score-card">
-        <h3>내 최고 기록</h3>
+        <h3>My Best Record</h3>
         <div class="score-icon">🏆</div>
         <p class="score-info" id="my-best-score">100</p>
         <div class="additional-info">
@@ -55,30 +56,46 @@
       </div>
     </div>
 
-    <label id="roundSelectLabel" for="round-select">목표점수 선택</label>
-    <select id="round-select" class="selector">
-      <option value="1">합이 10</option>
-      <option value="2">합이 11</option>
-      <option value="3">합이 12</option>
-      <option value="4">합이 13</option>
-      <option value="5">합이 14</option>
-      <option value="6">합이 15</option>
-      <option value="7">합이 16</option>
-      <option value="8">합이 17</option>
-      <option value="9">합이 18</option>
-      <option value="10">합이 19</option>
-      <option value="11">합이 20</option>
-    </select>
-    
-    <!-- 난이도 선택 -->
-    <label id="difficultyLabel" for="difficulty-select">난이도 선택</label>
-    <select id="difficulty-select" class="selector">
-      <option value="6">쉬움 (6x6)</option>
-      <option value="8">어려움 (8x8)</option>
-      <option value="10">매우 어려움 (10x10)</option>
-    </select>
-    
-    <button id="start-game-btn">게임 시작</button>
+    <div class="options-container">
+      <div class="option-group">
+        <label id="roundSelectLabel" for="round-select">목표점수</label>
+        <select id="round-select" class="selector">
+          <option value="1">10</option>
+          <option value="2">11</option>
+          <option value="3">12</option>
+          <option value="4">13</option>
+          <option value="5">14</option>
+          <option value="6">15</option>
+          <option value="7">16</option>
+          <option value="8">17</option>
+          <option value="9">18</option>
+          <option value="10">19</option>
+          <option value="11">20</option>
+        </select>
+      </div>
+      <div class="option-group">
+        <label id="difficultyLabel" for="difficulty-select">난이도</label>
+        <select id="difficulty-select" class="selector">
+          <option value="6">6x6 - 쉬움</option>
+          <option value="8">8x8 - 보통</option>
+          <option value="10">10x10 - 어려움</option>
+        </select>
+      </div>
+      <button id="start-game-btn">게임 시작</button>
+    </div>
+    <!-- 푸터를 페이지 본문의 가장 마지막에 위치 -->
+    <footer id="footer">
+      
+
+      <a href="pp.html" id="privacy-policy-link">Privacy Policy</a>
+      <select class="language-selector" id="language-select">
+        <option value="en">EN</option>
+        <option value="ko" selected>KR</option>
+        <option value="ja">JP</option>
+        <option value="zh">ZH</option>
+      </select>
+      <p>&copy; 2023 Dadanddot.com</p>
+    </footer>
   </div>
 
   <!-- [2] 카운트다운 오버레이 -->
@@ -95,13 +112,10 @@
     <!-- GNB 헤더 -->
     <header class="gnb-lnb">
       <div class="left-group">
-        <h2 class="game-title">숫자 결!합!</h2>
-        <span id="difficulty-label">쉬움 (6x6)</span>
+        <button id="home-button" class="home-icon-button"> < </button>
       </div>
-      <div class="right-group">
-        <!-- 변경: 3dot 메뉴 → 홈 아이콘 -->
-        <button id="home-button" class="home-icon-button">🏠</button>
-      </div>
+      <span id="difficulty-label">쉬움 (6x6)</span>
+      <div class="right-group"></div>
     </header>
 
     <!-- 상단 바: 목표점수, 내 점수, 남은 시간 -->
@@ -153,11 +167,7 @@
     </div>
   </div>
 
-  <!-- 푸터를 페이지 본문의 가장 마지막에 위치 -->
-  <footer id="footer">
-    <a href="pp.html" id="privacy-policy-link">Privacy Policy</a>
-    <p>&copy; 2023 Dadanddot.com</p>
-  </footer>
+  
 
 </body>
 </html>
