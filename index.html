@@ -21,7 +21,7 @@
   <div id="titleScreen">
     <header class="gnb-lnb">
       <div class="left-group">
-        <h2 class="game-title">합!결!</h2>
+        <h2 class="game-title">결!합!</h2>
       </div>
       <div class="right-group">
         <!-- 언어 선택 -->
@@ -37,19 +37,29 @@
       </div>
     </header>
     <h1 id="titleLabel">결!합!</h1>
-    <label id="roundSelectLabel" for="round-select">시작 라운드 선택</label>
+    <label id="roundSelectLabel" for="round-select">목표점수 선택</label>
     <select id="round-select" class="selector">
-      <option value="1">Round 1 (Goal:10)</option>
-      <option value="2">Round 2 (Goal:11)</option>
-      <option value="3">Round 3 (Goal:12)</option>
-      <option value="4">Round 4 (Goal:13)</option>
-      <option value="5">Round 5 (Goal:14)</option>
-      <option value="6">Round 6 (Goal:15)</option>
-      <option value="7">Round 7 (Goal:16)</option>
-      <option value="8">Round 8 (Goal:17)</option>
-      <option value="9">Round 9 (Goal:18)</option>
-      <option value="10">Round 10 (Goal:19)</option>
+      <option value="1">합이 10</option>
+      <option value="2">합이 11</option>
+      <option value="3">합이 12</option>
+      <option value="4">합이 13</option>
+      <option value="5">합이 14</option>
+      <option value="6">합이 15</option>
+      <option value="7">합이 16</option>
+      <option value="8">합이 17</option>
+      <option value="9">합이 18</option>
+      <option value="10">합이 19</option>
+      <option value="11">합이 20</option>
     </select>
+    
+    <!-- 난이도 선택 추가 -->
+    <label id="difficultyLabel" for="difficulty-select">난이도 선택</label>
+    <select id="difficulty-select" class="selector">
+      <option value="6">쉬움 (6x6)</option>
+      <option value="8">어려움 (8x8)</option>
+      <option value="10">매우 어려움 (10x10)</option>
+    </select>
+    
     <button id="start-game-btn">게임 시작</button>
   </div>
 
@@ -66,7 +76,7 @@
     <header class="gnb-lnb">
       <div class="left-group">
         <h2 class="game-title">결!합!</h2>
-        <span id="round-label">Round 1</span>
+        <span id="round-label">쉬움 (6x6)</span>
       </div>
       <div class="right-group">
         <!-- 언어 선택 -->

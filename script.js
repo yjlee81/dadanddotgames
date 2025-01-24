@@ -28,14 +28,14 @@ const translations = {
       statusStart: "Round {round} Start! (Target={target}, Score={score})",
       ok: "OK",
       invalidPath: "Invalid path!",
-      countdownGuide: "Drag tiles to make the target sum!",
+      countdownGuide: "Create {target} in a line or diagonal. Bonus for empty/multiple tiles!",
       timeOverMsg: "Time Over!",
       finalScoreMsg: "Your final score:"
     },
     ko: {
       title: "결!합!",
       startGame: "게임 시작",
-      selectRound: "시작 라운드 선택",
+      selectRound: "목표점수 선택",
       round: "라운드",
       goal: "목표점수",
       score: "점수",
@@ -58,7 +58,7 @@ const translations = {
       statusStart: "Round {round} 시작! (Target={target}, 누적점수={score})",
       ok: "확인",
       invalidPath: "잘못된 경로!",
-      countdownGuide: "드래그하여 목표점수를 만들어보세요!",
+      countdownGuide: "드래그하여 일렬이나 대각선의 합이 목표점수. 일렬이 길면 더 큰 보너스!",
       timeOverMsg: "시간 종료!",
       finalScoreMsg: "최종 점수:"
     },
@@ -88,7 +88,7 @@ const translations = {
       statusStart: "Round {round} 開始 (Target={target}, Score={score})",
       ok: "確認",
       invalidPath: "無効なパス!",
-      countdownGuide: "ドラッグして目標スコアを作りましょう！",
+      countdownGuide: "{target}を一列または対角線で作成。空白/複数タイルにボーナス！",
       timeOverMsg: "時間切れ！",
       finalScoreMsg: "最終スコア:"
     },
@@ -107,7 +107,7 @@ const translations = {
       backToTitle: "返回首页",
       policy: "隐私政策",
       policyLink: "pp.html",
-      noCombinationToast: "没有其他组合，请按“完成”按钮",
+      noCombinationToast: "没有其他组合，请按'完成'按钮",
       cancelSelection: "取消选择",
       success: "成功",
       failSum: "数字的总和不等于 {target}",
@@ -131,15 +131,15 @@ const translations = {
   let currentRound = 1;
   let totalScore = 0;
   let targetSum = 10;
-  const BOARD_ROWS = 6;
-  const BOARD_COLS = 6;
+  let BOARD_ROWS = 6;
+  let BOARD_COLS = 6;
   const MIN_NUM = 1;
   const MAX_NUM = 9;
   
   let boardData = [];
-  let startPos = null;
+  let startPos = [0, 0];
   let hintLinePositions = null;
-  let remainingSeconds = 180; // 3분(180초)
+  let remainingSeconds = 120; // 2분(120초)
   let timerInterval = null;
   let isTimerPaused = false;
   
@@ -204,7 +204,7 @@ const translations = {
     });
     setLanguage(languageSelect.value); // 초기 언어 설정
   
-    // 첫화면 “게임 시작” 버튼
+    // 첫화면 "게임 시작" 버튼
     const startGameBtn = document.getElementById("start-game-btn");
     startGameBtn.addEventListener("click", onStartGame);
   
@@ -225,7 +225,7 @@ const translations = {
       location.href = translations[currentLanguage].policyLink;
     });
   
-    // 결(“Done!”) 버튼
+    // 결("Done!") 버튼
     noMoreBtn.addEventListener("click", onNoMoreClick);
   
     // 힌트 버튼
@@ -315,12 +315,20 @@ const translations = {
   }
   
   /***************************************************
-   * [A] 첫화면 → “게임 시작” 버튼
+   * [A] 첫화면 → "게임 시작" 버튼
    ***************************************************/
   function onStartGame() {
     const roundSelect = document.getElementById("round-select");
     const selectedRound = parseInt(roundSelect.value, 10) || 1;
     currentRound = selectedRound;
+  
+    // 난이도 선택 추가
+    const difficultySelect = document.getElementById("difficulty-select");
+    const selectedDifficulty = parseInt(difficultySelect.value, 10) || 6;
+  
+    // 보드 크기 설정
+    BOARD_ROWS = selectedDifficulty;
+    BOARD_COLS = selectedDifficulty;
   
     // 첫화면 숨기고 카운트다운
     titleScreenEl.style.display = "none";
@@ -390,8 +398,8 @@ const translations = {
     updateInfoBar();
     renderBoard();
   
-    // 타이머 재설정(3분)
-    remainingSeconds = 180;
+    // 타이머 재설정(2분)
+    remainingSeconds = 120;
     updateTimerDisplay();
   
     // 힌트 라인, 시작칸 해제
@@ -505,9 +513,15 @@ const translations = {
     if (!isDragging) return;
     isDragging = false;
   
-    if (!dragPositions || dragPositions.length < 2) {
+    if (!dragPositions || dragPositions.length < 1) {
       clearDragSelection();
       showIOSToastMessage(translations[currentLanguage].hintMessage);
+    } else if (dragPositions.length === 1) {
+      const single = dragPositions[0];
+      clearDragSelection();
+      // ★ 단일 칸 선택 시에도 토스트를 다시 띄워준다.
+      showIOSToastMessage(translations[currentLanguage].hintMessage);
+      handleSingleSelection(single);
     } else {
       const start = dragPositions[0];
       const end = dragPositions[dragPositions.length - 1];
@@ -515,6 +529,7 @@ const translations = {
       checkLine(start, end);
     }
   }
+  
   
   /** 기존 하이라이트 지우기 */
   function clearDragSelection() {
@@ -533,6 +548,15 @@ const translations = {
       const td = trList[r].querySelectorAll("td")[c];
       td.classList.add("drag-select-highlight");
     });
+  }
+  
+  /**
+   * 단일 선택을 처리하는 함수 추가
+   */
+  function handleSingleSelection(position) {
+    // 여기에 단일 선택 시 수행할 로직을 구현하세요.
+    console.log(`선택된 위치: 행 ${position[0]}, 열 ${position[1]}`);
+    // 예: 해당 셀의 상태를 변경하거나 특정 동작을 트리거
   }
   
   /***************************************************
@@ -593,29 +617,37 @@ const translations = {
   function getLinePositions([r1, c1], [r2, c2]) {
     let rd = r2 - r1;
     let cd = c2 - c1;
-    if (rd === 0 && cd === 0) return null;
-    // 가로/세로/대각 검사
-    if (!(rd === 0 || cd === 0 || Math.abs(rd) === Math.abs(cd))) return null;
-  
-    // 최대공약수
+
+    if (rd === 0 && cd === 0) {
+        return [[r1, c1]];
+    }
+
+    // 가로, 세로, 대각만 허용
+    if (!(rd === 0 || cd === 0 || Math.abs(rd) === Math.abs(cd))) {
+        return null;
+    }
+
+    // 최대공약수로 스텝 계산
     function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
     let g = gcd(Math.abs(rd), Math.abs(cd));
     let stepR = rd / g;
     let stepC = cd / g;
-  
+
     let pos = [];
     let curR = r1, curC = c1;
     pos.push([curR, curC]);
-  
+
     let steps = Math.max(Math.abs(rd), Math.abs(cd));
     for (let i = 0; i < steps; i++) {
-      curR += stepR;
-      curC += stepC;
-      if (curR < 0 || curR >= BOARD_ROWS || curC < 0 || curC >= BOARD_COLS) return null;
-      pos.push([curR, curC]);
+        curR += stepR;
+        curC += stepC;
+        if (curR < 0 || curR >= BOARD_ROWS || curC < 0 || curC >= BOARD_COLS) {
+            return null;
+        }
+        pos.push([curR, curC]);
     }
     return pos;
-  }
+}
   
   /** 특정 라인에 클래스 추가/제거 */
   function markLine(positions, addClass = null, removeClass = null) {
@@ -803,7 +835,7 @@ const translations = {
    ***************************************************/
   function startTimer() {
     stopTimer(); // 혹시 이전 타이머 있으면 중단
-    remainingSeconds = 180;
+    remainingSeconds = 120;
     isTimerPaused = false;
     timerEl.classList.remove("time-warning"); // 혹시 남아있을 수 있는 클래스 제거
   
@@ -870,7 +902,7 @@ const translations = {
     `;
     gameOverOverlayEl.style.display = "flex";
     gameOverMessageEl.style.display = "flex";
-
+  
     // 버튼 기능 추가
     document.getElementById('home-button').addEventListener('click', function() {
       gameOverOverlayEl.style.display = 'none';
@@ -881,7 +913,7 @@ const translations = {
       document.getElementById('buttons-container').style.display = 'none';
       
     });
-
+  
   }
   
   // 게임 초기화 함수 예시
@@ -894,7 +926,7 @@ const translations = {
     gameOverOverlayEl.style.display = 'none';
     
     initRound(currentRound);
-
+  
   }
   
   /***************************************************
@@ -919,5 +951,29 @@ const translations = {
     });
   }
   
+  window.onload = function() {
+    updateInfoBar();
+  };
   
+  /***************************************************
+   * 보드 초기화
+   ***************************************************/
+  function initializeBoard(size) {
+    const gameBoard = document.getElementById('game-board');
+    gameBoard.innerHTML = ''; // 기존 보드 초기화
 
+    // 테이블 생성
+    for (let i = 0; i < size; i++) {
+        const row = gameBoard.insertRow();
+        for (let j = 0; j < size; j++) {
+            const cell = row.insertCell();
+            // 셀 내용 및 이벤트 리스너 추가
+            cell.innerText = ''; // 필요에 따라 내용 추가
+            cell.addEventListener('click', handleCellClick);
+        }
+    }
+
+    // 보드 스타일 조정 (예: 그리드 크기에 맞게 CSS 클래스 추가)
+    gameBoard.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+    gameBoard.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+  }
