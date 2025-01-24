@@ -5,7 +5,7 @@ const translations = {
   en: {
     title: "Number Gyeol!Hab!",
     startGame: "Start Game",
-    selectRound: "Goal",
+    selectRound: "Target Sum",
     round: "Difficulty",
     goal: "Goal",
     score: "Score",
@@ -708,7 +708,7 @@ function useHint() {
  ***************************************************/
 function startTimer() {
   stopTimer();
-  remainingSeconds = 120;
+  remainingSeconds = 5;
   isTimerPaused = false;
   timerEl.classList.remove("time-warning");
   
@@ -716,7 +716,7 @@ function startTimer() {
     if (!isTimerPaused) {
       remainingSeconds--;
       updateTimerDisplay();
-      if (remainingSeconds === 30) {
+      if (remainingSeconds === 3) {
         timerEl.classList.add("time-warning");
       }
       if (remainingSeconds <= 0) {
@@ -762,13 +762,12 @@ function showGameOver() {
 
   gameOverMessageEl.innerHTML = `
     <h2>${translations[currentLanguage].timeOverMsg}</h2>
-    <p>${translations[currentLanguage].finalScoreMsg} <strong>${totalScore}</strong></p>
     <!-- 카드 느낌 표시 -->
     <div class="score-card">
-      <h3>결과 카드</h3>
+      <h3>결과</h3>
       <p class="score-info">점수: ${totalScore}</p>
-      <p class="score-info">난이도: ${BOARD_ROWS}x${BOARD_COLS}</p>
-      <p class="score-info">목표점수: ${targetSum}</p>
+      <p class="score-info-small">난이도: ${BOARD_ROWS}x${BOARD_COLS}</p>
+      <p class="score-info-small">목표점수: ${targetSum}</p>
     </div>
 
     <div class="game-over-buttons">
