@@ -305,7 +305,7 @@ header.gnb-lnb {
 * 하단 버튼
 ***************************************************/
 .buttons-container {
-    position: relative;
+    position: fixed;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -316,6 +316,8 @@ header.gnb-lnb {
     box-sizing: border-box;
     z-index: 1000;
     bottom: 0px;
+    align-content: flex-end;
+    align-items: flex-end;
 }
 
 .primary-button {
@@ -673,14 +675,15 @@ h1, h2, h3, p {
 }
 
 
-/*
+
 @media (max-width: 768px) {
     .options-container {
-        flex-direction: column;
+        flex-direction: row;
         align-items: stretch;
     }
 
     .option-group {
+        flex-direction: column;
         margin-right: 0;
         margin-bottom: 15px;
         align-items: center;
@@ -699,7 +702,7 @@ h1, h2, h3, p {
     }
 
     #footer {
-        flex-direction: column;
+        flex-direction: row;
         text-align: center;
     }
 
@@ -709,4 +712,3 @@ h1, h2, h3, p {
     }
 }
 
-*/
