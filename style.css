@@ -79,11 +79,13 @@ html, body {
   /* ===== [내 점수 테이블 & 칩 UI] ===== */
   .score-filter-chips {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 8px;
     margin-bottom: 20px;
     justify-content: center;
-  }
+    overflow: scroll;
+    width: 100vw;
+    }
   .chip {
     display: inline-block;
     padding: 8px 16px;
@@ -130,15 +132,17 @@ html, body {
   }
 
   #countdownOverlay .game-image {
-    top:20%;
+    position: relative;
     width: 128px;
     height: 128px;
   }
 
   #countdownNumber {
+    position: relative;
     margin: 20px;
   }
   .guide-message {
+    position: relative;
     font-size: 1.2rem;
     width: 80vw;
     text-align: center;
@@ -213,7 +217,7 @@ html, body {
   }
   #game-board {
     border-collapse: separate;
-    border-spacing: 4px;
+    border-spacing: 2px;
     margin: 0px;
     table-layout: fixed; /* 셀 너비 균등 배분 */
   }

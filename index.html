@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <title>숫자 결!합!</title>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+  
+  
+  <!-- Firebase (v9 compat 예시) : 실제 버전에 맞춰서 스크립트 경로 수정하세요 -->
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-database-compat.js"></script>
   <!-- 스타일 -->
   <link rel="stylesheet" href="style.css">
 
@@ -20,21 +25,17 @@
   </div>
 
   <!-- 게임 옵션 (목표점수 & 난이도) -->
-  <div class="options-container">
-    <select id="round-select" class="selector">
-      <!-- 라운드(목표점수) -->
-      <option value="1">Goal: 10</option>
-      <option value="2">Goal: 11</option>
-      <option value="3">Goal: 12</option>
-      <option value="4">Goal: 13</option>
-      <option value="5">Goal: 14</option>
-      <option value="6">Goal: 15</option>
-      <option value="7">Goal: 16</option>
-      <option value="8">Goal: 17</option>
-      <option value="9">Goal: 18</option>
-      <option value="10">Goal: 19</option>
-      <option value="11">Goal: 20</option>
+  <div style="margin-bottom:10px;">
+    <select id="score-filter-select" class="selector">
+      <option value="all">전체</option>
+      <option value="6-10">6x6, Goal 10</option>
+      <option value="6-11">6x6, Goal 11</option>
+      <option value="8-10">8x8, Goal 10</option>
+      <option value="8-15">8x8, Goal 15</option>
+      <option value="10-20">10x10, Goal 20</option>
+      <!-- 필요 시 추가 -->
     </select>
+  </div>
 
     <select id="difficulty-select" class="selector">
       <!-- 난이도 -->
