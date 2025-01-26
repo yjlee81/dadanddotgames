@@ -1,8 +1,10 @@
 /* ===== [기본 리셋] ===== */
 html, body {
-    margin: 0; padding: 0;
+    margin: 0; 
+    padding: 0;
     font-family: 'Helvetica Neue', 'Nunito', Arial, sans-serif;
-    background-color: #f5f5f5;
+    /* 기존 단색 배경 대신, 은은한 그라데이션 배경 */
+    background: linear-gradient(135deg, #fafafa 0%, #e6f0f3 100%);
     color: #333;
     height: 100%;
     display: flex;
@@ -141,7 +143,9 @@ html, body {
     font-size: 1.1rem;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
-    min-width: 120px;
+    min-width: 300px;
+    height: 50px;
+    font-weight: 600;
   }
   #start-game-btn:hover {
     background-color: #005bb5;
@@ -221,7 +225,8 @@ html, body {
     background: #f9f9f9;
     border-bottom: 1px solid #ccc;
     height: 50px;
-  }
+    align-content: center;
+}
   .info-box {
     display: inline-block;
     text-align: center;
@@ -247,6 +252,7 @@ html, body {
     overflow: hidden;
     position: relative;
 }
+
   #game-board {
     border-collapse: separate;
     border-spacing: 4px;
@@ -254,16 +260,21 @@ html, body {
     table-layout: fixed; /* 셀 너비 균등 배분 */
   }
   #game-board td {
-    background-color: var(--tile-color);
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.25); /* 반투명 흰색 */
+    backdrop-filter: blur(10px);           /* 글래스 효과의 핵심: 흐림(blur) */
+    -webkit-backdrop-filter: blur(10px);   /* Safari 등 WebKit 호환성 */
+    border-radius: 16px;                   /* 모서리 둥글게 */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* 살짝 그림자 */
     text-align: center;
     vertical-align: middle;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 600;
     color: #333;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.15s, box-shadow 0.15s;
+    /* transition: background-color 0.2s, transform 0.15s, box-shadow 0.15s; */
     user-select: none;
+    
+    
   }
   /* 드래그 강조 */
   .drag-select-highlight {
@@ -314,10 +325,12 @@ html, body {
     width: 100%;
     background-color: #ffffff; /* 배경색 설정 */
     padding: 10px 20px;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* 상단에 그림자 추가 */
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);  /* 상단에 그림자 추가 */
+    border-top: 1px solid #ccc;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
+    border-radius: 16px;
     gap: 12px;
     align-items: center;
   }
@@ -377,6 +390,7 @@ html, body {
     box-sizing: border-box;
     font-size: 1.1rem;
     animation: modal-appear 0.3s ease forwards;
+    min-width: 300px;
   }
   @keyframes modal-appear {
     0% { transform: scale(0.8); opacity: 0; }
@@ -577,4 +591,12 @@ html, body {
 #finalScoreValue.animated {
   transition: transform 0.3s ease;
   transform: scale(1.2);
+}
+
+.goal-score {
+  font-size: 48px; /* 큰 글씨 크기 */
+  font-weight: bold; /* 굵은 글씨 */
+  color: #ffffff; /* 강조 색상 (주황색 예시) */
+  margin-top: 20px; /* 위쪽 여백 */
+  text-align: center; /* 중앙 정렬 */
 }

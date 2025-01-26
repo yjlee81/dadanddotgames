@@ -27,17 +27,17 @@
     <div class="options-container">
       <select id="round-select" class="selector">
         <!-- 라운드(목표점수) -->
-        <option value="1">Goal: 10</option>
-        <option value="2">Goal: 11</option>
-        <option value="3">Goal: 12</option>
-        <option value="4">Goal: 13</option>
-        <option value="5">Goal: 14</option>
-        <option value="6">Goal: 15</option>
-        <option value="7">Goal: 16</option>
-        <option value="8">Goal: 17</option>
-        <option value="9">Goal: 18</option>
-        <option value="10">Goal: 19</option>
-        <option value="11">Goal: 20</option>
+        <option value="10">Goal: 10</option>
+        <option value="11">Goal: 11</option>
+        <option value="12">Goal: 12</option>
+        <option value="13">Goal: 13</option>
+        <option value="14">Goal: 14</option>
+        <option value="15">Goal: 15</option>
+        <option value="16">Goal: 16</option>
+        <option value="17">Goal: 17</option>
+        <option value="18">Goal: 18</option>
+        <option value="19">Goal: 19</option>
+        <option value="20">Goal: 20</option>
       </select>
 
       <select id="difficulty-select" class="selector">
@@ -57,8 +57,7 @@
         <tr>
           <th>순위</th>
           <th>점수</th>
-          <th>난이도</th>
-          <th>목표</th>
+          <th>타입</th>
         </tr>
       </thead>
       <tbody>
@@ -83,7 +82,7 @@
       <h2>FAQ</h2>
       <p>
         <strong>Q:</strong> 더 이상 조합이 없는 것 같아요! 어떻게 해야 하나요?<br>
-        <strong>A:</strong> 화면 아래 <em>"Done!"</em> 버튼을 눌러보세요. 더 만들 수 있는 조합이 있으면 -100점, 없으면 +100점을 얻습니다.
+        <strong>A:</strong> 화면 아래 <em>"Done!"</em> 버튼을 눌러보세요. 더 만들 수 있는 조합이 없으면 +100점을 얻습니다. 하지만 더 만들 수 있는 조합이 있으면 -50점이 감점됩니다.
       </p>
       <p>
         <strong>Q:</strong> 힌트는 무제한인가요?<br>
@@ -123,8 +122,13 @@
 
   <!-- [2] 카운트다운 오버레이 -->
   <div id="countdownOverlay">
-    <img src="countdown_img.png" alt="countdown" class="game-image">
     <div id="countdownNumber">3</div>
+    
+    <!-- 목표점수 표시 추가 -->
+    <div id="goalScore" class="goal-score">
+      목표점수: <span id="goal-number">99</span>
+    </div>
+    
     <div id="guideMessage" class="guide-message">드래그하여 목표점수를 만들어보세요!</div>
   </div>
 

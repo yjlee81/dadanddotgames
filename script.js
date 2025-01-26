@@ -132,10 +132,9 @@ let currentLanguage = "ko";
 /***************************************************
  * 전역 변수
  ***************************************************/
-let currentRound = 1;
 let totalScore = 0;
-let targetSum = 10;
-let BOARD_ROWS = 6;
+let targetSum = 10;   // select에서 읽어온 목표값을 저장
+let BOARD_ROWS = 6;   // select에서 읽어온 난이도(행,열) 크기
 let BOARD_COLS = 6;
 const MIN_NUM = 1;
 const MAX_NUM = 9;
@@ -197,22 +196,29 @@ function saveScoreToFirebase(score, diff, target) {
 function renderScoreTable(scoreRecords) {
   if (!scoreTableBody) return;
   scoreTableBody.innerHTML = "";
+  
   // 점수 내림차순
-  const sorted = scoreRecords.sort((a,b)=>b.score - a.score).slice(0, 5);
+  const sorted = scoreRecords.sort((a, b) => b.score - a.score).slice(0, 5);
+  
   sorted.forEach((rec, idx) => {
     const tr = document.createElement("tr");
+    
+    // 순위 셀
     const rankTd = document.createElement("td");
-    rankTd.textContent = idx+1;
+    rankTd.textContent = idx + 1;
+    tr.appendChild(rankTd);
+    
+    // 점수 셀
     const scoreTd = document.createElement("td");
     scoreTd.textContent = rec.score;
-    const diffTd = document.createElement("td");
-    diffTd.textContent = `${rec.diff}x${rec.diff}`;
-    const targetTd = document.createElement("td");
-    targetTd.textContent = rec.target;
-    tr.appendChild(rankTd);
     tr.appendChild(scoreTd);
-    tr.appendChild(diffTd);
-    tr.appendChild(targetTd);
+    
+    // 타입 셀 (난이도와 목표를 합친 형태)
+    const typeTd = document.createElement("td");
+    typeTd.textContent = `${rec.diff}x${rec.diff}, ${rec.target}`;
+    tr.appendChild(typeTd);
+    
+    // 테이블에 행 추가
     scoreTableBody.appendChild(tr);
   });
 }
@@ -245,11 +251,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const startGameBtn = document.getElementById("start-game-btn");
   startGameBtn.addEventListener("click", onStartGame);
 
-  // 홈(헤더의 제목) 클릭 시: 첫화면 보이기
+  // 홈으로 돌아가기
   const homeLink = document.getElementById("home-link");
   homeLink.addEventListener("click", (e) => {
     e.preventDefault();
-    // 게임 중에 홈 누르면 종료/정지 처리
     backToTitleScreen();
   });
 
@@ -270,24 +275,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 /***************************************************
- * 게임 시작 로직 (카운트다운 → 보드 세팅)
+ * 게임 시작 로직
+ *  - select에서 선택된 목표점수(예: 10, 11...)를 그대로 targetSum에 넣는다
+ *  - select에서 선택된 난이도(6,8,10...)를 BOARD_ROWS/COLS에 넣는다
  ***************************************************/
 function onStartGame() {
-  // 우선 라운드 & 난이도값 읽어오기
-  const roundValue = parseInt(document.getElementById("round-select").value, 10) || 1;
-  const diffValue = parseInt(document.getElementById("difficulty-select").value, 10) || 6;
+  // 1) 목표점수
+  const selectedGoal = parseInt(document.getElementById("round-select").value, 10) || 10;
+  targetSum = selectedGoal;
 
-  currentRound = roundValue;
+  // 2) 난이도(보드 크기)
+  const diffValue = parseInt(document.getElementById("difficulty-select").value, 10) || 6;
   BOARD_ROWS = diffValue;
   BOARD_COLS = diffValue;
-  targetSum = 9 + roundValue; // (예: round=1 → goal=10, round=2 → goal=11 ...)
 
-  // TitleScreen 숨기고, 카운트다운 화면 띄우기
+  // 3) 첫 화면 숨기고 카운트다운 오버레이 보이기
   titleScreenEl.style.display = "none";
   countdownOverlayEl.style.display = "flex";
   gameContainerEl.style.display = "none";
 
-  // 3초 카운트다운
+  // **목표점수 동적 표시** (카운트다운 오버레이 내부)
+  showGoalOnCountdownOverlay(targetSum);
+
+  // 4) 3초 카운트다운
   let count = 3;
   countdownNumberEl.textContent = count;
   const countdownTimer = setInterval(() => {
@@ -295,13 +305,22 @@ function onStartGame() {
     countdownNumberEl.textContent = count;
     if (count <= 0) {
       clearInterval(countdownTimer);
-      // 카운트다운 끝 → 오버레이 숨기고, 게임컨테이너 보이기
       countdownOverlayEl.style.display = "none";
       gameContainerEl.style.display = "flex";
-      initRound(); // 보드 세팅
-      startTimer(); // 타이머 시작
+      initRound();
+      startTimer();
     }
   }, 1000);
+}
+
+/**
+ * 카운트다운 오버레이에서 목표점수를 표시하는 헬퍼 함수
+ */
+function showGoalOnCountdownOverlay(value) {
+  const goalNumEl = document.getElementById("goal-number");
+  if (goalNumEl) {
+    goalNumEl.textContent = value; 
+  }
 }
 
 /***************************************************
@@ -554,10 +573,10 @@ function removeLineTiles(linePositions) {
 function onNoMoreClick() {
   let found = findAllPossibleLines();
   if (found.length > 0) {
-    // 아직 만들 조합이 남아있을 때: -100점
-    totalScore = Math.max(0, totalScore - 100);
+    // 아직 만들 조합이 남아있을 때: -50점
+    totalScore = Math.max(0, totalScore - 50);
     document.getElementById("score").textContent = totalScore;
-    showOverlay("아직 조합이 남았습니다! -100점", false);
+    showOverlay("아직 조합이 남았습니다! -50점", false);
   } else {
     // 더 이상 조합이 없을 때: 성공!
     // 1) 일단 +100점
@@ -607,7 +626,7 @@ function showOverlay(msg, isSuccess){
 
   overlayMsgEl.innerHTML = `
     <h2>${isSuccess?"결 성공!":"조합 남음!"}</h2>
-    <p>${isSuccess?"+100 포인트!":"-100 포인트!"}</p>
+    <p>${isSuccess?"+100 포인트!":"-50 포인트!"}</p>
     <div style="margin:15px 0;">현재 점수: ${totalScore}</div>
     <button class="modal-button" onclick="closeOverlay()">확인</button>
   `;
@@ -803,81 +822,77 @@ function animateNumber(element, startValue, endValue, duration, callback) {
   }, 30);
 }
 
-/**
- * 최종 성공 오버레이: 남은 시간 보너스를 다르륵 올라가는 애니메이션으로 표시
- */
+/***************************************************
+ * 최종 성공 시 (showFinalSuccessOverlay)
+ ***************************************************/
 function showFinalSuccessOverlay(timeBonus) {
   const overlayEl = document.getElementById("overlay");
   const overlayMsgEl = document.getElementById("overlay-message");
 
-  // 아직 +100(결 성공 보너스)만 더해진 상태에서의 기본점수를 따로 저장
-  const baseScore = totalScore - 100; // 결 성공을 누른 시점에서 +100이 이미 더해져 있으므로
-
+  const baseScore = totalScore - 100; // 이미 +100 더해졌으므로
   overlayMsgEl.innerHTML = `
     <h2>결 성공!</h2>
-    
-    <!-- 간결한 표 형태로 구성 -->
     <table id="score-summary-table">
       <tbody>
-        <tr>
-          <th>기본 점수</th>
-          <td>${baseScore}</td>
-        </tr>
-        <tr>
-          <th>결 성공 보너스</th>
-          <td>+100</td>
-        </tr>
-        <tr>
-          <th>남은 시간 보너스</th>
-          <td><span id="time-bonus-anim">0</span> 점</td>
-        </tr>
-        <tr class="final-row">
-          <th>최종 점수</th>
-          <td><span id="finalScoreValue">${totalScore}</span></td>
-        </tr>
+        <tr><th>기본 점수</th><td>${baseScore}</td></tr>
+        <tr><th>결 성공 보너스</th><td>+100</td></tr>
+        <tr><th>남은 시간 보너스</th><td><span id="time-bonus-anim">0</span> 점</td></tr>
+        <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
       </tbody>
     </table>
-
     <button class="modal-button" onclick="closeFinalOverlay()">다음 라운드</button>
   `;
   overlayEl.style.display = "flex";
 
-  // 1) 남은 시간(timeBonus)의 숫자 애니메이션
+  // 1) 남은시간 보너스 숫자 애니메이션
   const timeBonusEl = document.getElementById("time-bonus-anim");
   animateNumber(timeBonusEl, 0, timeBonus, 1000, () => {
-    // 2) 최종 점수도 단계적으로 증가 ( timeBonus만큼 더함 )
+    // 2) 최종점수 애니메이션 (timeBonus만큼 추가)
     const finalScoreEl = document.getElementById("finalScoreValue");
-    const startScore = totalScore; 
+    const startScore = totalScore;
     const endScore = totalScore + timeBonus;
 
     animateNumber(finalScoreEl, startScore, endScore, 1000, () => {
-      // 실제 totalScore 반영
       totalScore = endScore;
-      // 상단 Score도 갱신
       document.getElementById("score").textContent = totalScore;
-
-      // 점수가 갱신되는 순간 살짝 강조 애니메이션
       finalScoreEl.classList.add('animated');
       setTimeout(() => finalScoreEl.classList.remove('animated'), 600);
 
-      // DB에 최종 스코어 저장
+      // DB에 스코어 저장
       saveScoreToFirebase(totalScore, BOARD_ROWS, targetSum);
     });
   });
 }
 
 /**
- * 최종 성공 오버레이 닫기 → 다음 라운드 or 타이틀화면 등 처리
+ * 다음 라운드로 넘어가는 로직
+ * (closeFinalOverlay → 카운트다운 다시 시작)
  */
 function closeFinalOverlay() {
-  // 오버레이 닫기
   document.getElementById("overlay").style.display = "none";
-  // (여기서는 라운드 하나를 성공한 것이므로 다음 라운드를 진행하거나,
-  //  혹은 다시 시작할 수도 있습니다. 필요에 맞게 변경하세요.)
-  
-  // 예: 다음 라운드 시작
-  currentRound++;
-  targetSum = 9 + currentRound;
-  initRound();
-  onStartGame();
+
+  // 목표점수 +1 증가
+  targetSum += 1;
+
+  // 다시 카운트다운 오버레이
+  titleScreenEl.style.display = "none";
+  countdownOverlayEl.style.display = "flex";
+  gameContainerEl.style.display = "none";
+
+  // **새로운 targetSum 반영**
+  showGoalOnCountdownOverlay(targetSum);
+
+  let count = 3;
+  countdownNumberEl.textContent = count;
+  const countdownTimer = setInterval(() => {
+    count--;
+    countdownNumberEl.textContent = count;
+    if (count <= 0) {
+      clearInterval(countdownTimer);
+      countdownOverlayEl.style.display = "none";
+      gameContainerEl.style.display = "flex";
+      initRound();
+      startTimer();
+    }
+  }, 1000);
 }
