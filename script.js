@@ -810,41 +810,57 @@ function showFinalSuccessOverlay(timeBonus) {
   const overlayEl = document.getElementById("overlay");
   const overlayMsgEl = document.getElementById("overlay-message");
 
-  // 오버레이 내부 내용을 동적으로 구성
+  // 아직 +100(결 성공 보너스)만 더해진 상태에서의 기본점수를 따로 저장
+  const baseScore = totalScore - 100; // 결 성공을 누른 시점에서 +100이 이미 더해져 있으므로
+
   overlayMsgEl.innerHTML = `
     <h2>결 성공!</h2>
-    <div>기본 성공 보너스 +100</div>
-    <div id="timeBonusContainer">
-      남은 시간 보너스: <span id="time-bonus-anim">0</span> 점
-    </div>
-    <div style="margin:10px 0;">
-      <strong>최종 점수:</strong> 
-      <span id="finalScoreValue">${totalScore}</span>
-    </div>
+    
+    <!-- 간결한 표 형태로 구성 -->
+    <table id="score-summary-table">
+      <tbody>
+        <tr>
+          <th>기본 점수</th>
+          <td>${baseScore}</td>
+        </tr>
+        <tr>
+          <th>결 성공 보너스</th>
+          <td>+100</td>
+        </tr>
+        <tr>
+          <th>남은 시간 보너스</th>
+          <td><span id="time-bonus-anim">0</span> 점</td>
+        </tr>
+        <tr class="final-row">
+          <th>최종 점수</th>
+          <td><span id="finalScoreValue">${totalScore}</span></td>
+        </tr>
+      </tbody>
+    </table>
+
     <button class="modal-button" onclick="closeFinalOverlay()">확인</button>
   `;
   overlayEl.style.display = "flex";
 
-  // 1) 시간 보너스 애니메이션
+  // 1) 남은 시간(timeBonus)의 숫자 애니메이션
   const timeBonusEl = document.getElementById("time-bonus-anim");
   animateNumber(timeBonusEl, 0, timeBonus, 1000, () => {
-    // 2) 최종 점수도 애니메이션(= totalScore + timeBonus)
+    // 2) 최종 점수도 단계적으로 증가 ( timeBonus만큼 더함 )
     const finalScoreEl = document.getElementById("finalScoreValue");
     const startScore = totalScore; 
     const endScore = totalScore + timeBonus;
 
     animateNumber(finalScoreEl, startScore, endScore, 1000, () => {
-      // 최종 반영
+      // 실제 totalScore 반영
       totalScore = endScore;
-      // 점수 DOM도 업데이트
+      // 상단 Score도 갱신
       document.getElementById("score").textContent = totalScore;
-      // 점수에 살짝 강조 애니메이션
+
+      // 점수가 갱신되는 순간 살짝 강조 애니메이션
       finalScoreEl.classList.add('animated');
-      setTimeout(() => {
-        finalScoreEl.classList.remove('animated');
-      }, 600);
-      
-      // Firebase DB 저장
+      setTimeout(() => finalScoreEl.classList.remove('animated'), 600);
+
+      // DB에 최종 스코어 저장
       saveScoreToFirebase(totalScore, BOARD_ROWS, targetSum);
     });
   });

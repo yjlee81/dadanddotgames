@@ -1,7 +1,7 @@
 /* ===== [기본 리셋] ===== */
 html, body {
     margin: 0; padding: 0;
-    font-family: 'Nunito', Arial, sans-serif;
+    font-family: 'Helvetica Neue', 'Nunito', Arial, sans-serif;
     background-color: #f5f5f5;
     color: #333;
     height: 100%;
@@ -13,7 +13,7 @@ html, body {
     cursor: pointer;
   }
   :root {
-    --accent-color: #0080ff;
+    --accent-color: #007aff; /* iOS 느낌의 파랑 */
     --tile-color: #ffffff;
     --tile-selected-color: #bbdefb;
     --background-color: #f5f5f5;
@@ -118,7 +118,7 @@ html, body {
     flex-wrap: wrap;
     gap: 15px;
     justify-content: center;
-    margin-bottom: 150px;
+    margin-bottom: 30px;
   }
   .selector {
     padding: 10px;
@@ -207,6 +207,9 @@ html, body {
     user-select: none;
     touch-action: none;
     background: #fafafa;
+    padding-top: 10px; 
+    padding-bottom: 80px; /* 버튼 컨테이너 높이보다 약간 더 큰 값 */
+
   }
   
   /* 상단바 */
@@ -239,7 +242,7 @@ html, body {
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     margin: 0;
     overflow: hidden;
     position: relative;
@@ -278,8 +281,18 @@ html, body {
     100% { transform: translateX(0); }
   }
   .success-line {
-    background-color: var(--accent-color) !important;
+    background-color: #007aff !important; /* 기존보다 좀 더 강렬한 색상 */
     color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .success-line::after {
+    content: "+";
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    font-size: 1.2rem;
+    opacity: 0.8;
   }
   .removing {
     animation: success-remove 0.4s forwards ease;
@@ -289,20 +302,24 @@ html, body {
     100% { transform: scale(0.8); opacity:0; }
   }
   .hint-line {
-    box-shadow: 2px 2px 5px #3d3d3d;
-    
+    background-color: lightgrey !important;
+    box-shadow: 0px 0px 10px #DDD;
   }
   
   /* ===== [하단버튼] ===== */
   .buttons-container {
-    display: flex;
     position: fixed;
     bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff; /* 배경색 설정 */
+    padding: 10px 20px;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* 상단에 그림자 추가 */
+    box-sizing: border-box;
+    display: flex;
     justify-content: center;
     gap: 12px;
-    width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
+    align-items: center;
   }
   .primary-button {
     flex: 1;
@@ -514,5 +531,50 @@ html, body {
   transition: transform 0.3s;
 }
 #finalScoreValue.animated {
+  transform: scale(1.2);
+}
+
+/* ===== 결 성공 화면 표 ===== */
+#score-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.95rem;
+}
+
+#score-summary-table th {
+  text-align: left;
+  padding: 6px 4px;
+  font-weight: normal;
+  color: #666;
+}
+
+#score-summary-table td {
+  text-align: right; /* 숫자/보너스는 우측 정렬 */
+  padding: 6px 4px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* 중간 행들만 얇은 라인 넣기 (너무 많은 선을 쓰지 않도록) */
+#score-summary-table tr:not(.final-row) {
+  border-bottom: 1px solid #eee;
+}
+
+/* 최종 점수 행은 강조 */
+#score-summary-table .final-row th {
+  font-size: 1.05rem;
+  color: #111;
+  font-weight: bold;
+}
+#score-summary-table .final-row td {
+  font-size: 1.2rem;
+  color: #1976D2; /* 파란색 톤 */
+  font-weight: bold;
+}
+
+/* 최종 점수에 살짝 스케일 업 애니메이션 */
+#finalScoreValue.animated {
+  transition: transform 0.3s ease;
   transform: scale(1.2);
 }
