@@ -838,7 +838,7 @@ function showFinalSuccessOverlay(timeBonus) {
       </tbody>
     </table>
 
-    <button class="modal-button" onclick="closeFinalOverlay()">확인</button>
+    <button class="modal-button" onclick="closeFinalOverlay()">다음 라운드</button>
   `;
   overlayEl.style.display = "flex";
 
@@ -879,4 +879,5 @@ function closeFinalOverlay() {
   currentRound++;
   targetSum = 9 + currentRound;
   initRound();
+  onStartGame();
 }
