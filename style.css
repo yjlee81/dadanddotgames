@@ -263,8 +263,8 @@ html, body {
     background: rgba(255, 255, 255, 0.25); /* 반투명 흰색 */
     backdrop-filter: blur(10px);           /* 글래스 효과의 핵심: 흐림(blur) */
     -webkit-backdrop-filter: blur(10px);   /* Safari 등 WebKit 호환성 */
-    border-radius: 16px;                   /* 모서리 둥글게 */
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* 살짝 그림자 */
+    border-radius: 16px;                   /* 모서리 둥글게 */
     text-align: center;
     vertical-align: middle;
     font-size: 28px;
@@ -325,7 +325,7 @@ html, body {
     width: 100%;
     background-color: #ffffff; /* 배경색 설정 */
     padding: 10px 20px;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);  /* 상단에 그림자 추가 */
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);  /*상단에 그림자 추가 */
     border-top: 1px solid #ccc;
     box-sizing: border-box;
     display: flex;
@@ -390,7 +390,6 @@ html, body {
     box-sizing: border-box;
     font-size: 1.1rem;
     animation: modal-appear 0.3s ease forwards;
-    min-width: 300px;
   }
   @keyframes modal-appear {
     0% { transform: scale(0.8); opacity: 0; }
@@ -496,10 +495,14 @@ html, body {
   width: 90%;
   max-width: 640px;
   margin: 30px auto;
-  background: #fff;
   padding: 20px;
-  box-shadow: 0 0 6px rgba(0,0,0,0.05);
-  border-radius: 8px;
+  
+  
+  background: rgba(255, 255, 255, 0.25); /* 반투명 흰색 */
+    backdrop-filter: blur(10px);           /* 글래스 효과의 핵심: 흐림(blur) */
+    -webkit-backdrop-filter: blur(10px);   /* Safari 등 WebKit 호환성 */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* 살짝 그림자 */
+    border-radius: 16px;
 }
 .info-section h2 {
   margin-top: 0;
@@ -518,6 +521,7 @@ html, body {
   border-top: 1px solid #eee;
   text-align: center;
   margin-top: auto;
+  width: 100vw;
 }
 #footer p {
   margin: 4px 0;
