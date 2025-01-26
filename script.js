@@ -554,15 +554,21 @@ function removeLineTiles(linePositions) {
 function onNoMoreClick() {
   let found = findAllPossibleLines();
   if (found.length > 0) {
-    // 아직 만들 조합이 남음
+    // 아직 만들 조합이 남아있을 때: -100점
     totalScore = Math.max(0, totalScore - 100);
     document.getElementById("score").textContent = totalScore;
-    showOverlay(translations[currentLanguage].overlayFail, false);
+    showOverlay("아직 조합이 남았습니다! -100점", false);
   } else {
-    // 더 이상 조합 없음
+    // 더 이상 조합이 없을 때: 성공!
+    // 1) 일단 +100점
     totalScore += 100;
-    document.getElementById("score").textContent = totalScore;
-    showOverlay(translations[currentLanguage].overlayClear + totalScore, true);
+
+    // 2) 남은 시간 보너스(예: 1초당 10점)
+    stopTimer();  // 시간을 멈추고
+    const timeBonus = remainingSeconds * 10;
+
+    // 오버레이 표시
+    showFinalSuccessOverlay(timeBonus);
   }
 }
 
@@ -757,4 +763,104 @@ function showFloatingScore(txt, r, c, isPenalty=false) {
       floatEl.parentNode.removeChild(floatEl);
     }
   }, 1000);
+}
+
+function showFinalScore(score) {
+  const finalScoreElement = document.getElementById('finalScoreValue');
+  finalScoreElement.textContent = score;
+  finalScoreElement.classList.add('animated');
+  
+  // 애니메이션이 끝난 후 클래스 제거
+  setTimeout(() => {
+    finalScoreElement.classList.remove('animated');
+  }, 300);
+}
+
+// ----------------------------------------------
+// [추가1] 남은 시간 보너스 애니메이션용 유틸 함수
+// ----------------------------------------------
+/**
+ * 특정 DOM Element의 숫자를 startValue -> endValue로 일정 시간 동안 서서히 증가시키는 함수
+ * @param {HTMLElement} element 
+ * @param {number} startValue 
+ * @param {number} endValue 
+ * @param {number} duration ms 단위
+ * @param {function} callback 완료 후 콜백(옵션)
+ */
+function animateNumber(element, startValue, endValue, duration, callback) {
+  let current = startValue;
+  const increment = (endValue - startValue) / (duration / 30); // 대략 30 FPS
+  const timer = setInterval(() => {
+    current += increment;
+    if ((increment > 0 && current >= endValue) || (increment < 0 && current <= endValue)) {
+      current = endValue;
+      clearInterval(timer);
+      element.textContent = Math.round(current);
+      if (callback) callback();
+    } else {
+      element.textContent = Math.round(current);
+    }
+  }, 30);
+}
+
+/**
+ * 최종 성공 오버레이: 남은 시간 보너스를 다르륵 올라가는 애니메이션으로 표시
+ */
+function showFinalSuccessOverlay(timeBonus) {
+  const overlayEl = document.getElementById("overlay");
+  const overlayMsgEl = document.getElementById("overlay-message");
+
+  // 오버레이 내부 내용을 동적으로 구성
+  overlayMsgEl.innerHTML = `
+    <h2>결 성공!</h2>
+    <div>기본 성공 보너스 +100</div>
+    <div id="timeBonusContainer">
+      남은 시간 보너스: <span id="time-bonus-anim">0</span> 점
+    </div>
+    <div style="margin:10px 0;">
+      <strong>최종 점수:</strong> 
+      <span id="finalScoreValue">${totalScore}</span>
+    </div>
+    <button class="modal-button" onclick="closeFinalOverlay()">확인</button>
+  `;
+  overlayEl.style.display = "flex";
+
+  // 1) 시간 보너스 애니메이션
+  const timeBonusEl = document.getElementById("time-bonus-anim");
+  animateNumber(timeBonusEl, 0, timeBonus, 1000, () => {
+    // 2) 최종 점수도 애니메이션(= totalScore + timeBonus)
+    const finalScoreEl = document.getElementById("finalScoreValue");
+    const startScore = totalScore; 
+    const endScore = totalScore + timeBonus;
+
+    animateNumber(finalScoreEl, startScore, endScore, 1000, () => {
+      // 최종 반영
+      totalScore = endScore;
+      // 점수 DOM도 업데이트
+      document.getElementById("score").textContent = totalScore;
+      // 점수에 살짝 강조 애니메이션
+      finalScoreEl.classList.add('animated');
+      setTimeout(() => {
+        finalScoreEl.classList.remove('animated');
+      }, 600);
+      
+      // Firebase DB 저장
+      saveScoreToFirebase(totalScore, BOARD_ROWS, targetSum);
+    });
+  });
+}
+
+/**
+ * 최종 성공 오버레이 닫기 → 다음 라운드 or 타이틀화면 등 처리
+ */
+function closeFinalOverlay() {
+  // 오버레이 닫기
+  document.getElementById("overlay").style.display = "none";
+  // (여기서는 라운드 하나를 성공한 것이므로 다음 라운드를 진행하거나,
+  //  혹은 다시 시작할 수도 있습니다. 필요에 맞게 변경하세요.)
+  
+  // 예: 다음 라운드 시작
+  currentRound++;
+  targetSum = 9 + currentRound;
+  initRound();
 }

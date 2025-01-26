@@ -118,7 +118,7 @@ html, body {
     flex-wrap: wrap;
     gap: 15px;
     justify-content: center;
-    margin-bottom: 30px;
+    margin-bottom: 150px;
   }
   .selector {
     padding: 10px;
@@ -239,11 +239,11 @@ html, body {
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     margin: 0;
-    overflow: hidden; 
+    overflow: hidden;
     position: relative;
-  }
+}
   #game-board {
     border-collapse: separate;
     border-spacing: 4px;
@@ -289,13 +289,15 @@ html, body {
     100% { transform: scale(0.8); opacity:0; }
   }
   .hint-line {
-    background-color: #acd6ff !important;
-    box-shadow: 0px 0px 10px #DDD;
+    box-shadow: 2px 2px 5px #3d3d3d;
+    
   }
   
   /* ===== [하단버튼] ===== */
   .buttons-container {
     display: flex;
+    position: fixed;
+    bottom: 0;
     justify-content: center;
     gap: 12px;
     width: 100%;
@@ -414,21 +416,25 @@ html, body {
   /* ===== [플로팅 점수] ===== */
   .floating-score {
     position: absolute;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(1);
     font-size: 24px;
+    font-weight: 700;
     pointer-events: none;
-    opacity: 1;
-    animation: floatUp 1s forwards;
+    animation: floatUpScale 1s forwards;
     z-index: 1000;
   }
-  @keyframes floatUp {
+  @keyframes floatUpScale {
     0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.8);
+    }
+    50% {
       opacity: 1;
-      transform: translate(-50%, -50%) translateY(0);
+      transform: translate(-50%, -50%) scale(1.2);
     }
     100% {
       opacity: 0;
-      transform: translate(-50%, -50%) translateY(-20px);
+      transform: translate(-50%, -50%) scale(1.0) translateY(-20px);
     }
   }
 
@@ -485,4 +491,28 @@ html, body {
 #footer p {
   margin: 4px 0;
   color: #666;
+}
+
+/* ===== 남은시간 보너스 애니메이션 ===== */
+#timeBonusContainer {
+  margin: 20px 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+#timeBonusContainer span {
+  font-weight: bold;
+  color: #D32F2F; /* 원하는 색상 */
+}
+
+/* ===== 최종 점수 애니메이션 ===== */
+#finalScoreValue {
+  font-size: 1.5rem;
+  margin-top: 10px;
+  display: inline-block;
+  color: #0d47a1;
+  font-weight: 700;
+  transition: transform 0.3s;
+}
+#finalScoreValue.animated {
+  transform: scale(1.2);
 }
