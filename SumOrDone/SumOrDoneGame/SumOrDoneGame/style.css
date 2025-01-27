@@ -208,7 +208,6 @@ html, body {
   /* ===== [게임화면] ===== */
   #game-container {
     display: none;
-    height: 100vh;
     flex-direction: column;
     user-select: none;
     touch-action: none;
@@ -246,17 +245,15 @@ html, body {
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     margin: 0;
     overflow: hidden;
     position: relative;
-    margin: 00px 0px 0px 0px;
 }
 
   #game-board {
     position: relative;
     border-collapse: separate;
-    
     table-layout: fixed; /* 셀 너비 균등 배분 */
     margin: 16px 16px 16px 16px;
   }

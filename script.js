@@ -252,7 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
   startGameBtn.addEventListener("click", onStartGame);
 
   // 홈으로 돌아가기
-  const homeLink = document.getElementById("home-link");
+  const homeLink = document.getElementById("home-btn");
   homeLink.addEventListener("click", (e) => {
     e.preventDefault();
     backToTitleScreen();
