@@ -725,9 +725,9 @@ function showGameOver() {
     <h2>시간 종료!</h2>
     <table id="score-summary-table">
       <tbody>
-        <tr><th>기본 점수</th><td>${baseScore}</td></tr>
-        <tr><th>결 성공 보너스</th><td>+100</td></tr>
-        <tr><th>남은 시간 보너스</th><td><span id="time-bonus-anim">0</span> 점</td></tr>
+        <tr><th>기본 점수</th><td>${totalScore}</td></tr>
+        <tr><th>결 성공 보너스</th><td>+0</td></tr>
+        <tr><th>남은 시간 보너스</th><td>+<span id="time-bonus-anim">0</span></td></tr>
         <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
       </tbody>
     </table>
@@ -840,7 +840,7 @@ function showFinalSuccessOverlay(timeBonus) {
       <tbody>
         <tr><th>기본 점수</th><td>${baseScore}</td></tr>
         <tr><th>결 성공 보너스</th><td>+100</td></tr>
-        <tr><th>남은 시간 보너스</th><td><span id="time-bonus-anim">0</span> 점</td></tr>
+        <tr><th>남은 시간 보너스</th><td>+<span id="time-bonus-anim">0</span></td></tr>
         <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
       </tbody>
     </table>

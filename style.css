@@ -415,7 +415,7 @@ html, body {
     background-color: #005bb5;
   }
   
-  .ad-close-btn {
+  #ad-close-btn {
     margin-top: 20px;
     padding: 10px 20px;
     font-size: 1rem;
@@ -426,7 +426,7 @@ html, body {
     cursor: pointer;
     transition: background-color 0.2s ease;
   }
-  .ad-close-btn:hover {
+  #ad-close-btn:hover {
     background-color: #005bb5;
   }
 
