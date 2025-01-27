@@ -143,7 +143,7 @@ html, body {
     font-size: 1.1rem;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
-    min-width: 300px;
+    min-width: 200px;
     height: 50px;
     font-weight: 600;
   }
@@ -205,14 +205,13 @@ html, body {
   
   /* ===== [게임화면] ===== */
   #game-container {
-    display: none; /* 초기에는 숨김 */
+    display: none;
     height: 100vh;
     flex-direction: column;
     user-select: none;
     touch-action: none;
     background: #fafafa;
-
-  }
+}
   
   /* 상단바 */
   #info-bar {
@@ -282,16 +281,16 @@ html, body {
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: #ffffff; /* 배경색 설정 */
-    padding: 16px 16px;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);  /*상단에 그림자 추가 */
-    border-top: 1px solid #ccc;
+    padding: 8px 16px;
+    /* box-shadow: 0 -2px 5px rgba(0,0,0,0.1);  상단에 그림자 추가 */
+    /* border-top: 1px solid #ccc; */
     box-sizing: border-box;
     display: flex;
     justify-content: center;
-    border-radius: 16px 16px 0 0;
+    /* border-radius: 12px; */
     gap: 12px;
     align-items: center;
+    max-width: 600px;
   }
   
   .primary-button {
@@ -518,12 +517,16 @@ html, body {
   margin: 30px auto;
   padding: 20px;
   
-  
   background: rgba(255, 255, 255, 0.25); /* 반투명 흰색 */
     backdrop-filter: blur(10px);           /* 글래스 효과의 핵심: 흐림(blur) */
     -webkit-backdrop-filter: blur(10px);   /* Safari 등 WebKit 호환성 */
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* 살짝 그림자 */
     border-radius: 16px;
+}
+.how-to-play-image {
+  display: flex;
+  justify-content: center;
+  width: 256px;
 }
 .info-section h2 {
   margin-top: 0;

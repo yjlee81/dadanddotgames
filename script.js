@@ -215,7 +215,7 @@ function renderScoreTable(scoreRecords) {
     
     // 타입 셀 (난이도와 목표를 합친 형태)
     const typeTd = document.createElement("td");
-    typeTd.textContent = `${rec.diff}x${rec.diff}, ${rec.target}`;
+    typeTd.textContent = /* `${rec.diff}x${rec.diff},` */ `${rec.target}`;
     tr.appendChild(typeTd);
     
     // 테이블에 행 추가
@@ -285,7 +285,10 @@ function onStartGame() {
   targetSum = selectedGoal;
 
   // 2) 난이도(보드 크기)
-  const diffValue = parseInt(document.getElementById("difficulty-select").value, 10) || 6;
+  /* 릴리즈시 난이도는 일단 제외 */
+  // const diffValue = parseInt(document.getElementById("difficulty-select").value, 10) || 6;
+  const diffValue = 6;
+
   BOARD_ROWS = diffValue;
   BOARD_COLS = diffValue;
 
@@ -726,8 +729,8 @@ function showGameOver() {
     <table id="score-summary-table">
       <tbody>
         <tr><th>기본 점수</th><td>${totalScore}</td></tr>
-        <tr><th>결 성공 보너스</th><td>+0</td></tr>
-        <tr><th>남은 시간 보너스</th><td>+<span id="time-bonus-anim">0</span></td></tr>
+        <tr><th>결 성공 보너스</th><td>+ 0</td></tr>
+        <tr><th>남은 시간 보너스</th><td>+ <span id="time-bonus-anim">0</span></td></tr>
         <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
       </tbody>
     </table>
@@ -839,8 +842,8 @@ function showFinalSuccessOverlay(timeBonus) {
     <table id="score-summary-table">
       <tbody>
         <tr><th>기본 점수</th><td>${baseScore}</td></tr>
-        <tr><th>결 성공 보너스</th><td>+100</td></tr>
-        <tr><th>남은 시간 보너스</th><td>+<span id="time-bonus-anim">0</span></td></tr>
+        <tr><th>결 성공 보너스</th><td>+ 100</td></tr>
+        <tr><th>남은 시간 보너스</th><td>+ <span id="time-bonus-anim">0</span></td></tr>
         <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
       </tbody>
     </table>
