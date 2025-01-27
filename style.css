@@ -89,7 +89,7 @@ html, body {
   }
   
   /* ===== [첫화면] ===== */
-  #titleScreen {
+  #title-screen {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -97,12 +97,12 @@ html, body {
     padding: 20px;
     background-color: #ffffff;
   }
-  #titleScreen h2 {
+  #title-screen h2 {
     font-size: 1.8rem;
     margin: 10px 0 8px 0;
     color: #333;
   }
-  #titleScreen .subtitle {
+  #title-screen .subtitle {
     font-size: 1rem;
     color: #666;
     margin: 0 auto 20px auto;
@@ -174,7 +174,7 @@ html, body {
   }
   
   /* ===== [카운트다운 오버레이] ===== */
-  #countdownOverlay {
+  #countdown-overlay {
     position: fixed; top: 0; left: 0;
     width: 100%; height: 100%;
     display: none;
@@ -187,12 +187,12 @@ html, body {
     font-size: 3rem;
   }
 
-  #countdownOverlay .game-image {
+  #countdown-overlay .game-image {
     width: 128px;
     height: 128px;
   }
 
-  #countdownNumber {
+  #countdown-number {
     margin: 20px;
     font-size: 4rem;
     font-weight: 700;
@@ -204,15 +204,13 @@ html, body {
   }
   
   /* ===== [게임화면] ===== */
-  #gameContainer {
+  #game-container {
     display: none; /* 초기에는 숨김 */
     height: 100vh;
     flex-direction: column;
     user-select: none;
     touch-action: none;
     background: #fafafa;
-    padding-top: 10px; 
-    padding-bottom: 80px; /* 버튼 컨테이너 높이보다 약간 더 큰 값 */
 
   }
   
@@ -220,11 +218,11 @@ html, body {
   #info-bar {
     display: flex;
     justify-content: space-around;
-    align-items: center;
-    padding: 10px;
+    align-items: flex-start;
+    padding: 8px;
     background: #f9f9f9;
     border-bottom: 1px solid #ccc;
-    height: 50px;
+    height: 40px;
     align-content: center;
 }
   .info-box {
@@ -247,24 +245,26 @@ html, body {
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     margin: 0;
     overflow: hidden;
     position: relative;
+    margin: 00px 0px 0px 0px;
 }
 
   #game-board {
+    position: relative;
     border-collapse: separate;
-    border-spacing: 4px;
-    margin: 0px;
+    
     table-layout: fixed; /* 셀 너비 균등 배분 */
-    margin:8px;
+    margin: 16px 16px 16px 16px;
   }
+
   #game-board td {
     background: rgba(255, 255, 255, 0.25); /* 반투명 흰색 */
     backdrop-filter: blur(10px);           /* 글래스 효과의 핵심: 흐림(blur) */
     -webkit-backdrop-filter: blur(10px);   /* Safari 등 WebKit 호환성 */
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* 살짝 그림자 */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* 살짝 그림자 */
     border-radius: 16px;                   /* 모서리 둥글게 */
     text-align: center;
     vertical-align: middle;
@@ -274,9 +274,58 @@ html, body {
     cursor: pointer;
     /* transition: background-color 0.2s, transform 0.15s, box-shadow 0.15s; */
     user-select: none;
-    
-    
   }
+
+  /* ===== [하단버튼] ===== */
+  .buttons-container {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff; /* 배경색 설정 */
+    padding: 16px 16px;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);  /*상단에 그림자 추가 */
+    border-top: 1px solid #ccc;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    border-radius: 16px 16px 0 0;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  .primary-button {
+    flex: 1;
+    height: 45px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--accent-color);
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    min-width: 80px;
+  }
+  .primary-button:hover {
+    background-color: #005bb5;
+  }
+  .secondary-button {
+    flex: 1;
+    height: 45px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--secondary-button-color);
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    min-width: 80px;
+  }
+  .secondary-button:hover {
+    background-color: var(--secondary-button-hover-color);
+  }
+
+
   /* 드래그 강조 */
   .drag-select-highlight {
     background-color: var(--tile-selected-color) !important;
@@ -318,57 +367,11 @@ html, body {
     box-shadow: 0px 0px 10px #DDD;
   }
   
-  /* ===== [하단버튼] ===== */
-  .buttons-container {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #ffffff; /* 배경색 설정 */
-    padding: 10px 20px;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);  /*상단에 그림자 추가 */
-    border-top: 1px solid #ccc;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    border-radius: 16px;
-    gap: 12px;
-    align-items: center;
-  }
-  .primary-button {
-    flex: 1;
-    height: 45px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 8px;
-    background-color: var(--accent-color);
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    min-width: 80px;
-  }
-  .primary-button:hover {
-    background-color: #005bb5;
-  }
-  .secondary-button {
-    flex: 1;
-    height: 45px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 8px;
-    background-color: var(--secondary-button-color);
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    min-width: 80px;
-  }
-  .secondary-button:hover {
-    background-color: var(--secondary-button-hover-color);
-  }
+  
   
   /* ===== [오버레이(성공/실패/게임오버/광고)] ===== */
   #overlay,
-  #gameOverOverlay,
+  #game-over-overlay,
   #ad-modal {
     position: fixed;
     top: 0; left: 0;
@@ -380,7 +383,7 @@ html, body {
     justify-content: center;
   }
   #overlay-message,
-  #gameOverMessage,
+  #game-over-message,
   #ad-modal .ad-content {
     background-color: #fff;
     padding: 20px;
@@ -391,6 +394,7 @@ html, body {
     box-sizing: border-box;
     font-size: 1.1rem;
     animation: modal-appear 0.3s ease forwards;
+    width: 80vw;
   }
   @keyframes modal-appear {
     0% { transform: scale(0.8); opacity: 0; }
@@ -411,6 +415,22 @@ html, body {
     background-color: #005bb5;
   }
   
+  .ad-close-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--accent-color);
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  .ad-close-btn:hover {
+    background-color: #005bb5;
+  }
+
+
   /* 게임오버 특별 UI */
   .game-over-buttons {
     margin-top: 20px;
@@ -451,10 +471,10 @@ html, body {
     font-size: 24px;
     font-weight: 700;
     pointer-events: none;
-    animation: floatUpScale 1s forwards;
+    animation: float-up-scale 1s forwards;
     z-index: 1000;
   }
-  @keyframes floatUpScale {
+  @keyframes float-up-scale {
     0% {
       opacity: 0;
       transform: translate(-50%, -50%) scale(0.8);
@@ -474,7 +494,7 @@ html, body {
 /***************************************************
 30초 경고 애니메이션 (time-warning)
 ***************************************************/
-@keyframes timeWarningBlink {
+@keyframes time-warning-blink {
     0%, 100% {
     color: #ffc7c7; /* 아주 연한 노란색 */
     font-weight: 100;
@@ -488,7 +508,7 @@ html, body {
     }
 }
 .time-warning {
-    animation: timeWarningBlink 1s infinite;
+    animation: time-warning-blink 1s infinite;
 }
 
 /* ===== how-to-play, faq, about ===== */
@@ -530,18 +550,18 @@ html, body {
 }
 
 /* ===== 남은시간 보너스 애니메이션 ===== */
-#timeBonusContainer {
+#time-bonus-container {
   margin: 20px 0;
   font-size: 1.2rem;
   color: #333;
 }
-#timeBonusContainer span {
+#time-bonus-container span {
   font-weight: bold;
   color: #D32F2F; /* 원하는 색상 */
 }
 
 /* ===== 최종 점수 애니메이션 ===== */
-#finalScoreValue {
+#final-score-value {
   font-size: 1.5rem;
   margin-top: 10px;
   display: inline-block;
@@ -549,7 +569,7 @@ html, body {
   font-weight: 700;
   transition: transform 0.3s;
 }
-#finalScoreValue.animated {
+#final-score-value.animated {
   transform: scale(1.2);
 }
 
@@ -593,7 +613,7 @@ html, body {
 }
 
 /* 최종 점수에 살짝 스케일 업 애니메이션 */
-#finalScoreValue.animated {
+#final-score-value.animated {
   transition: transform 0.3s ease;
   transform: scale(1.2);
 }

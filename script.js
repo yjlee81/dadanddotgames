@@ -151,10 +151,10 @@ let isDragging = false;
 let dragPositions = [];
 
 // DOM 캐시
-const titleScreenEl = document.getElementById("titleScreen");
-const countdownOverlayEl = document.getElementById("countdownOverlay");
-const countdownNumberEl = document.getElementById("countdownNumber");
-const gameContainerEl = document.getElementById("gameContainer");
+const titleScreenEl = document.getElementById("title-screen");
+const countdownOverlayEl = document.getElementById("countdown-overlay");
+const countdownNumberEl = document.getElementById("countdown-number");
+const gameContainerEl = document.getElementById("game-container");
 const scoreTableBody = document.querySelector("#score-table tbody");
 const timerEl = document.getElementById("timer");
 
@@ -719,19 +719,23 @@ function updateTimerDisplay() {
  ***************************************************/
 function showGameOver() {
   stopTimer();
-  const gameOverEl = document.getElementById("gameOverOverlay");
-  const gameOverMsg = document.getElementById("gameOverMessage");
+  const gameOverEl = document.getElementById("game-over-overlay");
+  const gameOverMsg = document.getElementById("game-over-message");
   gameOverMsg.innerHTML = `
     <h2>시간 종료!</h2>
-    <div style="border:none;box-shadow:none;">
-      <h3>최종 점수:</h3>
-      <p style="font-size:2rem;font-weight:bold;margin:10px 0;">${totalScore}</p>
-      <p>${BOARD_ROWS}x${BOARD_COLS}, Goal ${targetSum}</p>
-    </div>
+    <table id="score-summary-table">
+      <tbody>
+        <tr><th>기본 점수</th><td>${baseScore}</td></tr>
+        <tr><th>결 성공 보너스</th><td>+100</td></tr>
+        <tr><th>남은 시간 보너스</th><td><span id="time-bonus-anim">0</span> 점</td></tr>
+        <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
+      </tbody>
+    </table>
     <div class="game-over-buttons">
       <button class="primary-button" onclick="backToTitleScreen()">홈으로</button>
     </div>
   `;
+
   // 여기서도 스코어 저장
   saveScoreToFirebase(totalScore, BOARD_ROWS, targetSum);
   gameOverEl.style.display = "flex";
@@ -743,7 +747,7 @@ function showGameOver() {
 function backToTitleScreen() {
   // 게임화면 숨기고, 타이머 중지
   gameContainerEl.style.display = "none";
-  document.getElementById("gameOverOverlay").style.display = "none";
+  document.getElementById("game-over-overlay").style.display = "none";
   titleScreenEl.style.display = "flex";
   stopTimer();
 }
@@ -785,7 +789,7 @@ function showFloatingScore(txt, r, c, isPenalty=false) {
 }
 
 function showFinalScore(score) {
-  const finalScoreElement = document.getElementById('finalScoreValue');
+  const finalScoreElement = document.getElementById('final-score-value');
   finalScoreElement.textContent = score;
   finalScoreElement.classList.add('animated');
   
