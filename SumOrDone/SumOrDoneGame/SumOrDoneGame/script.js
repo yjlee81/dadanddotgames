@@ -176,26 +176,6 @@ function fetchScoresFromFirebase(callback) {
   });
 }
 
-function filterScores(filter) {
-  const now = Date.now();
-  let filteredScores = [];
-
-  if (filter === 'today') {
-    filteredScores = scores.filter(score => {
-      const oneDay = 24 * 60 * 60 * 1000;
-      return now - score.timestamp < oneDay;
-    });
-  } else if (filter === 'week') {
-    filteredScores = scores.filter(score => {
-      const oneWeek = 7 * 24 * 60 * 60 * 1000;
-      return now - score.timestamp < oneWeek;
-    });
-  } else {
-    filteredScores = scores;
-  }
-
-  displayScores(filteredScores);
-}
 
 function displayScores(scoreList) {
   const tbody = document.querySelector("#score-table tbody");
@@ -215,8 +195,43 @@ function displayScores(scoreList) {
     });
 }
 
+
 // 초기 로드 시 전체 점수 표시
 fetchScoresFromFirebase(displayScores);
+
+function filterScores(filter) {
+  const now = Date.now();
+  let filteredScores = [];
+
+  if (filter === 'today') {
+    filteredScores = scores.filter(score => {
+      const oneDay = 24 * 60 * 60 * 1000;
+      return now - score.timestamp < oneDay;
+    });
+  } else if (filter === 'week') {
+    filteredScores = scores.filter(score => {
+      const oneWeek = 7 * 24 * 60 * 60 * 1000;
+      return now - score.timestamp < oneWeek;
+    });
+  } else {
+    filteredScores = scores;
+  }
+
+  displayScores(filteredScores);
+  updateActiveChip(filter);
+}
+
+
+function updateActiveChip(filter) {
+  const chips = document.querySelectorAll('.chip');
+  chips.forEach(chip => {
+    chip.classList.remove('active');
+    if (chip.getAttribute('data-filter') === filter) {
+      chip.classList.add('active');
+    }
+  });
+}
+
 
 // 점수 저장
 function saveScoreToFirebase(score, diff, target) {
@@ -279,6 +294,8 @@ function setLanguage(lang) {
  * DOMContentLoaded
  ***************************************************/
 document.addEventListener("DOMContentLoaded", () => {
+  filterScores('today'); // 기본으로 '오늘'의 기록을 표시
+
   // 언어 선택
   const languageSelect = document.getElementById("language-select");
   languageSelect.addEventListener("change", (e) => {
