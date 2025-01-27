@@ -75,7 +75,7 @@ const translations = {
     backToTitle: "첫화면으로 돌아가기",
     policy: "개인정보 취급방침",
     policyLink: "pp.html",
-    noCombinationToast: "더 이상의 조합이 없으니 'Done!' 버튼을 누르세요.",
+    noCombinationToast: "더 이상의 조합이 없으니 'Done!'버튼을 누르세요",
     cancelSelection: "선택 취소",
     success: "성공",
     failSum: "숫자들의 합이 {target}이 아니에요",
@@ -158,10 +158,11 @@ const gameContainerEl = document.getElementById("game-container");
 const scoreTableBody = document.querySelector("#score-table tbody");
 const timerEl = document.getElementById("timer");
 
+let scores = []; // 전체 점수 데이터를 저장할 배열
+
 /***************************************************
  * 스코어 관련 (Firebase)
  ***************************************************/
-// 점수 불러오기
 function fetchScoresFromFirebase(callback) {
   db.ref("scores").on("value", (snapshot) => {
     const data = snapshot.val();
@@ -170,10 +171,52 @@ function fetchScoresFromFirebase(callback) {
       callback([]);
       return;
     }
-    const scoreRecords = Object.values(data);
-    callback(scoreRecords);
+    scores = Object.values(data);
+    callback(scores);
   });
 }
+
+function filterScores(filter) {
+  const now = Date.now();
+  let filteredScores = [];
+
+  if (filter === 'today') {
+    filteredScores = scores.filter(score => {
+      const oneDay = 24 * 60 * 60 * 1000;
+      return now - score.timestamp < oneDay;
+    });
+  } else if (filter === 'week') {
+    filteredScores = scores.filter(score => {
+      const oneWeek = 7 * 24 * 60 * 60 * 1000;
+      return now - score.timestamp < oneWeek;
+    });
+  } else {
+    filteredScores = scores;
+  }
+
+  displayScores(filteredScores);
+}
+
+function displayScores(scoreList) {
+  const tbody = document.querySelector("#score-table tbody");
+  tbody.innerHTML = ""; // 기존 점수 목록 초기화
+
+  scoreList
+    .sort((a, b) => b.score - a.score) // 점수 내림차순 정렬
+    .slice(0, 5) // 상위 5개 선택
+    .forEach((score, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${score.score}</td>
+        <td>${score.target}</td>
+      `;
+      tbody.appendChild(row);
+    });
+}
+
+// 초기 로드 시 전체 점수 표시
+fetchScoresFromFirebase(displayScores);
 
 // 점수 저장
 function saveScoreToFirebase(score, diff, target) {

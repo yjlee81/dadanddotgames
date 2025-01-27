@@ -20,7 +20,8 @@
 
   <!-- [1] 첫화면 -->
   <div id="title-screen">
-    <h2 id="titleLabel" data-key="mainTitle">숫자 결!합! <span id="version">v.0.7</span></h2>
+    <h2 id="titleLabel" data-key="mainTitle">숫자 결!합!</h2>
+    <h3 id="version">v.0.7.0001</h3>
     <p class="subtitle" data-key="welcomeMessage">간단하지만 연산과 집중력이 필요한 숫자 퍼즐 게임</p>
 
     <!-- 게임 옵션 (목표점수 & 난이도) -->
@@ -52,19 +53,28 @@
     </div>
 
     <!-- 내 점수 테이블 -->
-    <div id="score-table-title" class="options-title"><h3>최고 기록 TOP 5</h3></div>
-    <table id="score-table" class="score-table">
-      <thead>
-        <tr>
-          <th>순위</th>
-          <th>점수</th>
-          <th>타입</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- 점수 목록 -->
-      </tbody>
-    </table>
+    <div id="score-table-title" class="info-section">
+      <h3>최고 기록 TOP 5</h3>
+      <div class="filter-buttons">
+        <button onclick="filterScores('today')">오늘</button>
+        <button onclick="filterScores('week')">일주일</button>
+        <button onclick="filterScores('all')">전체</button>
+      </div>
+      <table id="score-table" class="score-table">
+        <thead>
+          <tr>
+            <th>순위</th>
+            <th>점수</th>
+            <th>타입</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 점수 목록 -->
+        </tbody>
+      </table>
+    </div>
+    
+    
 
     <!-- How to Play -->
     <section id="how-to-play" class="info-section">
@@ -209,8 +219,8 @@
   <!-- [6] 광고 모달 (힌트 클릭 시 노출) -->
   <div id="ad-modal" style="display: none;">
     <div class="ad-content">
-      <p>힌트를 보려면 클릭해주세요.</p>
-      <button id="ad-close-btn">닫기</button>
+      <p>두둥! 힌트가 회색으로 표시됩니다.</p>
+      <button id="ad-close-btn">힌트보기</button>
     </div>
   </div>
 

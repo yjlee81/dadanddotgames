@@ -158,11 +158,11 @@ html, body {
   
   
   .score-table {
-    width: 90%;
+    width: 100%;
     max-width: 600px;
-    margin: 0 auto 20px auto;
+    margin: 0 auto 10px auto;
     border-collapse: collapse;
-    text-align: center;
+    text-align: left;
     box-shadow: 0 0 6px rgba(0,0,0,0.07);
     background-color: #fff;
   }
@@ -351,7 +351,7 @@ html, body {
   }
   .success-line {
     background-color: #007aff !important; /* 기존보다 좀 더 강렬한 색상 */
-    color: #fff;
+    color: #fff !important;
     position: relative;
     overflow: hidden;
   }
@@ -450,7 +450,7 @@ html, body {
   /* ===== [토스트 메시지] ===== */
   #toast-message {
     position: fixed;
-    bottom: 80px;
+    bottom: 150px;
     left: 50%;
     transform: translateX(-50%) translateY(100px);
     background-color: var(--toast-background);
@@ -459,8 +459,8 @@ html, body {
     border-radius: 14px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     font-size: 0.95rem;
-    max-width: 360px;
-    width: 50vw;
+    max-width: 300px;
+    width: 80vw;
     white-space: nowrap;
     text-align: center;
     transition: transform 0.1s ease-out, opacity 0.1s ease-out;
