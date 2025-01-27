@@ -25,20 +25,20 @@
 
     <!-- 게임 옵션 (목표점수 & 난이도) -->
     <div class="options-container">
-      <span>목표점수</span>
+      <span>시작 레벨</span>
       <select id="round-select" class="selector">
         <!-- 라운드(목표점수) -->
-        <option value="10">10</option>
-        <option value="11">11</option>
-        <option value="12">12</option>
-        <option value="13">13</option>
-        <option value="14">14</option>
-        <option value="15">15</option>
-        <option value="16">16</option>
-        <option value="17">17</option>
-        <option value="18">18</option>
-        <option value="19">19</option>
-        <option value="20">20</option>
+        <option value="10">10점</option>
+        <option value="11">11점</option>
+        <option value="12">12점</option>
+        <option value="13">13점</option>
+        <option value="14">14점</option>
+        <option value="15">15점</option>
+        <option value="16">16점</option>
+        <option value="17">17점</option>
+        <option value="18">18점</option>
+        <option value="19">19점</option>
+        <option value="20">20점</option>
       </select>
 <!-- 릴리즈시 난이도 선택기능은 일단 스펙아웃
       <select id="difficulty-select" class="selector">
@@ -150,8 +150,9 @@
             <option value="ja">JP</option>
             <option value="zh">ZH</option>
           </select>
-        </div> -->
-      </nav>
+        </div>
+      </nav> -->
+
     </header>
     <!-- 상단 바 -->
     <div id="info-bar">
@@ -168,19 +169,31 @@
         <span class="data" id="timer">02:00</span>
       </div>
     </div>
-
     <!-- 보드 -->
     <div class="board-container">
       <table id="game-board"></table>
     </div>
 
+    
     <!-- 하단 버튼 -->
     <div class="buttons-container">
-        
       <button id="home-btn" class="tertiary-button">홈으로</button>
       <button id="hint-btn" class="secondary-button">Hint</button>
       <button id="no-more" class="primary-button">Done!</button>
+      
     </div>
+    <footer id="footer">
+      <p data-key="footerText">&copy; 2025 Dadanddot.com</p>
+      <a href="pp.html" id="privacy-policy-link">Privacy Policy</a>
+      
+      <select class="language-selector" id="language-select">
+        <option value="en">EN</option>
+        <option value="ko" selected>KR</option>
+        <option value="ja">JP</option>
+        <option value="zh">ZH</option>
+      </select>
+      
+    </footer>
   </div>
 
   <!-- [4] 통합 모달 (성공/실패) -->

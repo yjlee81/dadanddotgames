@@ -411,22 +411,37 @@ function renderBoard() {
 function resizeBoard() {
   const container = document.querySelector(".board-container");
   if (!container) return;
+  
+  // (1) .board-container의 실제 픽셀 크기
   const containerWidth = container.clientWidth;
   const containerHeight = container.clientHeight;
+  
+  // (2) 정사각형 한 변으로 사용할 크기: 화면에서 가능한 공간 중 작은 쪽
+  const size = Math.min(containerWidth, containerHeight);
 
-  const borderSpacing = 4;
+  // (3) 테이블 크기를 직접 지정해서 정사각형 만들기
+  const boardEl = document.getElementById("game-board");
+  boardEl.style.width = size + "px";
+  boardEl.style.height = size + "px";
+
+  // (4) 각 셀의 폭/높이를 계산
+  //     borderSpacing, 보더 등을 고려해 최대 셀 크기를 구해줍니다.
+  const borderSpacing = 2; // or 1, 원하는 값
   const totalHorizontalSpacing = (BOARD_COLS + 1) * borderSpacing;
   const totalVerticalSpacing = (BOARD_ROWS + 1) * borderSpacing;
 
-  const maxCellWidth = (containerWidth - totalHorizontalSpacing) / BOARD_COLS;
-  const maxCellHeight= (containerHeight - totalVerticalSpacing) / BOARD_ROWS;
+  // 만약 행/열이 같은 값이라면 그냥 BOARD_COLS를 쓰셔도 되고,
+  // 혹은 열과 행이 다를 수도 있으니 Math.max(...) 를 써도 무방합니다.
+  const maxCellSize = Math.floor(
+    (size - Math.max(totalHorizontalSpacing, totalVerticalSpacing))
+      / Math.max(BOARD_ROWS, BOARD_COLS)
+  );
 
-  const cellSize = Math.floor(Math.min(maxCellWidth, maxCellHeight));
-
-  const tdList = document.querySelectorAll("#game-board td");
+  // (5) 모든 셀에 width/height를 적용하여 "정사각형" 셀 배치
+  const tdList = boardEl.querySelectorAll("td");
   tdList.forEach(td => {
-    td.style.width = cellSize + "px";
-    td.style.height= cellSize + "px";
+    td.style.width = maxCellSize + "px";
+    td.style.height = maxCellSize + "px";
   });
 }
 

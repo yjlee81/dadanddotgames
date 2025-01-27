@@ -128,7 +128,7 @@ html, body {
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 1rem;
-    width: 60px;
+    width: 100px;
     outline: none;
     height: 50px;
   }
@@ -212,6 +212,7 @@ html, body {
     user-select: none;
     touch-action: none;
     background: #fafafa;
+    height: 100%;
 }
   
   /* 상단바 */
@@ -246,18 +247,16 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    margin: 0;
     overflow: hidden;
     position: relative;
 }
 
-  #game-board {
+#game-board {
     position: relative;
     border-collapse: separate;
-    table-layout: fixed; /* 셀 너비 균등 배분 */
+    table-layout: fixed;
     margin: 16px 16px 16px 16px;
-  }
-
+}
   #game-board td {
     background: rgba(255, 255, 255, 0.25); /* 반투명 흰색 */
     backdrop-filter: blur(10px);           /* 글래스 효과의 핵심: 흐림(blur) */
@@ -281,16 +280,15 @@ html, body {
     left: 0;
     width: 100%;
     padding: 8px 16px;
-    /* box-shadow: 0 -2px 5px rgba(0,0,0,0.1);  상단에 그림자 추가 */
     /* border-top: 1px solid #ccc; */
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     /* border-radius: 12px; */
     gap: 12px;
-    align-items: center;
-    max-width: 600px;
-  }
+    align-items: flex-start;
+    /* height: 160px; */
+}
   
   .primary-button {
     flex: 1;
@@ -461,7 +459,8 @@ html, body {
     border-radius: 14px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     font-size: 0.95rem;
-    max-width: 280px;
+    max-width: 360px;
+    width: 50vw;
     white-space: nowrap;
     text-align: center;
     transition: transform 0.1s ease-out, opacity 0.1s ease-out;
