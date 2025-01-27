@@ -212,6 +212,7 @@ html, body {
     user-select: none;
     touch-action: none;
     background: #fafafa;
+    height: 100%;
 }
   
   /* 상단바 */
@@ -246,18 +247,16 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    margin: 0;
     overflow: hidden;
     position: relative;
 }
 
-  #game-board {
+#game-board {
     position: relative;
     border-collapse: separate;
-    table-layout: fixed; /* 셀 너비 균등 배분 */
+    table-layout: fixed;
     margin: 16px 16px 16px 16px;
-  }
-
+}
   #game-board td {
     background: rgba(255, 255, 255, 0.25); /* 반투명 흰색 */
     backdrop-filter: blur(10px);           /* 글래스 효과의 핵심: 흐림(blur) */
