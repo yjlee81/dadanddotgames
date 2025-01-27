@@ -537,10 +537,14 @@ function stopDragSelect() {
     checkLine(start, end);
   }
 }
-function markDragSelection(positions) {
+funfunction markDragSelection(positions) {
   const trList = document.querySelectorAll("#game-board tr");
-  positions.forEach(([r, c]) => {
+  positions.forEach(([r, c], index) => {
     trList[r].children[c].classList.add("drag-select-highlight");
+    // 첫 번째 칸 제외, 이후 칸 선택 시마다 햅틱
+    if (index > 0) {
+      triggerHapticFeedback("selection");
+    }
   });
 }
 function clearDragSelection() {
@@ -593,6 +597,9 @@ function checkLine(start, end) {
   });
 
   if (sumVal === targetSum) {
+    // 성공 시 햅틱
+    triggerHapticFeedback('success');
+
     const gapBonus = gapCount * 10;
     const lengthBonus = (linePositions.length >= 3)? (linePositions.length - 2) * 5 : 0;
     const addScore = sumVal + gapBonus + lengthBonus;
@@ -711,6 +718,9 @@ function showOverlay(msg, isSuccess){
   overlayEl.style.display = "flex";
 
   if(isSuccess){
+    // 성공 시 햅틱
+    triggerHapticFeedback('done');
+
     // 스코어 저장
     saveScoreToFirebase(totalScore, BOARD_ROWS, targetSum);
   }
@@ -977,4 +987,20 @@ function closeFinalOverlay() {
       startTimer();
     }
   }, 1000);
+}
+
+/**
+ * 네이티브 iOS 코드로 햅틱 피드백 메시지를 전송합니다.
+ * @param {string} type - 햅틱 타입('selection', 'success', 'done' 등)
+ */
+function triggerHapticFeedback(type) {
+  if (
+    window.webkit &&
+    window.webkit.messageHandlers &&
+    window.webkit.messageHandlers.hapticFeedback
+  ) {
+    window.webkit.messageHandlers.hapticFeedback.postMessage(type);
+  } else {
+    console.warn("Haptic feedback is not supported on this device.");
+  }
 }
