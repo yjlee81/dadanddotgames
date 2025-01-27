@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>숫자 결!합!</title>
+  <title>숫자 결!합! 게임</title>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
   
   <!-- Firebase (v9 compat 예시) -->
@@ -25,19 +25,20 @@
 
     <!-- 게임 옵션 (목표점수 & 난이도) -->
     <div class="options-container">
+      <span>목표점수</span>
       <select id="round-select" class="selector">
         <!-- 라운드(목표점수) -->
-        <option value="10">Goal: 10</option>
-        <option value="11">Goal: 11</option>
-        <option value="12">Goal: 12</option>
-        <option value="13">Goal: 13</option>
-        <option value="14">Goal: 14</option>
-        <option value="15">Goal: 15</option>
-        <option value="16">Goal: 16</option>
-        <option value="17">Goal: 17</option>
-        <option value="18">Goal: 18</option>
-        <option value="19">Goal: 19</option>
-        <option value="20">Goal: 20</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20">20</option>
       </select>
 <!-- 릴리즈시 난이도 선택기능은 일단 스펙아웃
       <select id="difficulty-select" class="selector">
@@ -47,7 +48,7 @@
         <option value="10">Hard: 10x10</option>
       </select>
     -->
-      <button id="start-game-btn" data-key="startGame">게임 시작</button>
+      <button id="start-game-btn" data-key="startGame">지금 시작하기 ></button>
     </div>
 
     <!-- 내 점수 테이블 -->
@@ -176,7 +177,7 @@
     <!-- 하단 버튼 -->
     <div class="buttons-container">
         
-      <a href="#" id="home-link">홈으로</a>
+      <button id="home-btn" class="tertiary-button"><a href="index.html">홈으로</a></button>
       <button id="hint-btn" class="secondary-button">Hint</button>
       <button id="no-more" class="primary-button">Done!</button>
     </div>

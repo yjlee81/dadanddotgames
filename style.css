@@ -121,14 +121,16 @@ html, body {
     gap: 15px;
     justify-content: center;
     margin-bottom: 30px;
-  }
+    align-items: center;
+}
   .selector {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 1rem;
-    width: 140px;
+    width: 60px;
     outline: none;
+    height: 50px;
   }
   .selector:focus {
     border-color: var(--accent-color);
@@ -324,7 +326,19 @@ html, body {
     background-color: var(--secondary-button-hover-color);
   }
 
+  .tertiary-button {
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-width: 80px;
+    height: 50px;
 
+  }
   /* 드래그 강조 */
   .drag-select-highlight {
     background-color: var(--tile-selected-color) !important;
