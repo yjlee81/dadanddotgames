@@ -247,7 +247,7 @@ html, body {
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     margin: 0;
     overflow: hidden;
     position: relative;
@@ -258,6 +258,7 @@ html, body {
     border-spacing: 4px;
     margin: 0px;
     table-layout: fixed; /* 셀 너비 균등 배분 */
+    margin:8px;
   }
   #game-board td {
     background: rgba(255, 255, 255, 0.25); /* 반투명 흰색 */
