@@ -510,7 +510,7 @@ position: relative;
   /* ===== [토스트 메시지] ===== */
   #toast-message {
     position: fixed;
-    bottom: 190px;
+    bottom: 220px;
     left: 50%;
     transform: translateX(-50%) translateY(100px);
     background-color: var(--toast-background);

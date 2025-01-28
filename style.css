@@ -126,7 +126,7 @@ html, body {
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 1rem;
-    width: 150px;
+    width: 160px;
     outline: none;
     height: 50px;
   }
@@ -143,7 +143,7 @@ html, body {
     font-size: 1.1rem;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
-    min-width: 200px;
+    min-width: 160px;
     height: 50px;
     font-weight: 600;
   }
@@ -383,23 +383,24 @@ position: relative;
 
   .tertiary-button {
     text-decoration: none;
-    color: #333;
-    border: 1px solid #ccc;
+    color: var(--secondary-button-color);
+    border: 1px solid var(--secondary-button-color);;
     border-radius: 8px;
     padding: 10px 20px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    min-width: 80px;
+    max-width: 90px;
     height: 45px;
-
-  }
+    background: #fff;
+}
   /* 드래그 강조 */
   .drag-select-highlight {
     background-color: var(--tile-selected-color) !important;
   }
   /* 성공/실패/제거 에니메이션 */
   .fail-line {
+    background-color: #FF0A00 !important;
     animation: shake-fail 0.4s ease;
   }
   @keyframes shake-fail {
@@ -445,7 +446,7 @@ position: relative;
     top: 0; left: 0;
     width: 100%; height: 100%;
     background-color: rgba(0,0,0,0.7);
-    z-index: 9999;
+    z-index: 10000;
     display: none;
     align-items: center;
     justify-content: center;
@@ -469,7 +470,7 @@ position: relative;
     100% { transform: scale(1);   opacity: 1; }
   }
   .modal-button {
-    margin-top: 20px;
+    /* margin-top: 20px; */
     padding: 10px 20px;
     font-size: 1rem;
     border: none;
@@ -478,6 +479,7 @@ position: relative;
     color: #fff;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    min-width: 260px;
   }
   .modal-button:hover {
     background-color: #005bb5;
@@ -493,6 +495,7 @@ position: relative;
     color: #fff;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    width: 260px;
   }
   #ad-close-btn:hover {
     background-color: #005bb5;
@@ -510,7 +513,7 @@ position: relative;
   /* ===== [토스트 메시지] ===== */
   #toast-message {
     position: fixed;
-    bottom: 220px;
+    bottom: 160px;
     left: 50%;
     transform: translateX(-50%) translateY(100px);
     background-color: var(--toast-background);
@@ -526,7 +529,7 @@ position: relative;
     transition: transform 0.1s ease-out, opacity 0.1s ease-out;
     opacity: 0;
     pointer-events: none;
-    z-index: 999999;
+    z-index: 9999;
   }
   #toast-message.show {
     transform: translateX(-50%) translateY(0);
@@ -622,7 +625,7 @@ position: relative;
     align-items: center;
     /* height: 94px; */
     gap: 10px;
-    margin-bottom: 94px;
+    margin-bottom: 34px;
     flex-wrap: wrap;
 }
 
@@ -821,12 +824,11 @@ position: relative;
 }
 
 .final-round h2 {
-  color: #ffd700;
-  text-shadow: 0 0 10px #ffd700;
+  color: var(--primary-color);
 }
 
 .final-round p {
-  color: #fff;
+  color: var(--primary-color);
   font-size: 1.2em;
   text-align: center;
   margin: 10px 0;
