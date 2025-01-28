@@ -1,7 +1,7 @@
 /***************************************************
- * Firebase 초기화 (실제 값으로 교체)
+ * Firebase 초기화
  ***************************************************/
-// [1] Firebase config - Firebase 콘솔에서 발급받은 값으로 교체하세요
+// [1] Firebase config - Firebase 콘솔에서 발급받은 값으로 교체
 const firebaseConfig = {
   apiKey: "AIzaSyA98GLfDWJiLMwqnnHiFCqV9ptfwyyXNrk",
   authDomain: "dadanddotgames.firebaseapp.com",
@@ -142,7 +142,7 @@ const MAX_NUM = 9;
 let boardData = [];
 let startPos = [0,0];
 let hintLinePositions = null;
-let remainingSeconds = 120;
+let remainingSeconds = 150;
 let timerInterval = null;
 let isTimerPaused = false;
 
@@ -160,6 +160,7 @@ const timerEl = document.getElementById("timer");
 
 let scores = []; // 전체 점수 데이터를 저장할 배열
 
+
 /***************************************************
  * 스코어 관련 (Firebase)
  ***************************************************/
@@ -174,9 +175,8 @@ function fetchScoresFromFirebase(callback) {
     scores = Object.values(data);
     callback(scores);
   });
+  
 }
-
-
 function displayScores(scoreList) {
   const tbody = document.querySelector("#score-table tbody");
   tbody.innerHTML = ""; // 기존 점수 목록 초기화
@@ -186,18 +186,23 @@ function displayScores(scoreList) {
     .slice(0, 5) // 상위 5개 선택
     .forEach((score, index) => {
       const row = document.createElement("tr");
+      const date = new Date(score.timestamp);
+      const formattedTime =
+        `${(date.getMonth()+1).toString().padStart(2, '')}/${date.getDate().toString().padStart(2, '0')} ` +
+        `${date.getHours().toString().padStart(2, '')}:${date.getMinutes().toString().padStart(2, '0')}`;
+
       row.innerHTML = `
         <td>${index + 1}</td>
         <td>${score.score}</td>
         <td>${score.target}</td>
+        <td>${formattedTime}</td>
       `;
       tbody.appendChild(row);
     });
 }
 
 
-// 초기 로드 시 전체 점수 표시
-fetchScoresFromFirebase(displayScores);
+
 
 function filterScores(filter) {
   const now = Date.now();
@@ -220,7 +225,6 @@ function filterScores(filter) {
   displayScores(filteredScores);
   updateActiveChip(filter);
 }
-
 
 function updateActiveChip(filter) {
   const chips = document.querySelectorAll('.chip');
@@ -294,7 +298,7 @@ function setLanguage(lang) {
  * DOMContentLoaded
  ***************************************************/
 document.addEventListener("DOMContentLoaded", () => {
-  filterScores('today'); // 기본으로 '오늘'의 기록을 표시
+  
 
   // 언어 선택
   const languageSelect = document.getElementById("language-select");
@@ -302,11 +306,11 @@ document.addEventListener("DOMContentLoaded", () => {
     setLanguage(e.target.value);
   });
 
-  // 스코어 데이터 불러오기 + 테이블 렌더
-  fetchScoresFromFirebase((records) => {
-    renderScoreTable(records);
+  
+// 스코어 데이터 불러오기 + 테이블 렌더
+  fetchScoresFromFirebase((scores) => {
+    filterScores('today'); // 초기 로드 시 '오늘' 필터 적용
   });
-
   // 게임 시작 버튼
   const startGameBtn = document.getElementById("start-game-btn");
   startGameBtn.addEventListener("click", onStartGame);
@@ -331,6 +335,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 윈도우 리사이즈 -> 보드 사이즈 재조정
   window.addEventListener("resize", resizeBoard);
+
+  // DOM 변수 초기화 (DOMContentLoaded 내부)
+  gameOverOverlayEl = document.getElementById('game-over-overlay');
+  gameOverMessageEl = document.getElementById('game-over-message');
+
+  filterScores('today'); // 기본으로 '오늘'의 기록을 표시
 });
 
 
@@ -345,8 +355,6 @@ function onStartGame() {
   targetSum = selectedGoal;
 
   // 2) 난이도(보드 크기)
-  /* 릴리즈시 난이도는 일단 제외 */
-  // const diffValue = parseInt(document.getElementById("difficulty-select").value, 10) || 6;
   const diffValue = 6;
 
   BOARD_ROWS = diffValue;
@@ -361,28 +369,21 @@ function onStartGame() {
   showGoalOnCountdownOverlay(targetSum);
 
   // 4) 3초 카운트다운
-  let count = 3;
-  countdownNumberEl.textContent = count;
-  const countdownTimer = setInterval(() => {
-    count--;
-    countdownNumberEl.textContent = count;
-    if (count <= 0) {
-      clearInterval(countdownTimer);
-      countdownOverlayEl.style.display = "none";
-      gameContainerEl.style.display = "flex";
-      initRound();
-      startTimer();
-    }
-  }, 1000);
+  setTimeout(() => {
+    countdownOverlayEl.style.display = "none";
+    gameContainerEl.style.display = "flex";
+    initRound();
+    startTimer();
+  }, 3000); // 3초 후 게임 시작
 }
 
 /**
  * 카운트다운 오버레이에서 목표점수를 표시하는 헬퍼 함수
  */
 function showGoalOnCountdownOverlay(value) {
-  const goalNumEl = document.getElementById("goal-number");
+  const goalNumEl = document.getElementById("goal-value");
   if (goalNumEl) {
-    goalNumEl.textContent = value; 
+    goalNumEl.textContent = value;
   }
 }
 
@@ -407,7 +408,7 @@ function initRound() {
   document.getElementById("score").textContent = totalScore;
 
   // 타이머 리셋
-  remainingSeconds = 120;
+  remainingSeconds = 150;
   isTimerPaused = false;
   updateTimerDisplay();
 
@@ -435,6 +436,11 @@ function renderBoard() {
       td.addEventListener("mouseup", stopDragSelect);
 
       td.addEventListener("touchstart", (e)=>{
+         // 힌트 라인 제거
+          if (hintLinePositions) {
+            markLine(hintLinePositions, null, "hint-line");
+            hintLinePositions = null;
+          }
         e.preventDefault();
         startDragSelect(r,c);
       }, {passive:false});
@@ -473,8 +479,8 @@ function resizeBoard() {
   if (!container) return;
   
   // (1) .board-container의 실제 픽셀 크기
-  const containerWidth = container.clientWidth;
-  const containerHeight = container.clientHeight;
+  const containerWidth = container.clientWidth - 40;
+  const containerHeight = container.clientHeight - 40;
   
   // (2) 정사각형 한 변으로 사용할 크기: 화면에서 가능한 공간 중 작은 쪽
   const size = Math.min(containerWidth, containerHeight);
@@ -541,9 +547,9 @@ function markDragSelection(positions) {
   const trList = document.querySelectorAll("#game-board tr");
   positions.forEach(([r, c], index) => {
     trList[r].children[c].classList.add("drag-select-highlight");
-    // 첫 번째 선택은 제외하고, 이후 선택 시 햅틱 피드백
+    // 첫 번째 칸 제외, 이후 칸 선택 시마다 햅틱
     if (index > 0) {
-      triggerHapticFeedback('selection');
+      triggerHapticFeedback("selection");
     }
   });
 }
@@ -600,7 +606,6 @@ function checkLine(start, end) {
     // 성공 시 햅틱
     triggerHapticFeedback('success');
 
-    // 기존 성공 로직 유지...
     const gapBonus = gapCount * 10;
     const lengthBonus = (linePositions.length >= 3)? (linePositions.length - 2) * 5 : 0;
     const addScore = sumVal + gapBonus + lengthBonus;
@@ -672,8 +677,11 @@ function onNoMoreClick() {
     stopTimer();  // 시간을 멈추고
     const timeBonus = remainingSeconds * 10;
 
+    // 마지막 라운드인지 확인 (목표점수가 20일 때)
+    const isFinalRound = targetSum === 20;
+
     // 오버레이 표시
-    showFinalSuccessOverlay(timeBonus);
+    showFinalSuccessOverlay(timeBonus, isFinalRound);
   }
 }
 
@@ -761,7 +769,7 @@ function useHint() {
  ***************************************************/
 function startTimer() {
   stopTimer();
-  remainingSeconds = 120;
+  remainingSeconds = 150;
   isTimerPaused = false;
   timerEl.classList.remove("time-warning");
 
@@ -806,7 +814,36 @@ function updateTimerDisplay() {
 /***************************************************
  * 게임오버
  ***************************************************/
+function restartCurrentRound() {
+  // 게임 오버 모달 숨기기
+  gameOverOverlayEl.style.display = "none";
+
+  // 카운트다운 오버레이 표시
+  titleScreenEl.style.display = "none";
+  countdownOverlayEl.style.display = "flex";
+  gameContainerEl.style.display = "none";
+
+  // 목표점수는 그대로 유지
+  showGoalOnCountdownOverlay(targetSum);
+
+  // 3초 카운트다운 시작
+  let count = 3;
+  countdownNumberEl.textContent = count;
+  const countdownTimer = setInterval(() => {
+    count--;
+    countdownNumberEl.textContent = count;
+    if (count <= 0) {
+      clearInterval(countdownTimer);
+      countdownOverlayEl.style.display = "none";
+      gameContainerEl.style.display = "flex";
+      initRound();
+      startTimer();
+    }
+  }, 1000);
+}
+
 function showGameOver() {
+  gameOverOverlayEl.style.display = "flex";
   stopTimer();
   const gameOverEl = document.getElementById("game-over-overlay");
   const gameOverMsg = document.getElementById("game-over-message");
@@ -821,7 +858,8 @@ function showGameOver() {
       </tbody>
     </table>
     <div class="game-over-buttons">
-      <button class="primary-button" onclick="backToTitleScreen()">홈으로</button>
+      <button id="home-button" class="secondary-button" onclick="backToTitleScreen()">홈으로</button>
+      <button id="restart-button" class="primary-button" onclick="restartCurrentRound()">다시 하기</button>
     </div>
   `;
 
@@ -893,9 +931,9 @@ function showFinalScore(score) {
 // ----------------------------------------------
 /**
  * 특정 DOM Element의 숫자를 startValue -> endValue로 일정 시간 동안 서서히 증가시키는 함수
- * @param {HTMLElement} element 
- * @param {number} startValue 
- * @param {number} endValue 
+ * @param {HTMLElement} element
+ * @param {number} startValue
+ * @param {number} endValue
  * @param {number} duration ms 단위
  * @param {function} callback 완료 후 콜백(옵션)
  */
@@ -918,23 +956,45 @@ function animateNumber(element, startValue, endValue, duration, callback) {
 /***************************************************
  * 최종 성공 시 (showFinalSuccessOverlay)
  ***************************************************/
-function showFinalSuccessOverlay(timeBonus) {
+function showFinalSuccessOverlay(timeBonus, isFinalRound = false) {
   const overlayEl = document.getElementById("overlay");
   const overlayMsgEl = document.getElementById("overlay-message");
 
   const baseScore = totalScore - 100; // 이미 +100 더해졌으므로
-  overlayMsgEl.innerHTML = `
-    <h2>결 성공!</h2>
-    <table id="score-summary-table">
-      <tbody>
-        <tr><th>기본 점수</th><td>${baseScore}</td></tr>
-        <tr><th>결 성공 보너스</th><td>+ 100</td></tr>
-        <tr><th>남은 시간 보너스</th><td>+ <span id="time-bonus-anim">0</span></td></tr>
-        <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
-      </tbody>
-    </table>
-    <button class="modal-button" onclick="closeFinalOverlay()">다음 라운드</button>
-  `;
+  
+  if (isFinalRound) {
+    // 마지막 라운드인 경우
+    overlayEl.classList.add('final-round');
+    overlayMsgEl.innerHTML = `
+      <h2>🎉 축하합니다! 🎉</h2>
+      <p>마지막 라운드에서 성공했어요!</p>
+      <table id="score-summary-table">
+        <tbody>
+          <tr><th>기본 점수</th><td>${baseScore}</td></tr>
+          <tr><th>결 성공 보너스</th><td>+ 100</td></tr>
+          <tr><th>남은 시간 보너스</th><td>+ <span id="time-bonus-anim">0</span></td></tr>
+          <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
+        </tbody>
+      </table>
+      <button class="modal-button" onclick="restartGame()">계속 더 진행하기</button>
+    `;
+  } else {
+    // 일반 라운드인 경우
+    overlayEl.classList.remove('final-round');
+    overlayMsgEl.innerHTML = `
+      <h2>결 성공!</h2>
+      <table id="score-summary-table">
+        <tbody>
+          <tr><th>기본 점수</th><td>${baseScore}</td></tr>
+          <tr><th>결 성공 보너스</th><td>+ 100</td></tr>
+          <tr><th>남은 시간 보너스</th><td>+ <span id="time-bonus-anim">0</span></td></tr>
+          <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
+        </tbody>
+      </table>
+      <button class="modal-button" onclick="closeFinalOverlay()">다음 라운드</button>
+    `;
+  }
+
   overlayEl.style.display = "flex";
 
   // 1) 남은시간 보너스 숫자 애니메이션
@@ -955,6 +1015,15 @@ function showFinalSuccessOverlay(timeBonus) {
       saveScoreToFirebase(totalScore, BOARD_ROWS, targetSum);
     });
   });
+}
+
+function restartGame() {
+  // 게임 초기화 로직
+  currentRound = 1;
+  totalScore = 0;
+  document.getElementById("score").textContent = totalScore;
+  closeFinalOverlay();
+  initRound(currentRound);
 }
 
 /**
@@ -991,13 +1060,16 @@ function closeFinalOverlay() {
 }
 
 
-
 /**
  * 네이티브 iOS 코드로 햅틱 피드백 메시지를 전송합니다.
- * @param {string} type - 햅틱 타입 ('selection', 'success', 'done')
+ * @param {string} type - 햅틱 타입('selection', 'success', 'done' 등)
  */
 function triggerHapticFeedback(type) {
-  if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.hapticFeedback) {
+  if (
+    window.webkit &&
+    window.webkit.messageHandlers &&
+    window.webkit.messageHandlers.hapticFeedback
+  ) {
     window.webkit.messageHandlers.hapticFeedback.postMessage(type);
   } else {
     console.warn("Haptic feedback is not supported on this device.");

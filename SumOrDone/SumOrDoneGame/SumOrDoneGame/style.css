@@ -1,6 +1,6 @@
 /* ===== [기본 리셋] ===== */
 html, body {
-    margin: 0; 
+    margin: 0;
     padding: 0;
     font-family: 'Helvetica Neue', 'Nunito', Arial, sans-serif;
     /* 기존 단색 배경 대신, 은은한 그라데이션 배경 */
@@ -94,12 +94,11 @@ html, body {
     flex-direction: column;
     align-items: center;
     flex: 1;
-    padding: 20px;
+    padding: 0 20px;
     background-color: #ffffff;
   }
   #title-screen h2 {
     font-size: 1.8rem;
-    margin: 80px 0 8px 0;
     color: #333;
   }
   #title-screen .subtitle {
@@ -110,7 +109,6 @@ html, body {
     line-height: 1.4;
   }
   .options-title h3 {
-    margin: 20px 0 10px 0;
     font-size: 1.2rem;
     color: #444;
     text-align: center;
@@ -128,7 +126,7 @@ html, body {
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 1rem;
-    width: 100px;
+    width: 150px;
     outline: none;
     height: 50px;
   }
@@ -156,23 +154,34 @@ html, body {
     transform: scale(0.98);
   }
   
-  
   .score-table {
     width: 100%;
     max-width: 600px;
     margin: 0 auto 10px auto;
     border-collapse: collapse;
-    text-align: left;
-    box-shadow: 0 0 6px rgba(0,0,0,0.07);
+    text-align: right;
+    /* box-shadow: 0 0 6px rgba(0,0,0,0.07); */
     background-color: #fff;
-  }
+}
   .score-table thead {
     background-color: #f9f9f9;
     font-weight: bold;
   }
   .score-table th, .score-table td {
-    padding: 12px;
-    border-bottom: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  /* 목표점수 스타일 */
+  .score-table td:nth-child(2) {
+    color: #000;
+    font-weight: bold;
+  }
+  
+  /* 점수와 시간 스타일 */
+  .score-table td:nth-child(3),
+  .score-table td:nth-child(4) {
+    color: #666;
   }
   
   /* ===== [카운트다운 오버레이] ===== */
@@ -191,21 +200,67 @@ html, body {
     z-index: 9999;
     font-size: 3rem;
     padding: 20vh 0 0 0;
-}
-
-  #countdown-number {
-    top: 50%;
-    margin: 20px;
-    font-size: 4rem;
-    font-weight: 700;
+    transition: opacity 0.3s ease, display 0.3s ease;
   }
-  .guide-message {
-    font-size: 1.2rem;
-    width: 80vw;
-    text-align: center;
+
+
+.countdown-container {
+    position: relative;
+    height: 100px;
+    width: 100px;
   }
   
-  /* ===== [게임화면] ===== */
+  .countdown-number {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    line-height: 100px;
+    opacity: 0;
+    animation: countdownAnimation 1s ease-out forwards;
+  }
+  
+  @keyframes countdownAnimation {
+    0% {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    20% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    80% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+  }
+  
+  .countdown-number:nth-child(1) {
+    animation-delay: 0s;
+  }
+  .countdown-number:nth-child(2) {
+    animation-delay: 1s;
+  }
+  .countdown-number:nth-child(3) {
+    animation-delay: 2s;
+  }
+  #countdown-overlay.hide {
+    opacity: 0;
+  }
+
+  #guideMessage {
+    font-size:1.2rem;
+    font-weight: 600;
+    color: #999999;
+  }
   #game-container {
     display: none;
     flex-direction: column;
@@ -213,7 +268,12 @@ html, body {
     touch-action: none;
     background: #fafafa;
     height: 100%;
-}
+    transition: opacity 0.3s ease, display 0.3s ease;
+  }
+  
+  #game-container.hide {
+    opacity: 0;
+  }
   
   /* 상단바 */
   #info-bar {
@@ -226,29 +286,29 @@ html, body {
     height: 40px;
     align-content: center;
 }
-  .info-box {
-    display: inline-block;
-    text-align: center;
-    width: 100px;
-  }
-  .info-box .label {
-    font-size: 14px; 
-    color: #333;
-    display: block;
-  }
-  .info-box .data {
-    font-size: 20px; 
-    font-weight: bold;
-  }
-  
-  /* ===== [보드컨테이너 & 보드] ===== */
-  .board-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    overflow: hidden;
-    position: relative;
+.info-box {
+display: inline-block;
+text-align: center;
+width: 100px;
+}
+.info-box .label {
+font-size: 14px;
+color: #333;
+display: block;
+}
+.info-box .data {
+font-size: 20px;
+font-weight: bold;
+}
+
+/* ===== [보드컨테이너 & 보드] ===== */
+.board-container {
+flex: 1;
+display: flex;
+justify-content: center;
+align-items: center;
+overflow: hidden;
+position: relative;
 }
 
 #game-board {
@@ -356,7 +416,7 @@ html, body {
     overflow: hidden;
   }
   .success-line::after {
-    content: "+";
+    content: "";
     position: absolute;
     right: 8px;
     top: 8px;
@@ -450,7 +510,7 @@ html, body {
   /* ===== [토스트 메시지] ===== */
   #toast-message {
     position: fixed;
-    bottom: 150px;
+    bottom: 190px;
     left: 50%;
     transform: translateX(-50%) translateY(100px);
     background-color: var(--toast-background);
@@ -548,6 +608,25 @@ html, body {
 }
 
 /* ===== 푸터 ===== */
+#footer-game {
+    padding: 10px;
+    font-size: 0.9rem;
+    background-color: #fafafa;
+    border-top: 1px solid #eee;
+    text-align: center;
+    margin-top: auto;
+    /* width: 100vw; */
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-around;
+    align-items: center;
+    /* height: 94px; */
+    gap: 10px;
+    margin-bottom: 94px;
+    flex-wrap: wrap;
+}
+
+/* ===== 푸터 ===== */
 #footer {
     padding: 10px;
     font-size: 0.9rem;
@@ -557,14 +636,21 @@ html, body {
     margin-top: auto;
     width: 100vw;
     display: flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
     justify-content: space-around;
     align-items: center;
-    height: 60px;
+    /* height: 94px; */
+    gap: 10px;
+    flex-wrap: wrap;
 }
+
 #footer p {
   margin: 4px 0;
   color: #666;
+}
+
+#footer select {
+  height: 30px;
 }
 
 /* ===== 남은시간 보너스 애니메이션 ===== */
@@ -636,20 +722,59 @@ html, body {
   transform: scale(1.2);
 }
 
-.goal-score {
-  font-size: 48px; /* 큰 글씨 크기 */
+#goal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#goal-label {
+  font-size: 24px; /* 큰 글씨 크기 */
   font-weight: bold; /* 굵은 글씨 */
-  color: #ffffff; /* 강조 색상 (주황색 예시) */
+  color: #999; /* 강조 색상 (주황색 예시) */
   margin-top: 20px; /* 위쪽 여백 */
   text-align: center; /* 중앙 정렬 */
 }
+
+#goal-value {
+    font-size: 100px; /* 큰 글씨 크기 */
+    font-weight: bold; /* 굵은 글씨 */
+    color: #fff; /* 강조 색상 (주황색 예시) */
+    text-align: center; /* 중앙 정렬 */
+}
+
+  /* 카운트다운 숫자 애니메이션 */
+@keyframes countdown-slide-up {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+}
+
+#countdown-number {
+    /* position: absolute;
+    font-size: 24px;
+    bottom: 40%; */
+    margin-top: 50px;
+    display: inline-block;
+    font-size: 4rem;
+    font-weight: bold;
+    color: #fff;
+    animation: countdown-slide-up 0.2s ease-out;
+}
+
 
 .score-table-title-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     align-content: center;
-    flex-direction: row;
+    flex-direction: column;
+    margin-bottom: 12px;
 }
 
 .chip {
@@ -670,4 +795,50 @@ html, body {
 
 .chip:hover {
   background-color: #e0e0e0;
+}
+
+.title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  flex-direction: column;
+  margin: 20px 0 10px 0;
+}
+
+/* 폭죽 애니메이션 */
+@keyframes fireworks {
+  0% { background-position: 0 0, 0 0, 0 0; }
+  100% { background-position: 500px 1000px, 1000px 500px, 500px 500px; }
+}
+
+.final-round {
+  background: radial-gradient(circle, rgba(255,215,0,0.2), rgba(255,69,0,0.2)),
+              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="100" cy="100" r="5" fill="gold" /></svg>'),
+              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="100" cy="100" r="5" fill="red" /></svg>'),
+              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="100" cy="100" r="5" fill="blue" /></svg>');
+  animation: fireworks 2s linear infinite;
+}
+
+.final-round h2 {
+  color: #ffd700;
+  text-shadow: 0 0 10px #ffd700;
+}
+
+.final-round p {
+  color: #fff;
+  font-size: 1.2em;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.final-round .modal-button {
+  background-color: #ffd700;
+  color: #000;
+  font-weight: bold;
+  border: 2px solid #ff8c00;
+}
+
+.final-round .modal-button:hover {
+  background-color: #ff8c00;
 }

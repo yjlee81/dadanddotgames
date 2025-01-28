@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <title>숫자 결!합! 게임</title>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-  
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8718440574316852"
+     crossorigin="anonymous"></script>
+
   <!-- Firebase (v9 compat 예시) -->
   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-database-compat.js"></script>
@@ -20,26 +23,27 @@
 
   <!-- [1] 첫화면 -->
   <div id="title-screen">
-    <h2 id="titleLabel" data-key="mainTitle">숫자 결!합!</h2>
-    <h3 id="version">v.0.7.0002</h3>
+    <div class="title-container">
+    <h2 id="titleLabel" data-key="mainTitle">숫자 결!합! 게임</h2>
+    <h3 id="version">v.0.7.0006</h3>
+  </div>
     <p class="subtitle" data-key="welcomeMessage">간단하지만 연산과 집중력이 필요한 숫자 퍼즐 게임</p>
 
     <!-- 게임 옵션 (목표점수 & 난이도) -->
     <div class="options-container">
-      <span>시작 레벨</span>
       <select id="round-select" class="selector">
         <!-- 라운드(목표점수) -->
-        <option value="10">10점</option>
-        <option value="11">11점</option>
-        <option value="12">12점</option>
-        <option value="13">13점</option>
-        <option value="14">14점</option>
-        <option value="15">15점</option>
-        <option value="16">16점</option>
-        <option value="17">17점</option>
-        <option value="18">18점</option>
-        <option value="19">19점</option>
-        <option value="20">20점</option>
+        <option value="10">Level 1 (10점)</option>
+        <option value="11">Level 2 (11점)</option>
+        <option value="12">Level 3 (12점)</option>
+        <option value="13">Level 4 (13점)</option>
+        <option value="14">Level 5 (14점)</option>
+        <option value="15">Level 6 (15점)</option>
+        <option value="16">Level 7 (16점)</option>
+        <option value="17">Level 8 (17점)</option>
+        <option value="18">Level 9 (18점)</option>
+        <option value="19">Level 10 (19점)</option>
+        <option value="20">Level 11 (20점)</option>
       </select>
 <!-- 릴리즈시 난이도 선택기능은 일단 스펙아웃
       <select id="difficulty-select" class="selector">
@@ -57,7 +61,7 @@
       <div class="score-table-title-container">
         <h3>Scoreboards</h3>
         <div class="filter-buttons">
-          <button class="chip" data-filter="today" onclick="filterScores('today')">오늘</button>
+          <button class="chip active" data-filter="today" onclick="filterScores('today')">오늘</button>
           <button class="chip" data-filter="week" onclick="filterScores('week')">일주일</button>
           <button class="chip" data-filter="all" onclick="filterScores('all')">전체</button>
         </div>
@@ -69,6 +73,7 @@
             <th>순위</th>
             <th>점수</th>
             <th>목표점수</th>
+            <th>시간</th>
           </tr>
         </thead>
         <tbody>
@@ -123,29 +128,32 @@
     </section>
 
     <footer id="footer">
-      <p data-key="footerText">&copy; 2025 Dadanddot.com</p>
-      <a href="pp.html" id="privacy-policy-link">Privacy Policy</a>
-      
       <select class="language-selector" id="language-select">
         <option value="en">EN</option>
         <option value="ko" selected>KR</option>
         <option value="ja">JP</option>
         <option value="zh">ZH</option>
       </select>
-      
+      <a href="pp.html" id="privacy-policy-link">Privacy Policy</a>
+
+      <p data-key="footerText">&copy; 2025 Dadanddot.com</p>
     </footer>
   </div>
 
   <!-- [2] 카운트다운 오버레이 -->
   <div id="countdown-overlay">
-    <div id="countdown-number">3</div>
-    
-    <!-- 목표점수 표시 추가 -->
-    <div id="goalScore" class="goal-score">
-      목표점수: <span id="goal-number">99</span>
+    <div id="goal-container">
+      <div id="goal-label">Goal</div>
+      <div id="goal-value">99</div>
     </div>
     
-    <div id="guideMessage" class="guide-message">드래그하여 목표점수를 만들어보세요!</div>
+    <div id="guideMessage" class="guide-message">드래그하여 위의 목표합을 만드세요!</div>
+
+    <div class="countdown-container">
+      <div class="countdown-number">3</div>
+      <div class="countdown-number">2</div>
+      <div class="countdown-number">1</div>
+    </div>
   </div>
 
   <!-- [3] 게임화면 -->
@@ -163,7 +171,7 @@
             <option value="ja">JP</option>
             <option value="zh">ZH</option>
           </select>
-        </div> 
+        </div>
       </nav> -->
 
     </header>
@@ -195,17 +203,16 @@
       <button id="no-more" class="primary-button">Done!</button>
       
     </div>
-    <footer id="footer">
-      <p data-key="footerText">&copy; 2025 Dadanddot.com</p>
-      <a href="pp.html" id="privacy-policy-link">Privacy Policy</a>
-      
+    <footer id="footer-game">
       <select class="language-selector" id="language-select">
         <option value="en">EN</option>
         <option value="ko" selected>KR</option>
         <option value="ja">JP</option>
         <option value="zh">ZH</option>
       </select>
-      
+      <a href="pp.html" id="privacy-policy-link">Privacy Policy</a>
+
+      <p data-key="footerText">&copy; 2025 Dadanddot.com</p>
     </footer>
   </div>
 
@@ -215,8 +222,8 @@
   </div>
 
   <!-- [5] 게임 오버 모달 -->
-  <div id="game-over-overlay" style="display: none;">
-    <div id="game-over-message"></div>
+  <div id="game-over-overlay" class="game-over-overlay" style="display: none;">
+    <div id="game-over-message" class="game-over-message"></div>
   </div>
 
   <!-- [6] 광고 모달 (힌트 클릭 시 노출) -->

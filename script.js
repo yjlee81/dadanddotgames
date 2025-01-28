@@ -436,6 +436,11 @@ function renderBoard() {
       td.addEventListener("mouseup", stopDragSelect);
 
       td.addEventListener("touchstart", (e)=>{
+         // 힌트 라인 제거
+          if (hintLinePositions) {
+            markLine(hintLinePositions, null, "hint-line");
+            hintLinePositions = null;
+          }
         e.preventDefault();
         startDragSelect(r,c);
       }, {passive:false});
@@ -1031,27 +1036,22 @@ function closeFinalOverlay() {
   // 목표점수 +1 증가
   targetSum += 1;
 
-  // 다시 카운트다운 오버레이
+  // 첫 화면 숨기고 카운트다운 오버레이 보이기
   titleScreenEl.style.display = "none";
   countdownOverlayEl.style.display = "flex";
   gameContainerEl.style.display = "none";
 
-  // **새로운 targetSum 반영**
+  // **목표점수 동적 표시** (카운트다운 오버레이 내부)
   showGoalOnCountdownOverlay(targetSum);
 
-  let count = 3;
-  countdownNumberEl.textContent = count;
-  const countdownTimer = setInterval(() => {
-    count--;
-    countdownNumberEl.textContent = count;
-    if (count <= 0) {
-      clearInterval(countdownTimer);
-      countdownOverlayEl.style.display = "none";
-      gameContainerEl.style.display = "flex";
-      initRound();
-      startTimer();
-    }
-  }, 1000);
+  // 4) 3초 카운트다운
+  setTimeout(() => {
+    countdownOverlayEl.style.display = "none";
+    gameContainerEl.style.display = "flex";
+    initRound();
+    startTimer();
+  }, 3000); // 3초 후 게임 시작
+
 }
 
 
