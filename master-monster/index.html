@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>Master Monster - Dad and Dot Games</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Master Monster - Dad and Dot Games">
+  <meta property="og:title" content="Master Monster - Dad and Dot Games">
+  <meta property="og:description" content="Merge monsters and reach the master level!">
+  <meta property="og:site_name" content="Dad and Dot Games">
+
+  <!-- 공통 CSS + 페이지 전용 CSS -->
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- 구글 애드센스 스크립트 -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8718440574316852" crossorigin="anonymous"></script>
+  <script>
+    (function (m, a, z, e) {
+      var s, t;
+      try {
+        t = m.sessionStorage.getItem('maze-us');
+      } catch (err) {}
+    
+      if (!t) {
+        t = new Date().getTime();
+        try {
+          m.sessionStorage.setItem('maze-us', t);
+        } catch (err) {}
+      }
+    
+      s = a.createElement('script');
+      s.src = z + '?apiKey=' + e;
+      s.async = true;
+      a.getElementsByTagName('head')[0].appendChild(s);
+      m.mazeUniversalSnippetApiKey = e;
+    })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '9bed29c9-965e-46af-9f9f-0af175bf4756');
+    </script>
+</head>
+<body>
+  <!-- 별 효과(이미지) 적용을 위해, 패럴랙스 배경을 감쌀 컨테이너 -->
+  <section class="parallax">
+
+    <!-- (1) GNB - 헤더와 LNB 통합 -->
+    <header class="gnb-lnb">
+      <div class="left-group">
+        <div id="logo" class="logo" onclick="window.location.href='/'" style="cursor: pointer;">
+          D&D
+        </div>
+        <div class="divider"></div>
+        <h2 class="game-title" data-i18n="title">Master Monster</h2>
+      </div>
+
+      <div class="right-group">
+        <!-- (B) 게임 상태 (Score/Next Tile) -->
+        <div class="game-status-box">
+          <div class="score-area">
+            
+            <span class="score-label">Score</span>
+            <span class="current-score" id="score">0</span> /
+            <span class="score-label">Best</span>
+            <span class="best-score" id="best-score">0</span>
+          </div>
+        </div>
+        
+        <!-- 볼륨 컨트롤 -->
+        <div class="volume-control">
+          <button class="volume-icon" id="volume-toggle">
+            <span class="icon-volume-on">🔊</span>
+            <span class="icon-volume-off" style="display: none;">🔇</span>
+          </button>
+        </div>
+
+        <!-- 랭킹 버튼 추가 -->
+        <div class="ranking-menu">
+          <button id="ranking-button" class="action-button">랭킹</button>
+        </div>
+
+        <div class="lang-dropdown">
+          <!-- 언어 선택 -->
+          <select class="language-selector" id="language-select">
+            <option value="en">EN</option>
+            <option value="ko" selected>KR</option>
+            <option value="ja">JP</option>
+            <option value="zh">ZH</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <div class="dad-dot-floating"></div>
+
+    <!-- 말풍선 안내 요소 추가 -->
+    <div id="tutorial-bubble" class="tutorial-bubble" style="display: none;">
+      키보드의 화살키나 화면을 쓸어내려 타일을 이동해보세요!
+    </div>
+
+    <!-- (2) 서브페이지 본문: LNB + 게임영역 -->
+    <div class="lnb">
+      <div class="lnb-container">
+
+        <div class="right-group">
+          
+        </div>
+      </div>
+    </div>
+
+    <!-- 게임 안내 풀페이지 -->
+    <div id="game-guide" class="game-guide">
+      <div class="guide-content">
+        <h2 data-i18n="welcome">Master Monster 게임방법</h2>
+        <div class="instructions">
+          <div class="feature">
+            <p>방향키를 사용하여 몬스터를 이동시키고, 같은 레벨의 몬스터를 합쳐 더 강한 몬스터를 만드세요.</p>
+          </div>
+          <div class="feature">
+            <h3>💡 전략 팁</h3>
+            <ul>
+              <li>높은 레벨의 몬스터를 구석에 모아두세요</li>
+              <li>합칠 수 있는 몬스터들을 미리 파악하세요</li>
+              <li>되돌리기 기능을 전략적으로 사용하세요</li>
+            </ul>
+          </div>
+        </div>
+        <button id="start-button" class="action-button" data-i18n="startGame">
+          게임 시작 ⏎
+        </button>
+      </div>
+    </div>
+
+    <!-- (3) 게임 컨테이너 -->
+    <div id="game-container">
+      <audio id="mergeSound" preload="auto">
+        <source src="sounds/merge.mp3" type="audio/mpeg">
+      </audio>
+      <!-- 실시간 업데이트를 위한 게임 상태 표시 -->
+      <div class="game-stats">
+        <div class="stat-item">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-label">현재 점수</div>
+          <div class="stat-value" id="current-score">0</div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-icon">⏱️</div>
+          <div class="stat-label">소요 시간</div>
+          <div class="stat-value" id="current-play-time">00:00</div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-icon">🏆</div>
+          <div class="stat-label">현재 최고 레벨</div>
+          <div class="stat-value" id="current-best-level">Lv.1</div>
+        </div>
+      </div>
+      <div id="game-board">
+        
+      </div>
+      <!-- Undo 버튼 : 아이콘 + 텍스트 -->
+      <div class="game-controls">
+        <button id="open-game-over-modal">게임오버모달열기</button>
+        <div class="next-tile-box">
+          <span class="btn-label">다음 타일</span>
+          <div class="next-tile">
+            <span class="tile-preview">🥚</span>
+            <span class="tile-level">Lv.1</span>
+          </div>
+        </div>
+        <div class="control-buttons">
+          <button id="undo-button" class="control-btn" title="Undo">
+            <span class="icon-undo"></span>
+            <span class="btn-label">되돌리기</span>
+          </button>
+          <button id="restart-button" class="control-btn" title="Restart">
+            <span class="icon-restart"></span>
+            <span class="btn-label">다시시작</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 하단 광고, 결과화면 광고 등 -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8718440574316852" crossorigin="anonymous"></script>
+    <!-- 마스터몬스터-사이드바 -->
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+    <!-- 결과 화면 광고 -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8718440574316852" crossorigin="anonymous"></script>
+    
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+  </section> <!-- 패럴랙스 끝 -->
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    © 2024 Dad and Dot Games. All rights reserved.
+  </footer>
+
+  <!-- 전용 스크립트 -->
+  <script src="script.js"></script>
+  <!-- 별/패럴랙스 등 공통 기능 -->
+  <script src="/js/common.js"></script>
+
+  <!-- 랭킹 모달 -->
+  <div id="ranking-modal" class="modal">
+    <div class="modal-content">
+      <button class="close-button" onclick="closeRankingModal()">×</button>
+      <h2>전체 랭킹</h2>
+      <table id="ranking-table" class="ranking-table">
+        <thead>
+          <tr>
+            <th>순위</th>
+            <th>점수</th>
+            <th>최고 레벨</th>
+            <th>소요 시간</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- JavaScript에서 자동 생성 -->
+        </tbody>
+      </table>
+      <button id="close-ranking-modal" class="action-button">닫기</button>
+    </div>
+  </div>
+
+  <div id="gameOverModal" class="modal">
+    <div class="modal-content">
+        <button class="close-button" onclick="closeGameOverModal()">×</button>
+        <h2>Game Over!</h2>
+        
+        <!-- 게임 결과 통계 -->
+        <div class="game-stats">
+            <div class="stat-item">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-label">최종 점수</div>
+                <div class="stat-value" id="final-score">0</div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-label">소요 시간</div>
+                <div class="stat-value" id="play-time">00:00</div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-label">현재 최고 레벨</div>
+                <div class="stat-value" id="current-best-level">Lv.1</div>
+            </div>
+        </div>
+
+        <div class="modal-buttons">
+            <button id="modal-undo-button" class="action-button primary">되돌리기</button>
+            <button id="modal-restart-button" class="action-button tertiary">다시하기</button>
+        </div>
+    </div>
+  </div>
+</body>
+</html>
