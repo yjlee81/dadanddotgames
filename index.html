@@ -25,7 +25,7 @@
   <div id="title-screen">
     <div class="title-container">
     <h2 id="titleLabel" data-key="mainTitle">숫자 결!합! 게임</h2>
-    <h3 id="version">v.0.7.0008</h3>
+    <h3 id="version">v.0.7.0009</h3>
   </div>
     <p class="subtitle" data-key="welcomeMessage">간단하지만 연산과 집중력이 필요한 숫자 퍼즐게임</p>
 
@@ -33,17 +33,17 @@
     <div class="options-container">
       <select id="round-select" class="selector">
         <!-- 라운드(목표합) -->
-        <option value="10" data-key="level1">Level 1 (10점)</option>
-        <option value="11" data-key="level2">Level 2 (11점)</option>
-        <option value="12" data-key="level3">Level 3 (12점)</option>
-        <option value="13" data-key="level4">Level 4 (13점)</option>
-        <option value="14" data-key="level5">Level 5 (14점)</option>
-        <option value="15" data-key="level6">Level 6 (15점)</option>
-        <option value="16" data-key="level7">Level 7 (16점)</option>
-        <option value="17" data-key="level8">Level 8 (17점)</option>
-        <option value="18" data-key="level9">Level 9 (18점)</option>
-        <option value="19" data-key="level10">Level 10 (19점)</option>
-        <option value="20" data-key="finalLevel">최종 Level (20점)</option>
+        <option value="10">Level 1 (10점)</option>
+        <option value="11">Level 2 (11점)</option>
+        <option value="12">Level 3 (12점)</option>
+        <option value="13">Level 4 (13점)</option>
+        <option value="14">Level 5 (14점)</option>
+        <option value="15">Level 6 (15점)</option>
+        <option value="16">Level 7 (16점)</option>
+        <option value="17">Level 8 (17점)</option>
+        <option value="18">Level 9 (18점)</option>
+        <option value="19">Level 10 (19점)</option>
+        <option value="20">최종 Level (20점)</option>
       </select>
 <!-- 릴리즈시 난이도 선택기능은 일단 스펙아웃
       <select id="difficulty-select" class="selector">
@@ -59,21 +59,21 @@
     <!-- 내 점수 테이블 -->
     <div id="score-table-title" class="info-section">
       <div class="score-table-title-container">
-        <h3 data-key="scoreboards">Scoreboards</h3>
+        <h3>Scoreboards</h3>
         <div class="filter-buttons">
-          <button class="chip active" data-filter="today" onclick="filterScores('today')" data-key="today">오늘</button>
-          <button class="chip" data-filter="week" onclick="filterScores('week')" data-key="week">일주일</button>
-          <button class="chip" data-filter="all" onclick="filterScores('all')" data-key="all">전체</button>
+          <button class="chip active" data-filter="today" onclick="filterScores('today')">오늘</button>
+          <button class="chip" data-filter="week" onclick="filterScores('week')">일주일</button>
+          <button class="chip" data-filter="all" onclick="filterScores('all')">전체</button>
         </div>
       </div>
       
       <table id="score-table" class="score-table">
         <thead>
           <tr>
-            <th data-key="rank">순위</th>
+            <th>순위</th>
             <th>점수</th>
             <th>목표합</th>
-            <th data-key="timeLabel">시간</th>
+            <th>시간</th>
           </tr>
         </thead>
         <tbody>
@@ -142,11 +142,11 @@
   <!-- [2] 카운트다운 오버레이 -->
   <div id="countdown-overlay">
     <div id="goal-container">
-      <div id="goal-label" data-key="goalLabel">목표합(Goal)</div>
+      <div id="goal-label">목표합(Goal)</div>
       <div id="goal-value">99</div>
     </div>
     
-    <div id="guideMessage" class="guide-message" data-key="guideMessage">드래그하여 위의 목표합을 만드세요!</div>
+    <div id="guideMessage" class="guide-message">드래그하여 위의 목표합을 만드세요!</div>
 
     <div class="countdown-container">
       <div class="countdown-number">3</div>
@@ -222,22 +222,14 @@
 
   <!-- [5] 게임 오버 모달 -->
   <div id="game-over-overlay" class="game-over-overlay" style="display: none;">
-    <div id="game-over-message" class="game-over-message">
-      <h2 data-key="gameOverTitle">시간 종료!</h2>
-      <p data-key="basicScore">기본 점수</p>
-      <p data-key="successBonus">결 성공 보너스</p>
-      <p data-key="timeBonus">남은 시간 보너스</p>
-      <p data-key="finalScore">최종 점수</p>
-      <button id="home-button" class="tertiary-button" data-key="homeButton">홈으로</button>
-      <button id="restart-button" class="primary-button" data-key="restartButton">다시 하기</button>
-    </div>
+    <div id="game-over-message" class="game-over-message"></div>
   </div>
 
   <!-- [6] 광고 모달 (힌트 클릭 시 노출) -->
   <div id="ad-modal" style="display: none;">
     <div class="ad-content">
-      <p data-key="hintMessageAd">힌트가 회색으로 표시됩니다.</p>
-      <button id="ad-close-btn" data-key="hintButton">힌트보기</button>
+      <p>힌트가 회색으로 표시됩니다.</p>
+      <button id="ad-close-btn">힌트보기</button>
     </div>
   </div>
 
