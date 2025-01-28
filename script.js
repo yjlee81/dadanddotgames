@@ -160,6 +160,7 @@ const timerEl = document.getElementById("timer");
 
 let scores = []; // 전체 점수 데이터를 저장할 배열
 
+
 /***************************************************
  * 스코어 관련 (Firebase)
  ***************************************************/
@@ -331,6 +332,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 윈도우 리사이즈 -> 보드 사이즈 재조정
   window.addEventListener("resize", resizeBoard);
+
+  // DOM 변수 초기화 (DOMContentLoaded 내부)
+  gameOverOverlayEl = document.getElementById('game-over-overlay');
+  gameOverMessageEl = document.getElementById('game-over-message');
+
 });
 
 
@@ -473,8 +479,8 @@ function resizeBoard() {
   if (!container) return;
   
   // (1) .board-container의 실제 픽셀 크기
-  const containerWidth = container.clientWidth;
-  const containerHeight = container.clientHeight;
+  const containerWidth = container.clientWidth - 40;
+  const containerHeight = container.clientHeight - 40;
   
   // (2) 정사각형 한 변으로 사용할 크기: 화면에서 가능한 공간 중 작은 쪽
   const size = Math.min(containerWidth, containerHeight);
@@ -760,7 +766,7 @@ function useHint() {
  ***************************************************/
 function startTimer() {
   stopTimer();
-  remainingSeconds = 120;
+  remainingSeconds = 180;
   isTimerPaused = false;
   timerEl.classList.remove("time-warning");
 
@@ -805,7 +811,36 @@ function updateTimerDisplay() {
 /***************************************************
  * 게임오버
  ***************************************************/
+function restartCurrentRound() {
+  // 게임 오버 모달 숨기기
+  gameOverOverlayEl.style.display = "none";
+
+  // 카운트다운 오버레이 표시
+  titleScreenEl.style.display = "none";
+  countdownOverlayEl.style.display = "flex";
+  gameContainerEl.style.display = "none";
+
+  // 목표점수는 그대로 유지
+  showGoalOnCountdownOverlay(targetSum);
+
+  // 3초 카운트다운 시작
+  let count = 3;
+  countdownNumberEl.textContent = count;
+  const countdownTimer = setInterval(() => {
+    count--;
+    countdownNumberEl.textContent = count;
+    if (count <= 0) {
+      clearInterval(countdownTimer);
+      countdownOverlayEl.style.display = "none";
+      gameContainerEl.style.display = "flex";
+      initRound();
+      startTimer();
+    }
+  }, 1000);
+}
+
 function showGameOver() {
+  gameOverOverlayEl.style.display = "flex";
   stopTimer();
   const gameOverEl = document.getElementById("game-over-overlay");
   const gameOverMsg = document.getElementById("game-over-message");
@@ -820,7 +855,8 @@ function showGameOver() {
       </tbody>
     </table>
     <div class="game-over-buttons">
-      <button class="primary-button" onclick="backToTitleScreen()">홈으로</button>
+      <button id="home-button" class="secondary-button" onclick="backToTitleScreen()">홈으로</button>
+      <button id="restart-button" class="primary-button" onclick="restartCurrentRound()">다시 하기</button>
     </div>
   `;
 
@@ -989,6 +1025,7 @@ function closeFinalOverlay() {
   }, 1000);
 }
 
+
 /**
  * 네이티브 iOS 코드로 햅틱 피드백 메시지를 전송합니다.
  * @param {string} type - 햅틱 타입('selection', 'success', 'done' 등)
@@ -1004,45 +1041,3 @@ function triggerHapticFeedback(type) {
     console.warn("Haptic feedback is not supported on this device.");
   }
 }
-
-function showCountdownOverlay() {
-  countdownOverlayEl.classList.remove('fade-out');
-  countdownOverlayEl.classList.add('fade-in');
-  countdownOverlayEl.style.display = 'flex';
-
-  setTimeout(() => {
-    countdownOverlayEl.classList.remove('fade-in');
-  }, 500);
-}
-
-function hideCountdownOverlay() {
-  countdownOverlayEl.classList.add('fade-out');
-
-  setTimeout(() => {
-    countdownOverlayEl.style.display = 'none';
-    countdownOverlayEl.classList.remove('fade-out');
-  }, 500);
-}
-
-function showGameContainer() {
-  gameContainerEl.classList.remove('fade-out');
-  gameContainerEl.classList.add('fade-in');
-  gameContainerEl.style.display = 'flex';
-
-  setTimeout(() => {
-    gameContainerEl.classList.remove('fade-in');
-  }, 500);
-}
-
-function hideGameContainer() {
-  gameContainerEl.classList.add('fade-out');
-
-  setTimeout(() => {
-    gameContainerEl.style.display = 'none';
-    gameContainerEl.classList.remove('fade-out');
-  }, 500);
-}
-
-// 사용 예시
-hideCountdownOverlay();
-showGameContainer();

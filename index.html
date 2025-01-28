@@ -7,7 +7,7 @@
 
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8718440574316852"
      crossorigin="anonymous"></script>
-     
+
   <!-- Firebase (v9 compat 예시) -->
   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-database-compat.js"></script>
@@ -25,26 +25,25 @@
   <div id="title-screen">
     <div class="title-container">
     <h2 id="titleLabel" data-key="mainTitle">숫자 결!합! 게임</h2>
-    <h3 id="version">v.0.7.0004</h3>
+    <h3 id="version">v.0.7.0005</h3>
   </div>
     <p class="subtitle" data-key="welcomeMessage">간단하지만 연산과 집중력이 필요한 숫자 퍼즐 게임</p>
 
     <!-- 게임 옵션 (목표점수 & 난이도) -->
     <div class="options-container">
-      <span>Level</span>
       <select id="round-select" class="selector">
         <!-- 라운드(목표점수) -->
-        <option value="10">1 (10점)</option>
-        <option value="11">2 (11점)</option>
-        <option value="12">3 (12점)</option>
-        <option value="13">4 (13점)</option>
-        <option value="14">5 (14점)</option>
-        <option value="15">6 (15점)</option>
-        <option value="16">7 (16점)</option>
-        <option value="17">8 (17점)</option>
-        <option value="18">9 (18점)</option>
-        <option value="19">10 (19점)</option>
-        <option value="20">11 (20점)</option>
+        <option value="10">Level 1 (10점)</option>
+        <option value="11">Level 2 (11점)</option>
+        <option value="12">Level 3 (12점)</option>
+        <option value="13">Level 4 (13점)</option>
+        <option value="14">Level 5 (14점)</option>
+        <option value="15">Level 6 (15점)</option>
+        <option value="16">Level 7 (16점)</option>
+        <option value="17">Level 8 (17점)</option>
+        <option value="18">Level 9 (18점)</option>
+        <option value="19">Level 10 (19점)</option>
+        <option value="20">Level 11 (20점)</option>
       </select>
 <!-- 릴리즈시 난이도 선택기능은 일단 스펙아웃
       <select id="difficulty-select" class="selector">
@@ -220,8 +219,8 @@
   </div>
 
   <!-- [5] 게임 오버 모달 -->
-  <div id="game-over-overlay" style="display: none;">
-    <div id="game-over-message"></div>
+  <div id="game-over-overlay" class="game-over-overlay" style="display: none;">
+    <div id="game-over-message" class="game-over-message"></div>
   </div>
 
   <!-- [6] 광고 모달 (힌트 클릭 시 노출) -->
