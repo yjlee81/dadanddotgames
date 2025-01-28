@@ -382,7 +382,7 @@ function onStartGame() {
 function showGoalOnCountdownOverlay(value) {
   const goalNumEl = document.getElementById("goal-number");
   if (goalNumEl) {
-    goalNumEl.textContent = value;
+    goalNumEl.textContent = value; 
   }
 }
 
@@ -537,13 +537,13 @@ function stopDragSelect() {
     checkLine(start, end);
   }
 }
-funfunction markDragSelection(positions) {
+function markDragSelection(positions) {
   const trList = document.querySelectorAll("#game-board tr");
   positions.forEach(([r, c], index) => {
     trList[r].children[c].classList.add("drag-select-highlight");
-    // 첫 번째 칸 제외, 이후 칸 선택 시마다 햅틱
+    // 첫 번째 선택은 제외하고, 이후 선택 시 햅틱 피드백
     if (index > 0) {
-      triggerHapticFeedback("selection");
+      triggerHapticFeedback('selection');
     }
   });
 }
@@ -600,6 +600,7 @@ function checkLine(start, end) {
     // 성공 시 햅틱
     triggerHapticFeedback('success');
 
+    // 기존 성공 로직 유지...
     const gapBonus = gapCount * 10;
     const lengthBonus = (linePositions.length >= 3)? (linePositions.length - 2) * 5 : 0;
     const addScore = sumVal + gapBonus + lengthBonus;
@@ -892,9 +893,9 @@ function showFinalScore(score) {
 // ----------------------------------------------
 /**
  * 특정 DOM Element의 숫자를 startValue -> endValue로 일정 시간 동안 서서히 증가시키는 함수
- * @param {HTMLElement} element
- * @param {number} startValue
- * @param {number} endValue
+ * @param {HTMLElement} element 
+ * @param {number} startValue 
+ * @param {number} endValue 
  * @param {number} duration ms 단위
  * @param {function} callback 완료 후 콜백(옵션)
  */
@@ -989,16 +990,14 @@ function closeFinalOverlay() {
   }, 1000);
 }
 
+
+
 /**
  * 네이티브 iOS 코드로 햅틱 피드백 메시지를 전송합니다.
- * @param {string} type - 햅틱 타입('selection', 'success', 'done' 등)
+ * @param {string} type - 햅틱 타입 ('selection', 'success', 'done')
  */
 function triggerHapticFeedback(type) {
-  if (
-    window.webkit &&
-    window.webkit.messageHandlers &&
-    window.webkit.messageHandlers.hapticFeedback
-  ) {
+  if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.hapticFeedback) {
     window.webkit.messageHandlers.hapticFeedback.postMessage(type);
   } else {
     console.warn("Haptic feedback is not supported on this device.");

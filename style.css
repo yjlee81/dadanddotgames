@@ -94,7 +94,7 @@ html, body {
     flex-direction: column;
     align-items: center;
     flex: 1;
-    padding: 20px;
+    padding: 0 20px;
     background-color: #ffffff;
   }
   #title-screen h2 {
@@ -154,23 +154,34 @@ html, body {
     transform: scale(0.98);
   }
   
-  
   .score-table {
     width: 100%;
     max-width: 600px;
     margin: 0 auto 10px auto;
     border-collapse: collapse;
-    text-align: left;
-    box-shadow: 0 0 6px rgba(0,0,0,0.07);
+    text-align: right;
+    /* box-shadow: 0 0 6px rgba(0,0,0,0.07); */
     background-color: #fff;
-  }
+}
   .score-table thead {
     background-color: #f9f9f9;
     font-weight: bold;
   }
   .score-table th, .score-table td {
-    padding: 12px;
-    border-bottom: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  /* 목표점수 스타일 */
+  .score-table td:nth-child(2) {
+    color: #000;
+    font-weight: bold;
+  }
+  
+  /* 점수와 시간 스타일 */
+  .score-table td:nth-child(3),
+  .score-table td:nth-child(4) {
+    color: #666;
   }
   
   /* ===== [카운트다운 오버레이] ===== */
@@ -226,29 +237,29 @@ html, body {
     height: 40px;
     align-content: center;
 }
-  .info-box {
-    display: inline-block;
-    text-align: center;
-    width: 100px;
-  }
-  .info-box .label {
-    font-size: 14px; 
-    color: #333;
-    display: block;
-  }
-  .info-box .data {
-    font-size: 20px; 
-    font-weight: bold;
-  }
-  
-  /* ===== [보드컨테이너 & 보드] ===== */
-  .board-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    overflow: hidden;
-    position: relative;
+.info-box {
+display: inline-block;
+text-align: center;
+width: 100px;
+}
+.info-box .label {
+font-size: 14px; 
+color: #333;
+display: block;
+}
+.info-box .data {
+font-size: 20px; 
+font-weight: bold;
+}
+
+/* ===== [보드컨테이너 & 보드] ===== */
+.board-container {
+flex: 1;
+display: flex;
+justify-content: center;
+align-items: center;
+overflow: hidden;
+position: relative;
 }
 
 #game-board {
@@ -548,6 +559,25 @@ html, body {
 }
 
 /* ===== 푸터 ===== */
+#footer-game {
+    padding: 10px;
+    font-size: 0.9rem;
+    background-color: #fafafa;
+    border-top: 1px solid #eee;
+    text-align: center;
+    margin-top: auto;
+    /* width: 100vw; */
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-around;
+    align-items: center;
+    /* height: 94px; */
+    gap: 10px;
+    margin-bottom: 94px;
+    flex-wrap: wrap;
+}
+
+/* ===== 푸터 ===== */
 #footer {
     padding: 10px;
     font-size: 0.9rem;
@@ -557,15 +587,21 @@ html, body {
     margin-top: auto;
     width: 100vw;
     display: flex;
-    flex-direction: column;
+    flex-direction: row-reverse;
     justify-content: space-around;
     align-items: center;
-    height: 94px;
+    /* height: 94px; */
     gap: 10px;
+    flex-wrap: wrap;
 }
+
 #footer p {
   margin: 4px 0;
   color: #666;
+}
+
+#footer select {
+  height: 30px;
 }
 
 /* ===== 남은시간 보너스 애니메이션 ===== */
@@ -650,7 +686,8 @@ html, body {
     justify-content: space-between;
     align-items: center;
     align-content: center;
-    flex-direction: row;
+    flex-direction: column;
+    margin-bottom: 12px;
 }
 
 .chip {
@@ -680,4 +717,41 @@ html, body {
   align-content: center;
   flex-direction: column;
   margin: 20px 0 10px 0;
+}
+
+/* 폭죽 애니메이션 */
+@keyframes fireworks {
+  0% { background-position: 0 0, 0 0, 0 0; }
+  100% { background-position: 500px 1000px, 1000px 500px, 500px 500px; }
+}
+
+.final-round {
+  background: radial-gradient(circle, rgba(255,215,0,0.2), rgba(255,69,0,0.2)),
+              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="100" cy="100" r="5" fill="gold" /></svg>'),
+              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="100" cy="100" r="5" fill="red" /></svg>'),
+              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="100" cy="100" r="5" fill="blue" /></svg>');
+  animation: fireworks 2s linear infinite;
+}
+
+.final-round h2 {
+  color: #ffd700;
+  text-shadow: 0 0 10px #ffd700;
+}
+
+.final-round p {
+  color: #fff;
+  font-size: 1.2em;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.final-round .modal-button {
+  background-color: #ffd700;
+  color: #000;
+  font-weight: bold;
+  border: 2px solid #ff8c00;
+}
+
+.final-round .modal-button:hover {
+  background-color: #ff8c00;
 }

@@ -1,7 +1,7 @@
 /***************************************************
- * Firebase 초기화 (실제 값으로 교체)
+ * Firebase 초기화 
  ***************************************************/
-// [1] Firebase config - Firebase 콘솔에서 발급받은 값으로 교체하세요
+// [1] Firebase config - Firebase 콘솔에서 발급받은 값으로 교체
 const firebaseConfig = {
   apiKey: "AIzaSyA98GLfDWJiLMwqnnHiFCqV9ptfwyyXNrk",
   authDomain: "dadanddotgames.firebaseapp.com",
@@ -142,7 +142,7 @@ const MAX_NUM = 9;
 let boardData = [];
 let startPos = [0,0];
 let hintLinePositions = null;
-let remainingSeconds = 120;
+let remainingSeconds = 150;
 let timerInterval = null;
 let isTimerPaused = false;
 
@@ -175,9 +175,8 @@ function fetchScoresFromFirebase(callback) {
     scores = Object.values(data);
     callback(scores);
   });
+  
 }
-
-
 function displayScores(scoreList) {
   const tbody = document.querySelector("#score-table tbody");
   tbody.innerHTML = ""; // 기존 점수 목록 초기화
@@ -187,18 +186,23 @@ function displayScores(scoreList) {
     .slice(0, 5) // 상위 5개 선택
     .forEach((score, index) => {
       const row = document.createElement("tr");
+      const date = new Date(score.timestamp);
+      const formattedTime = 
+        `${(date.getMonth()+1).toString().padStart(2, '')}/${date.getDate().toString().padStart(2, '0')} ` +
+        `${date.getHours().toString().padStart(2, '')}:${date.getMinutes().toString().padStart(2, '0')}`;
+
       row.innerHTML = `
         <td>${index + 1}</td>
         <td>${score.score}</td>
         <td>${score.target}</td>
+        <td>${formattedTime}</td>
       `;
       tbody.appendChild(row);
     });
 }
 
 
-// 초기 로드 시 전체 점수 표시
-fetchScoresFromFirebase(displayScores);
+
 
 function filterScores(filter) {
   const now = Date.now();
@@ -221,7 +225,6 @@ function filterScores(filter) {
   displayScores(filteredScores);
   updateActiveChip(filter);
 }
-
 
 function updateActiveChip(filter) {
   const chips = document.querySelectorAll('.chip');
@@ -295,7 +298,7 @@ function setLanguage(lang) {
  * DOMContentLoaded
  ***************************************************/
 document.addEventListener("DOMContentLoaded", () => {
-  filterScores('today'); // 기본으로 '오늘'의 기록을 표시
+  
 
   // 언어 선택
   const languageSelect = document.getElementById("language-select");
@@ -303,11 +306,11 @@ document.addEventListener("DOMContentLoaded", () => {
     setLanguage(e.target.value);
   });
 
-  // 스코어 데이터 불러오기 + 테이블 렌더
-  fetchScoresFromFirebase((records) => {
-    renderScoreTable(records);
+  
+// 스코어 데이터 불러오기 + 테이블 렌더
+  fetchScoresFromFirebase((scores) => {
+    filterScores('today'); // 초기 로드 시 '오늘' 필터 적용
   });
-
   // 게임 시작 버튼
   const startGameBtn = document.getElementById("start-game-btn");
   startGameBtn.addEventListener("click", onStartGame);
@@ -337,6 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
   gameOverOverlayEl = document.getElementById('game-over-overlay');
   gameOverMessageEl = document.getElementById('game-over-message');
 
+  filterScores('today'); // 기본으로 '오늘'의 기록을 표시
 });
 
 
@@ -413,7 +417,7 @@ function initRound() {
   document.getElementById("score").textContent = totalScore;
 
   // 타이머 리셋
-  remainingSeconds = 120;
+  remainingSeconds = 150;
   isTimerPaused = false;
   updateTimerDisplay();
 
@@ -677,8 +681,11 @@ function onNoMoreClick() {
     stopTimer();  // 시간을 멈추고
     const timeBonus = remainingSeconds * 10;
 
+    // 마지막 라운드인지 확인 (목표점수가 20일 때)
+    const isFinalRound = targetSum === 20;
+
     // 오버레이 표시
-    showFinalSuccessOverlay(timeBonus);
+    showFinalSuccessOverlay(timeBonus, isFinalRound);
   }
 }
 
@@ -766,7 +773,7 @@ function useHint() {
  ***************************************************/
 function startTimer() {
   stopTimer();
-  remainingSeconds = 180;
+  remainingSeconds = 150;
   isTimerPaused = false;
   timerEl.classList.remove("time-warning");
 
@@ -953,23 +960,45 @@ function animateNumber(element, startValue, endValue, duration, callback) {
 /***************************************************
  * 최종 성공 시 (showFinalSuccessOverlay)
  ***************************************************/
-function showFinalSuccessOverlay(timeBonus) {
+function showFinalSuccessOverlay(timeBonus, isFinalRound = false) {
   const overlayEl = document.getElementById("overlay");
   const overlayMsgEl = document.getElementById("overlay-message");
 
   const baseScore = totalScore - 100; // 이미 +100 더해졌으므로
-  overlayMsgEl.innerHTML = `
-    <h2>결 성공!</h2>
-    <table id="score-summary-table">
-      <tbody>
-        <tr><th>기본 점수</th><td>${baseScore}</td></tr>
-        <tr><th>결 성공 보너스</th><td>+ 100</td></tr>
-        <tr><th>남은 시간 보너스</th><td>+ <span id="time-bonus-anim">0</span></td></tr>
-        <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
-      </tbody>
-    </table>
-    <button class="modal-button" onclick="closeFinalOverlay()">다음 라운드</button>
-  `;
+  
+  if (isFinalRound) {
+    // 마지막 라운드인 경우
+    overlayEl.classList.add('final-round');
+    overlayMsgEl.innerHTML = `
+      <h2>🎉 축하합니다! 🎉</h2>
+      <p>마지막 라운드에서 성공했어요!</p>
+      <table id="score-summary-table">
+        <tbody>
+          <tr><th>기본 점수</th><td>${baseScore}</td></tr>
+          <tr><th>결 성공 보너스</th><td>+ 100</td></tr>
+          <tr><th>남은 시간 보너스</th><td>+ <span id="time-bonus-anim">0</span></td></tr>
+          <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
+        </tbody>
+      </table>
+      <button class="modal-button" onclick="restartGame()">계속 더 진행하기</button>
+    `;
+  } else {
+    // 일반 라운드인 경우
+    overlayEl.classList.remove('final-round');
+    overlayMsgEl.innerHTML = `
+      <h2>결 성공!</h2>
+      <table id="score-summary-table">
+        <tbody>
+          <tr><th>기본 점수</th><td>${baseScore}</td></tr>
+          <tr><th>결 성공 보너스</th><td>+ 100</td></tr>
+          <tr><th>남은 시간 보너스</th><td>+ <span id="time-bonus-anim">0</span></td></tr>
+          <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
+        </tbody>
+      </table>
+      <button class="modal-button" onclick="closeFinalOverlay()">다음 라운드</button>
+    `;
+  }
+
   overlayEl.style.display = "flex";
 
   // 1) 남은시간 보너스 숫자 애니메이션
@@ -990,6 +1019,15 @@ function showFinalSuccessOverlay(timeBonus) {
       saveScoreToFirebase(totalScore, BOARD_ROWS, targetSum);
     });
   });
+}
+
+function restartGame() {
+  // 게임 초기화 로직
+  currentRound = 1;
+  totalScore = 0;
+  document.getElementById("score").textContent = totalScore;
+  closeFinalOverlay();
+  initRound(currentRound);
 }
 
 /**
