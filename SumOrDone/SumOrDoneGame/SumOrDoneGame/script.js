@@ -21,47 +21,9 @@ const db = firebase.database();
  * i18n (다국어)
  ***************************************************/
 const translations = {
-  en: {
-    title: "Number Gyeol!Hab!",
-    startGame: "Start Game",
-    selectRound: "Target Sum",
-    round: "Difficulty",
-    goal: "Goal",
-    score: "Score",
-    myScore: "Score",
-    time: "Time",
-    noMore: "Done!",
-    hint: "Hint",
-    restartMenu: "Restart",
-    backToTitle: "Go to Title",
-    policy: "Privacy Policy",
-    policyLink: "pp.html",
-    noCombinationToast: "No more combinations, press 'Done!'",
-    cancelSelection: "Selection Cancelled",
-    success: "Success",
-    failSum: "Sum is not {target}",
-    hintMessage: "Drag to select multiple numbers",
-    overlayClear: "🎉 Success! Score=",
-    overlayNext: "Next Step",
-    overlayFail: "⚠️ Moves left! Score -100",
-    countdownGuide: "Form {target} in lines or diagonals. Bonus for length!",
-    timeOverMsg: "Time Over! 😵",
-    finalScoreMsg: "Final Score:",
-    ok: "OK",
-    invalidPath: "Invalid path!",
-    mainTitle: "Number Combine!",
-    welcomeMessage: "Welcome to the fun and challenging number puzzle game.",
-    rules: "Rules",
-    scores: "Scores",
-    difficulty: "Difficulty",
-    easy: "Easy",
-    medium: "Medium",
-    hard: "Hard",
-    footerText: "&copy; 2023 Number Combine Game. <a href=\"#privacy\">Privacy Policy</a>",
-    privacyPolicy: "Privacy Policy"
-  },
+  
   ko: {
-    title: "숫자 결!합!",
+    title: "숫자 결!합?",
     startGame: "게임 시작",
     selectRound: "목표점수",
     round: "난이도",
@@ -99,33 +61,7 @@ const translations = {
     footerText: "&copy; 2023 숫자 결!합! 게임. 개인정보 보호정책",
     privacyPolicy: "개인정보 보호정책"
   },
-  ja: {
-    mainTitle: "数字結合!",
-    welcomeMessage: "楽しく挑戦的な数字パズルゲームへようこそ。",
-    rules: "ルール",
-    scores: "スコア",
-    difficulty: "難易度",
-    easy: "簡単",
-    medium: "普通",
-    hard: "難しい",
-    startGame: "ゲーム開始",
-    footerText: "&copy; 2023 数字結合ゲーム. <a href=\"#privacy\">プライバシーポリシー</a>",
-    privacyPolicy: "プライバシーポリシー"
-  },
-  zh: {
-    mainTitle: "数字结合!",
-    welcomeMessage: "欢迎来到有趣且具有挑战性的数字拼图游戏。",
-    rules: "规则",
-    scores: "分数",
-    difficulty: "难度",
-    easy: "简单",
-    medium: "中等",
-    hard: "困难",
-    startGame: "开始游戏",
-    footerText: "&copy; 2023 数字结合游戏。<a href=\"#privacy\">隐私政策</a>",
-    privacyPolicy: "隐私政策"
-  },
-  // 다른 언어(ja, zh 등)도 필요시 추가
+  
 };
 let currentLanguage = "ko";
 
@@ -622,10 +558,10 @@ function checkLine(start, end) {
     markLine(linePositions, "fail-line");
     const failMsg = translations[currentLanguage].failSum.replace("{target}", targetSum);
     showIOSToastMessage(failMsg, 1500);
-
-    totalScore = Math.max(0, totalScore - targetSum);
+    // 실패시 감점 제거
+    /* totalScore = Math.max(0, totalScore  - targetSum );
     document.getElementById("score").textContent = totalScore;
-    showFloatingScore("-" + targetSum, end[0], end[1], true);
+    showFloatingScore("-" + targetSum, end[0], end[1], true); */
 
     setTimeout(() => {
       markLine(linePositions, null, "fail-line");
@@ -818,28 +754,21 @@ function restartCurrentRound() {
   // 게임 오버 모달 숨기기
   gameOverOverlayEl.style.display = "none";
 
-  // 카운트다운 오버레이 표시
+  // 첫 화면 숨기고 카운트다운 오버레이 보이기
   titleScreenEl.style.display = "none";
   countdownOverlayEl.style.display = "flex";
   gameContainerEl.style.display = "none";
 
-  // 목표점수는 그대로 유지
+  // **목표점수 동적 표시** (카운트다운 오버레이 내부)
   showGoalOnCountdownOverlay(targetSum);
 
-  // 3초 카운트다운 시작
-  let count = 3;
-  countdownNumberEl.textContent = count;
-  const countdownTimer = setInterval(() => {
-    count--;
-    countdownNumberEl.textContent = count;
-    if (count <= 0) {
-      clearInterval(countdownTimer);
-      countdownOverlayEl.style.display = "none";
-      gameContainerEl.style.display = "flex";
-      initRound();
-      startTimer();
-    }
-  }, 1000);
+  // 4) 3초 카운트다운
+  setTimeout(() => {
+    countdownOverlayEl.style.display = "none";
+    gameContainerEl.style.display = "flex";
+    initRound();
+    startTimer();
+  }, 3000); // 3초 후 게임 시작
 }
 
 function showGameOver() {
@@ -858,7 +787,7 @@ function showGameOver() {
       </tbody>
     </table>
     <div class="game-over-buttons">
-      <button id="home-button" class="secondary-button" onclick="backToTitleScreen()">홈으로</button>
+      <button id="home-button" class="tertiary-button" onclick="backToTitleScreen()">홈으로</button>
       <button id="restart-button" class="primary-button" onclick="restartCurrentRound()">다시 하기</button>
     </div>
   `;
@@ -877,6 +806,11 @@ function backToTitleScreen() {
   document.getElementById("game-over-overlay").style.display = "none";
   titleScreenEl.style.display = "flex";
   stopTimer();
+  
+  const gameOverOverlay = document.getElementById('overlay');
+  if (gameOverOverlay) {
+    gameOverOverlay.style.display = 'none';
+  }
 }
 
 /***************************************************
@@ -976,7 +910,11 @@ function showFinalSuccessOverlay(timeBonus, isFinalRound = false) {
           <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
         </tbody>
       </table>
+      <div class="game-over-buttons">
+      <button id="home-button" class="tertiary-button" onclick="backToTitleScreen()">홈으로</button>
       <button class="modal-button" onclick="restartGame()">계속 더 진행하기</button>
+    </div>
+      
     `;
   } else {
     // 일반 라운드인 경우

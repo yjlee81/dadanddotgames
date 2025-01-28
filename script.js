@@ -23,7 +23,7 @@ const db = firebase.database();
 const translations = {
   
   ko: {
-    title: "숫자 결!합!",
+    title: "숫자 결!합?",
     startGame: "게임 시작",
     selectRound: "목표점수",
     round: "난이도",
@@ -59,39 +59,7 @@ const translations = {
     medium: "보통",
     hard: "어려움",
     footerText: "&copy; 2023 숫자 결!합! 게임. 개인정보 보호정책",
-    privacyPolicy: "개인정보 보호정책",
-    level1: "Level 1 (10점)",
-    level2: "Level 2 (11점)",
-    level3: "Level 3 (12점)",
-    level4: "Level 4 (13점)",
-    level5: "Level 5 (14점)",
-    level6: "Level 6 (15점)",
-    level7: "Level 7 (16점)",
-    level8: "Level 8 (17점)",
-    level9: "Level 9 (18점)",
-    level10: "Level 10 (19점)",
-    finalLevel: "최종 Level (20점)",
-    goalLabel: "목표합(Goal)",
-    guideMessage: "드래그하여 위의 목표합을 만드세요!",
-    scoreboards: "Scoreboards",
-    today: "오늘",
-    week: "일주일",
-    all: "전체",
-    rank: "순위",
-    timeLabel: "시간",
-    hintMessageAd: "힌트가 회색으로 표시됩니다.",
-    hintButton: "힌트보기",
-    gameOverTitle: "시간 종료!",
-    basicScore: "기본 점수",
-    successBonus: "결 성공 보너스",
-    timeBonus: "남은 시간 보너스",
-    finalScore: "최종 점수",
-    homeButton: "< 홈으로",
-    restartButton: "다시 하기",
-    continueButton: "계속 더 진행하기",
-    nextRound: "다음 라운드",
-    congratsTitle: "🎉 축하합니다! 🎉",
-    finalRoundMessage: "마지막 라운드에서 성공했어요!",
+    privacyPolicy: "개인정보 보호정책"
   },
   
 }; 
@@ -809,18 +777,18 @@ function showGameOver() {
   const gameOverEl = document.getElementById("game-over-overlay");
   const gameOverMsg = document.getElementById("game-over-message");
   gameOverMsg.innerHTML = `
-    <h2>${translations[currentLanguage].gameOverTitle}</h2>
+    <h2>시간 종료!</h2>
     <table id="score-summary-table">
       <tbody>
-        <tr><th>${translations[currentLanguage].basicScore}</th><td>${totalScore}</td></tr>
-        <tr><th>${translations[currentLanguage].successBonus}</th><td>+ 0</td></tr>
-        <tr><th>${translations[currentLanguage].timeBonus}</th><td>+ <span id="time-bonus-anim">0</span></td></tr>
-        <tr class="final-row"><th>${translations[currentLanguage].finalScore}</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
+        <tr><th>기본 점수</th><td>${totalScore}</td></tr>
+        <tr><th>결 성공 보너스</th><td>+ 0</td></tr>
+        <tr><th>남은 시간 보너스</th><td>+ <span id="time-bonus-anim">0</span></td></tr>
+        <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
       </tbody>
     </table>
     <div class="game-over-buttons">
-      <button id="home-button" class="tertiary-button" onclick="backToTitleScreen()">${translations[currentLanguage].homeButton}</button>
-      <button id="restart-button" class="primary-button" onclick="restartCurrentRound()">${translations[currentLanguage].restartButton}</button>
+      <button id="home-button" class="tertiary-button" onclick="backToTitleScreen()">홈으로</button>
+      <button id="restart-button" class="primary-button" onclick="restartCurrentRound()">다시 하기</button>
     </div>
   `;
 
@@ -932,36 +900,36 @@ function showFinalSuccessOverlay(timeBonus, isFinalRound = false) {
     // 마지막 라운드인 경우
     overlayEl.classList.add('final-round');
     overlayMsgEl.innerHTML = `
-      <h2>${translations[currentLanguage].congratsTitle}</h2>
-      <p>${translations[currentLanguage].finalRoundMessage}</p>
+      <h2>🎉 축하합니다! 🎉</h2>
+      <p>마지막 라운드에서 성공했어요!</p>
       <table id="score-summary-table">
         <tbody>
-          <tr><th>${translations[currentLanguage].basicScore}</th><td>${baseScore}</td></tr>
-          <tr><th>${translations[currentLanguage].successBonus}</th><td>+ 100</td></tr>
-          <tr><th>${translations[currentLanguage].timeBonus}</th><td>+ <span id="time-bonus-anim">0</span></td></tr>
-          <tr class="final-row"><th>${translations[currentLanguage].finalScore}</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
+          <tr><th>기본 점수</th><td>${baseScore}</td></tr>
+          <tr><th>결 성공 보너스</th><td>+ 100</td></tr>
+          <tr><th>남은 시간 보너스</th><td>+ <span id="time-bonus-anim">0</span></td></tr>
+          <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
         </tbody>
       </table>
       <div class="game-over-buttons">
-        <button id="home-button" class="tertiary-button" onclick="backToTitleScreen()">${translations[currentLanguage].homeButton}</button>
-        <button class="modal-button" onclick="restartGame()">${translations[currentLanguage].continueButton}</button>
-      </div>
+      <button id="home-button" class="tertiary-button" onclick="backToTitleScreen()">홈으로</button>
+      <button class="modal-button" onclick="restartGame()">계속 더 진행하기</button>
+    </div>
+      
     `;
   } else {
     // 일반 라운드인 경우
     overlayEl.classList.remove('final-round');
     overlayMsgEl.innerHTML = `
-      <h2>${translations[currentLanguage].congratsTitle}</h2>
-      <p>${translations[currentLanguage].finalRoundMessage}</p>
+      <h2>결 성공!</h2>
       <table id="score-summary-table">
         <tbody>
-          <tr><th>${translations[currentLanguage].basicScore}</th><td>${baseScore}</td></tr>
-          <tr><th>${translations[currentLanguage].successBonus}</th><td>+ 100</td></tr>
-          <tr><th>${translations[currentLanguage].timeBonus}</th><td>+ <span id="time-bonus-anim">0</span></td></tr>
-          <tr class="final-row"><th>${translations[currentLanguage].finalScore}</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
+          <tr><th>기본 점수</th><td>${baseScore}</td></tr>
+          <tr><th>결 성공 보너스</th><td>+ 100</td></tr>
+          <tr><th>남은 시간 보너스</th><td>+ <span id="time-bonus-anim">0</span></td></tr>
+          <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
         </tbody>
       </table>
-      <button class="modal-button" onclick="closeFinalOverlay()">${translations[currentLanguage].nextRound}</button>
+      <button class="modal-button" onclick="closeFinalOverlay()">다음 라운드</button>
     `;
   }
 

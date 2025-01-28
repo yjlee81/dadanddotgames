@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "sumordone_logo_1024.png",
+      "filename" : "sd_ic_1024.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -13,7 +13,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "sumordone_logo_1024 1.png",
+      "filename" : "sd_ic_1024 1.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -25,67 +25,67 @@
           "value" : "tinted"
         }
       ],
-      "filename" : "sumordone_logo_1024 2.png",
+      "filename" : "sd_ic_1024 2.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
     },
     {
-      "filename" : "sd_icon_16.png",
+      "filename" : "sd_ic_16.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "16x16"
     },
     {
-      "filename" : "sd_icon_32.png",
+      "filename" : "sd_ic_32.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "16x16"
     },
     {
-      "filename" : "sd_icon_32 1.png",
+      "filename" : "sd_ic_32 1.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "32x32"
     },
     {
-      "filename" : "sd_icon_64.png",
+      "filename" : "sd_ic_64.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "32x32"
     },
     {
-      "filename" : "sd_icon_128.png",
+      "filename" : "sd_ic_128.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "128x128"
     },
     {
-      "filename" : "sd_icon_256.png",
+      "filename" : "sd_ic_256.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "128x128"
     },
     {
-      "filename" : "sd_icon_256_L.png",
+      "filename" : "sd_ic_256 1.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "256x256"
     },
     {
-      "filename" : "sd_icon_512.png",
+      "filename" : "sd_ic_512.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "256x256"
     },
     {
-      "filename" : "sd_icon_512 1.png",
+      "filename" : "sd_ic_512 1.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "512x512"
     },
     {
-      "filename" : "sd_icon_1024.png",
+      "filename" : "sd_ic_1024 3.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "512x512"
