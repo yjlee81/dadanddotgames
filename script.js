@@ -1004,3 +1004,45 @@ function triggerHapticFeedback(type) {
     console.warn("Haptic feedback is not supported on this device.");
   }
 }
+
+function showCountdownOverlay() {
+  countdownOverlayEl.classList.remove('fade-out');
+  countdownOverlayEl.classList.add('fade-in');
+  countdownOverlayEl.style.display = 'flex';
+
+  setTimeout(() => {
+    countdownOverlayEl.classList.remove('fade-in');
+  }, 500);
+}
+
+function hideCountdownOverlay() {
+  countdownOverlayEl.classList.add('fade-out');
+
+  setTimeout(() => {
+    countdownOverlayEl.style.display = 'none';
+    countdownOverlayEl.classList.remove('fade-out');
+  }, 500);
+}
+
+function showGameContainer() {
+  gameContainerEl.classList.remove('fade-out');
+  gameContainerEl.classList.add('fade-in');
+  gameContainerEl.style.display = 'flex';
+
+  setTimeout(() => {
+    gameContainerEl.classList.remove('fade-in');
+  }, 500);
+}
+
+function hideGameContainer() {
+  gameContainerEl.classList.add('fade-out');
+
+  setTimeout(() => {
+    gameContainerEl.style.display = 'none';
+    gameContainerEl.classList.remove('fade-out');
+  }, 500);
+}
+
+// 사용 예시
+hideCountdownOverlay();
+showGameContainer();
