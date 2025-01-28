@@ -355,8 +355,6 @@ function onStartGame() {
   targetSum = selectedGoal;
 
   // 2) 난이도(보드 크기)
-  /* 릴리즈시 난이도는 일단 제외 */
-  // const diffValue = parseInt(document.getElementById("difficulty-select").value, 10) || 6;
   const diffValue = 6;
 
   BOARD_ROWS = diffValue;
@@ -371,26 +369,19 @@ function onStartGame() {
   showGoalOnCountdownOverlay(targetSum);
 
   // 4) 3초 카운트다운
-  let count = 3;
-  countdownNumberEl.textContent = count;
-  const countdownTimer = setInterval(() => {
-    count--;
-    countdownNumberEl.textContent = count;
-    if (count <= 0) {
-      clearInterval(countdownTimer);
-      countdownOverlayEl.style.display = "none";
-      gameContainerEl.style.display = "flex";
-      initRound();
-      startTimer();
-    }
-  }, 1000);
+  setTimeout(() => {
+    countdownOverlayEl.style.display = "none";
+    gameContainerEl.style.display = "flex";
+    initRound();
+    startTimer();
+  }, 3000); // 3초 후 게임 시작
 }
 
 /**
  * 카운트다운 오버레이에서 목표점수를 표시하는 헬퍼 함수
  */
 function showGoalOnCountdownOverlay(value) {
-  const goalNumEl = document.getElementById("goal-number");
+  const goalNumEl = document.getElementById("goal-value");
   if (goalNumEl) {
     goalNumEl.textContent = value; 
   }

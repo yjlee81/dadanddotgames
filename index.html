@@ -71,8 +71,8 @@
         <thead>
           <tr>
             <th>순위</th>
-            <th>목표점수</th>
             <th>점수</th>
+            <th>목표점수</th>
             <th>시간</th>
           </tr>
         </thead>
@@ -142,14 +142,18 @@
 
   <!-- [2] 카운트다운 오버레이 -->
   <div id="countdown-overlay">
-    <div id="countdown-number">3</div>
-    
-    <!-- 목표점수 표시 추가 -->
-    <div id="goalScore" class="goal-score">
-      목표점수: <span id="goal-number">99</span>
+    <div id="goal-container">
+      <div id="goal-label">Goal</div>
+      <div id="goal-value">99</div>
     </div>
     
-    <div id="guideMessage" class="guide-message">드래그하여 목표점수를 만들어보세요!</div>
+    <div id="guideMessage" class="guide-message">드래그하여 위의 목표합을 만드세요!</div>
+
+    <div class="countdown-container">
+      <div class="countdown-number">3</div>
+      <div class="countdown-number">2</div>
+      <div class="countdown-number">1</div>
+    </div>
   </div>
 
   <!-- [3] 게임화면 -->

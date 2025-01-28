@@ -203,6 +203,55 @@ html, body {
     transition: opacity 0.3s ease, display 0.3s ease;
   }
 
+
+.countdown-container {
+    position: relative;
+    height: 100px;
+    width: 100px;
+  }
+  
+  .countdown-number {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    line-height: 100px;
+    opacity: 0;
+    animation: countdownAnimation 1s ease-out forwards;
+  }
+  
+  @keyframes countdownAnimation {
+    0% {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    20% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    80% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+  }
+  
+  .countdown-number:nth-child(1) {
+    animation-delay: 0s;
+  }
+  .countdown-number:nth-child(2) {
+    animation-delay: 1s;
+  }
+  .countdown-number:nth-child(3) {
+    animation-delay: 2s;
+  }
   #countdown-overlay.hide {
     opacity: 0;
   }
@@ -673,13 +722,51 @@ position: relative;
   transform: scale(1.2);
 }
 
-.goal-score {
-  font-size: 48px; /* 큰 글씨 크기 */
+#goal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#goal-label {
+  font-size: 24px; /* 큰 글씨 크기 */
   font-weight: bold; /* 굵은 글씨 */
-  color: #ffffff; /* 강조 색상 (주황색 예시) */
+  color: #999; /* 강조 색상 (주황색 예시) */
   margin-top: 20px; /* 위쪽 여백 */
   text-align: center; /* 중앙 정렬 */
 }
+
+#goal-value {
+    font-size: 100px; /* 큰 글씨 크기 */
+    font-weight: bold; /* 굵은 글씨 */
+    color: #fff; /* 강조 색상 (주황색 예시) */
+    text-align: center; /* 중앙 정렬 */
+}
+
+  /* 카운트다운 숫자 애니메이션 */
+@keyframes countdown-slide-up {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+}
+
+#countdown-number {
+    /* position: absolute;
+    font-size: 24px; 
+    bottom: 40%; */
+    margin-top: 50px;
+    display: inline-block;
+    font-size: 4rem;
+    font-weight: bold;
+    color: #fff;
+    animation: countdown-slide-up 0.2s ease-out;
+}
+
 
 .score-table-title-container {
     display: flex;
