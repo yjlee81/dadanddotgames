@@ -53,7 +53,7 @@ struct WebView: UIViewRepresentable {
                     handleHapticFeedback(type: type)
                 }
             } else if message.name == "submitScore", let score = message.body as? Int {
-                gameCenterManager.submitScore(score: score, leaderboardID: "com.yourgame.leaderboard")
+                gameCenterManager.submitScore(score: score, leaderboardID: "com.dadanddot.SumOrDoneGame.leaderboard")
             }
         }
 

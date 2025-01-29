@@ -97,9 +97,48 @@ const timerEl = document.getElementById("timer");
 let scores = []; // 전체 점수 데이터를 저장할 배열
 
 
+
+/***************************************************
+ * 게임 카운트 관련 (Firebase)
+ ***************************************************/
+// 게임 카운트 가져오기 및 표시
+function fetchAndDisplayGameCount() {
+  const gameCountRef = db.ref('gameCount');
+  
+  gameCountRef.once('value')
+    .then((snapshot) => {
+      const count = snapshot.val() || 0;
+      const gameCountEl = document.getElementById("game-count-value");
+      animateNumber(gameCountEl, 0, count, 1000);
+    })
+    .catch((error) => {
+      console.error("게임 카운트 가져오기 실패:", error);
+    });
+}
+
+// 게임 플레이 시 게임 카운트 증가
+function incrementGameCount() {
+  const gameCountRef = db.ref('gameCount');
+  
+  gameCountRef.transaction((currentCount) => {
+    return (currentCount || 0) + 1;
+  }, (error, committed, snapshot) => {
+    if (error) {
+      console.error("게임 카운트 증가 실패:", error);
+    } else if (committed) {
+      const newCount = snapshot.val();
+      const gameCountEl = document.getElementById("game-count-value");
+      animateNumber(gameCountEl, gameCountEl.textContent, newCount, 1000);
+    }
+  });
+}
+
+
+
 /***************************************************
  * 스코어 관련 (Firebase)
  ***************************************************/
+
 function fetchScoresFromFirebase(callback) {
   db.ref("scores").on("value", (snapshot) => {
     const data = snapshot.val();
@@ -136,9 +175,6 @@ function displayScores(scoreList) {
       tbody.appendChild(row);
     });
 }
-
-
-
 
 function filterScores(filter) {
   const now = Date.now();
@@ -277,6 +313,8 @@ document.addEventListener("DOMContentLoaded", () => {
   gameOverMessageEl = document.getElementById('game-over-message');
 
   filterScores('today'); // 기본으로 '오늘'의 기록을 표시
+
+  fetchAndDisplayGameCount();
 });
 
 
@@ -286,9 +324,10 @@ document.addEventListener("DOMContentLoaded", () => {
  *  - select에서 선택된 난이도(6,8,10...)를 BOARD_ROWS/COLS에 넣는다
  ***************************************************/
 function onStartGame() {
-  // 1) 목표점수
+  // 1) 목표합
   const selectedGoal = parseInt(document.getElementById("round-select").value, 10) || 10;
   targetSum = selectedGoal;
+  incrementGameCount();
 
   // 2) 난이도(보드 크기)
   const diffValue = 6;
@@ -533,7 +572,7 @@ function checkLine(start, end) {
   }
 
   let sumVal = 0, gapCount = 0;
-  linePositions.forEach(([r,c]) => {
+  linePositions.forEach(([r, c]) => {
     if (boardData[r][c] === null) gapCount++;
     else sumVal += boardData[r][c];
   });
@@ -543,12 +582,19 @@ function checkLine(start, end) {
     triggerHapticFeedback('success');
 
     const gapBonus = gapCount * 10;
-    const lengthBonus = (linePositions.length >= 3)? (linePositions.length - 2) * 5 : 0;
+    const lengthBonus = (linePositions.length >= 3) ? (linePositions.length - 2) * 5 : 0;
     const addScore = sumVal + gapBonus + lengthBonus;
-    totalScore += addScore;
+    
+    const scoreEl = document.getElementById("score");
+    const previousScore = parseInt(scoreEl.textContent, 10) || 0;
+    const newScore = previousScore + addScore;
+    
+    // 애니메이션 적용
+    animateNumber(scoreEl, previousScore, newScore, 500, () => {
+      totalScore = newScore;
+    });
 
     markLine(linePositions, "success-line");
-    document.getElementById("score").textContent = totalScore;
     showFloatingScore("+" + addScore, end[0], end[1], false);
 
     setTimeout(() => {
@@ -668,6 +714,8 @@ function showOverlay(msg, isSuccess){
 
     // 스코어 저장
     saveScoreToFirebase(totalScore, BOARD_ROWS, targetSum);
+    // 게임센터에 점수 제출
+    submitScoreToGameCenter(totalScore);
   }
 }
 
@@ -792,6 +840,8 @@ function showGameOver() {
     </div>
   `;
 
+  
+  submitScoreToGameCenter(totalScore);
   // 여기서도 스코어 저장
   saveScoreToFirebase(totalScore, BOARD_ROWS, targetSum);
   gameOverEl.style.display = "flex";
@@ -801,10 +851,14 @@ function showGameOver() {
  * 첫화면 복귀
  ***************************************************/
 function backToTitleScreen() {
+  const overlayEl = document.getElementById("overlay");
+  const overlayMsgEl = document.getElementById("overlay-message");
   // 게임화면 숨기고, 타이머 중지
   gameContainerEl.style.display = "none";
   document.getElementById("game-over-overlay").style.display = "none";
+  document.getElementById("overlay").style.display = "none";
   titleScreenEl.style.display = "flex";
+  overlayEl.classList.remove('final-round');
   stopTimer();
   
   const gameOverOverlay = document.getElementById('overlay');
@@ -872,19 +926,28 @@ function showFinalScore(score) {
  * @param {function} callback 완료 후 콜백(옵션)
  */
 function animateNumber(element, startValue, endValue, duration, callback) {
-  let current = startValue;
-  const increment = (endValue - startValue) / (duration / 30); // 대략 30 FPS
-  const timer = setInterval(() => {
-    current += increment;
-    if ((increment > 0 && current >= endValue) || (increment < 0 && current <= endValue)) {
-      current = endValue;
-      clearInterval(timer);
-      element.textContent = Math.round(current);
-      if (callback) callback();
+  const startTime = performance.now();
+  
+  const easeInOutQuad = (t) => {
+    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  };
+
+  const animate = (currentTime) => {
+    const elapsed = currentTime - startTime;
+    let progress = Math.min(elapsed / duration, 1);
+    const easedProgress = easeInOutQuad(progress);
+    const currentValue = Math.round(startValue + (endValue - startValue) * easedProgress);
+    
+    element.textContent = currentValue;
+    
+    if (progress < 1) {
+      requestAnimationFrame(animate);
     } else {
-      element.textContent = Math.round(current);
+      if (callback) callback();
     }
-  }, 30);
+  };
+
+  requestAnimationFrame(animate);
 }
 
 /***************************************************
@@ -949,6 +1012,8 @@ function showFinalSuccessOverlay(timeBonus, isFinalRound = false) {
       finalScoreEl.classList.add('animated');
       setTimeout(() => finalScoreEl.classList.remove('animated'), 600);
 
+      // 게임센터에 점수 제출
+      submitScoreToGameCenter(totalScore);
       // DB에 스코어 저장
       saveScoreToFirebase(totalScore, BOARD_ROWS, targetSum);
     });
@@ -1009,12 +1074,13 @@ function triggerHapticFeedback(type) {
   }
 }
 
-function gameOver(score) {
-  // 게임 오버 로직
-  console.log("게임 종료, 점수: " + score);
-  
-  // Game Center에 점수 제출
-  if (window.submitScoreToGameCenter) {
-    submitScoreToGameCenter(score);
-  }
-}
+
+
+    // 게임센터에 점수 제출 함수
+    function submitScoreToGameCenter(score) {
+      if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.submitScore) {
+        window.webkit.messageHandlers.submitScore.postMessage(score);
+      } else {
+        console.warn("Game Center 점수 제출이 지원되지 않습니다.");
+      }
+    }

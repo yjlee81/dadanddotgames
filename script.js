@@ -25,16 +25,16 @@ const translations = {
   ko: {
     title: "숫자 결!합?",
     startGame: "게임 시작",
-    selectRound: "목표점수",
+    selectRound: "목표합",
     round: "난이도",
-    goal: "목표점수",
+    goal: "목표합",
     score: "점수",
     myScore: "내 점수",
     time: "남은 시간",
     noMore: "결!",
     hint: "힌트",
     restartMenu: "다시 시작하기",
-    backToTitle: "첫화면으로 돌아가기",
+    backToTitle: "홈으로",
     policy: "개인정보 취급방침",
     policyLink: "pp.html",
     noCombinationToast: "더 이상의 조합이 없으니 'Done!'버튼을 누르세요",
@@ -164,7 +164,7 @@ function displayScores(scoreList) {
       const date = new Date(score.timestamp);
       const formattedTime = 
         `${(date.getMonth()+1).toString().padStart(2, '')}/${date.getDate().toString().padStart(2, '0')} ` +
-        `${date.getHours().toString().padStart(2, '')}:${date.getMinutes().toString().padStart(2, '0')}`;
+        `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
 
       row.innerHTML = `
         <td>${index + 1}</td>
@@ -714,6 +714,8 @@ function showOverlay(msg, isSuccess){
 
     // 스코어 저장
     saveScoreToFirebase(totalScore, BOARD_ROWS, targetSum);
+    // 게임센터에 점수 제출
+    submitScoreToGameCenter(totalScore);
   }
 }
 
