@@ -24,11 +24,6 @@
                                 <rect key="frame" x="39" y="283" width="315" height="122"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="title_2lines" translatesAutoresizingMaskIntoConstraints="NO" id="azq-3I-4NN">
-                                <rect key="frame" x="53" y="424" width="287" height="111"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
-                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" red="0.20392158630000001" green="0.47058826679999999" blue="0.96862745289999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -42,6 +37,5 @@
     <resources>
         <image name="Image" width="42.666667938232422" height="42.666667938232422"/>
         <image name="dnd_logo_wh" width="160" height="160"/>
-        <image name="title_2lines" width="682.66668701171875" height="188.66667175292969"/>
     </resources>
 </document>

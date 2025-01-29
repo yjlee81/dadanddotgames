@@ -231,11 +231,12 @@
 				};
 			};
 			buildConfigurationList = C6957BCC2D392C11007AF6A1 /* Build configuration list for PBXProject "SumOrDoneGame" */;
-			developmentRegion = en;
+			developmentRegion = ko;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				ko,
 			);
 			mainGroup = C6957BC82D392C11007AF6A1;
 			minimizedProjectReferenceProxies = 1;

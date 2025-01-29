@@ -97,9 +97,48 @@ const timerEl = document.getElementById("timer");
 let scores = []; // 전체 점수 데이터를 저장할 배열
 
 
+
+/***************************************************
+ * 게임 카운트 관련 (Firebase)
+ ***************************************************/
+// 게임 카운트 가져오기 및 표시
+function fetchAndDisplayGameCount() {
+  const gameCountRef = db.ref('gameCount');
+  
+  gameCountRef.once('value')
+    .then((snapshot) => {
+      const count = snapshot.val() || 0;
+      const gameCountEl = document.getElementById("game-count-value");
+      animateNumber(gameCountEl, 0, count, 1000);
+    })
+    .catch((error) => {
+      console.error("게임 카운트 가져오기 실패:", error);
+    });
+}
+
+// 게임 플레이 시 게임 카운트 증가
+function incrementGameCount() {
+  const gameCountRef = db.ref('gameCount');
+  
+  gameCountRef.transaction((currentCount) => {
+    return (currentCount || 0) + 1;
+  }, (error, committed, snapshot) => {
+    if (error) {
+      console.error("게임 카운트 증가 실패:", error);
+    } else if (committed) {
+      const newCount = snapshot.val();
+      const gameCountEl = document.getElementById("game-count-value");
+      animateNumber(gameCountEl, gameCountEl.textContent, newCount, 1000);
+    }
+  });
+}
+
+
+
 /***************************************************
  * 스코어 관련 (Firebase)
  ***************************************************/
+
 function fetchScoresFromFirebase(callback) {
   db.ref("scores").on("value", (snapshot) => {
     const data = snapshot.val();
@@ -136,9 +175,6 @@ function displayScores(scoreList) {
       tbody.appendChild(row);
     });
 }
-
-
-
 
 function filterScores(filter) {
   const now = Date.now();
@@ -277,6 +313,8 @@ document.addEventListener("DOMContentLoaded", () => {
   gameOverMessageEl = document.getElementById('game-over-message');
 
   filterScores('today'); // 기본으로 '오늘'의 기록을 표시
+
+  fetchAndDisplayGameCount();
 });
 
 
@@ -289,6 +327,7 @@ function onStartGame() {
   // 1) 목표점수
   const selectedGoal = parseInt(document.getElementById("round-select").value, 10) || 10;
   targetSum = selectedGoal;
+  incrementGameCount();
 
   // 2) 난이도(보드 크기)
   const diffValue = 6;
@@ -533,7 +572,7 @@ function checkLine(start, end) {
   }
 
   let sumVal = 0, gapCount = 0;
-  linePositions.forEach(([r,c]) => {
+  linePositions.forEach(([r, c]) => {
     if (boardData[r][c] === null) gapCount++;
     else sumVal += boardData[r][c];
   });
@@ -543,13 +582,19 @@ function checkLine(start, end) {
     triggerHapticFeedback('success');
 
     const gapBonus = gapCount * 10;
-    const lengthBonus = (linePositions.length >= 3)? (linePositions.length - 2) * 5 : 0;
+    const lengthBonus = (linePositions.length >= 3) ? (linePositions.length - 2) * 5 : 0;
     const addScore = sumVal + gapBonus + lengthBonus;
-    totalScore += addScore;
-
     
+    const scoreEl = document.getElementById("score");
+    const previousScore = parseInt(scoreEl.textContent, 10) || 0;
+    const newScore = previousScore + addScore;
+    
+    // 애니메이션 적용
+    animateNumber(scoreEl, previousScore, newScore, 500, () => {
+      totalScore = newScore;
+    });
+
     markLine(linePositions, "success-line");
-    document.getElementById("score").textContent = totalScore;
     showFloatingScore("+" + addScore, end[0], end[1], false);
 
     setTimeout(() => {
@@ -877,19 +922,28 @@ function showFinalScore(score) {
  * @param {function} callback 완료 후 콜백(옵션)
  */
 function animateNumber(element, startValue, endValue, duration, callback) {
-  let current = startValue;
-  const increment = (endValue - startValue) / (duration / 30); // 대략 30 FPS
-  const timer = setInterval(() => {
-    current += increment;
-    if ((increment > 0 && current >= endValue) || (increment < 0 && current <= endValue)) {
-      current = endValue;
-      clearInterval(timer);
-      element.textContent = Math.round(current);
-      if (callback) callback();
+  const startTime = performance.now();
+  
+  const easeInOutQuad = (t) => {
+    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  };
+
+  const animate = (currentTime) => {
+    const elapsed = currentTime - startTime;
+    let progress = Math.min(elapsed / duration, 1);
+    const easedProgress = easeInOutQuad(progress);
+    const currentValue = Math.round(startValue + (endValue - startValue) * easedProgress);
+    
+    element.textContent = currentValue;
+    
+    if (progress < 1) {
+      requestAnimationFrame(animate);
     } else {
-      element.textContent = Math.round(current);
+      if (callback) callback();
     }
-  }, 30);
+  };
+
+  requestAnimationFrame(animate);
 }
 
 /***************************************************
@@ -1013,3 +1067,4 @@ function triggerHapticFeedback(type) {
     console.warn("Haptic feedback is not supported on this device.");
   }
 }
+
