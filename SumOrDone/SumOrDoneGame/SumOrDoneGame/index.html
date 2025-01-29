@@ -25,7 +25,7 @@
   <div id="title-screen">
     <div class="title-container">
     <h2 id="titleLabel" data-key="mainTitle">숫자 결!합? 게임</h2>
-    <h3 id="version">v.0.7.0009</h3>
+    <h3 id="version">v.0.8.1</h3>
   </div>
     <p class="subtitle" data-key="welcomeMessage">간단하지만 연산과 집중력이 필요한 숫자 퍼즐게임</p>
 
@@ -134,7 +134,7 @@
          <option value="en">EN</option>
         <option value="ja">JP</option>
         <option value="zh">ZH</option> -->
-      </select>
+      </select> 
       <a href="pp.html" id="privacy-policy-link">Privacy Policy</a>
 
       <p data-key="footerText">&copy; 2025 Dadanddot.com</p>
@@ -173,7 +173,7 @@
             <option value="ja">JP</option>
             <option value="zh">ZH</option>
           </select>
-        </div>
+        </div> 
       </nav> -->
 
     </header>
@@ -212,7 +212,7 @@
         <!-- <option value="en">EN</option>
         <option value="ja">JP</option>
         <option value="zh">ZH</option> -->
-      </select>
+      </select> 
     
       <a href="pp.html" id="privacy-policy-link">Privacy Policy</a>
 
@@ -256,6 +256,21 @@
   };
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
+</script>
+
+<script>
+  function submitScoreToGameCenter(score) {
+    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.submitScore) {
+      window.webkit.messageHandlers.submitScore.postMessage(score);
+    } else {
+      console.warn("Game Center 점수 제출이 지원되지 않습니다.");
+    }
+  }
+
+  // 예시: 게임 종료 시 점수 제출
+  function onGameEnd(score) {
+    submitScoreToGameCenter(score);
+  }
 </script>
 
 </body>

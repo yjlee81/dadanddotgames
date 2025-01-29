@@ -547,6 +547,7 @@ function checkLine(start, end) {
     const addScore = sumVal + gapBonus + lengthBonus;
     totalScore += addScore;
 
+    
     markLine(linePositions, "success-line");
     document.getElementById("score").textContent = totalScore;
     showFloatingScore("+" + addScore, end[0], end[1], false);
@@ -801,10 +802,14 @@ function showGameOver() {
  * 첫화면 복귀
  ***************************************************/
 function backToTitleScreen() {
+  const overlayEl = document.getElementById("overlay");
+  const overlayMsgEl = document.getElementById("overlay-message");
   // 게임화면 숨기고, 타이머 중지
   gameContainerEl.style.display = "none";
   document.getElementById("game-over-overlay").style.display = "none";
+  document.getElementById("overlay").style.display = "none";
   titleScreenEl.style.display = "flex";
+  overlayEl.classList.remove('final-round');
   stopTimer();
   
   const gameOverOverlay = document.getElementById('overlay');

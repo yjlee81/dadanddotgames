@@ -333,6 +333,10 @@ position: relative;
     user-select: none;
   }
 
+  #game-board td.drag-select-highlight {
+    background-color: var(--tile-selected-color) !important;
+    font-size: 1.4rem;
+  }
   /* ===== [하단버튼] ===== */
   .buttons-container {
     position: relative;
@@ -391,16 +395,14 @@ position: relative;
     font-weight: 600;
     cursor: pointer;
     max-width: 90px;
+    width: 120px;
     height: 45px;
     background: #fff;
 }
-  /* 드래그 강조 */
-  .drag-select-highlight {
-    background-color: var(--tile-selected-color) !important;
-  }
+  
   /* 성공/실패/제거 에니메이션 */
   .fail-line {
-    background-color: #FF0A00 !important;
+    background-color: #f1602c !important;
     animation: shake-fail 0.4s ease;
   }
   @keyframes shake-fail {
@@ -480,6 +482,7 @@ position: relative;
     cursor: pointer;
     transition: background-color 0.2s ease;
     min-width: 160px;
+    width: 100%;
   }
   .modal-button:hover {
     background-color: #005bb5;
@@ -513,7 +516,7 @@ position: relative;
   /* ===== [토스트 메시지] ===== */
   #toast-message {
     position: fixed;
-    bottom: 160px;
+    bottom: 168px;
     left: 50%;
     transform: translateX(-50%) translateY(100px);
     background-color: var(--toast-background);
@@ -625,7 +628,7 @@ position: relative;
     align-items: center;
     /* height: 94px; */
     gap: 10px;
-    margin-bottom: 34px;
+    margin-bottom: 40px;
     flex-wrap: wrap;
 }
 

@@ -1,5 +1,5 @@
 /***************************************************
- * Firebase 초기화
+ * Firebase 초기화 
  ***************************************************/
 // [1] Firebase config - Firebase 콘솔에서 발급받은 값으로 교체
 const firebaseConfig = {
@@ -62,7 +62,7 @@ const translations = {
     privacyPolicy: "개인정보 보호정책"
   },
   
-};
+}; 
 let currentLanguage = "ko";
 
 /***************************************************
@@ -123,7 +123,7 @@ function displayScores(scoreList) {
     .forEach((score, index) => {
       const row = document.createElement("tr");
       const date = new Date(score.timestamp);
-      const formattedTime =
+      const formattedTime = 
         `${(date.getMonth()+1).toString().padStart(2, '')}/${date.getDate().toString().padStart(2, '0')} ` +
         `${date.getHours().toString().padStart(2, '')}:${date.getMinutes().toString().padStart(2, '0')}`;
 
@@ -319,7 +319,7 @@ function onStartGame() {
 function showGoalOnCountdownOverlay(value) {
   const goalNumEl = document.getElementById("goal-value");
   if (goalNumEl) {
-    goalNumEl.textContent = value;
+    goalNumEl.textContent = value; 
   }
 }
 
@@ -865,9 +865,9 @@ function showFinalScore(score) {
 // ----------------------------------------------
 /**
  * 특정 DOM Element의 숫자를 startValue -> endValue로 일정 시간 동안 서서히 증가시키는 함수
- * @param {HTMLElement} element
- * @param {number} startValue
- * @param {number} endValue
+ * @param {HTMLElement} element 
+ * @param {number} startValue 
+ * @param {number} endValue 
  * @param {number} duration ms 단위
  * @param {function} callback 완료 후 콜백(옵션)
  */
@@ -1006,5 +1006,15 @@ function triggerHapticFeedback(type) {
     window.webkit.messageHandlers.hapticFeedback.postMessage(type);
   } else {
     console.warn("Haptic feedback is not supported on this device.");
+  }
+}
+
+function gameOver(score) {
+  // 게임 오버 로직
+  console.log("게임 종료, 점수: " + score);
+  
+  // Game Center에 점수 제출
+  if (window.submitScoreToGameCenter) {
+    submitScoreToGameCenter(score);
   }
 }

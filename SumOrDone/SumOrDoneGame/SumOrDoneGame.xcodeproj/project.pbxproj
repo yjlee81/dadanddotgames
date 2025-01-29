@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		C6CFC6752D492DEB002AA20B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6CFC6742D492DEB002AA20B /* GameKit.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		C6957BE62D392C15007AF6A1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		C6957BD12D392C11007AF6A1 /* SumOrDoneGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SumOrDoneGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6957BE52D392C15007AF6A1 /* SumOrDoneGameTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SumOrDoneGameTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6957BEF2D392C15007AF6A1 /* SumOrDoneGameUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SumOrDoneGameUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C6CFC6742D492DEB002AA20B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/System/Library/Frameworks/GameKit.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -81,6 +86,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6CFC6752D492DEB002AA20B /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,6 +113,7 @@
 				C6957BD32D392C11007AF6A1 /* SumOrDoneGame */,
 				C6957BE82D392C15007AF6A1 /* SumOrDoneGameTests */,
 				C6957BF22D392C15007AF6A1 /* SumOrDoneGameUITests */,
+				C6CFC6732D492DEA002AA20B /* Frameworks */,
 				C6957BD22D392C11007AF6A1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -119,6 +126,14 @@
 				C6957BEF2D392C15007AF6A1 /* SumOrDoneGameUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C6CFC6732D492DEA002AA20B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C6CFC6742D492DEB002AA20B /* GameKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

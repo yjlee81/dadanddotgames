@@ -9,10 +9,12 @@ import SwiftUI
 import WebKit
 
 struct WebView: UIViewRepresentable {
-
+    @ObservedObject var gameCenterManager: GameCenterManager
+    
     func makeUIView(context: Context) -> WKWebView {
         let contentController = WKUserContentController()
         contentController.add(context.coordinator, name: "hapticFeedback")
+        contentController.add(context.coordinator, name: "submitScore")
 
         let config = WKWebViewConfiguration()
         config.userContentController = contentController
@@ -32,14 +34,16 @@ struct WebView: UIViewRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(self)
+        Coordinator(self, gameCenterManager: gameCenterManager)
     }
 
     class Coordinator: NSObject, WKScriptMessageHandler {
         var parent: WebView
+        var gameCenterManager: GameCenterManager
 
-        init(_ parent: WebView) {
+        init(_ parent: WebView, gameCenterManager: GameCenterManager) {
             self.parent = parent
+            self.gameCenterManager = gameCenterManager
         }
 
         func userContentController(_ userContentController: WKUserContentController,
@@ -48,6 +52,8 @@ struct WebView: UIViewRepresentable {
                 if let type = message.body as? String {
                     handleHapticFeedback(type: type)
                 }
+            } else if message.name == "submitScore", let score = message.body as? Int {
+                gameCenterManager.submitScore(score: score, leaderboardID: "com.yourgame.leaderboard")
             }
         }
 

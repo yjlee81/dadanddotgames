@@ -1,9 +1,16 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var gameCenterManager = GameCenterManager()
+    
     var body: some View {
-        WebView()
+        WebView(gameCenterManager: gameCenterManager)
             .edgesIgnoringSafeArea(.all)
+            .onAppear {
+                if gameCenterManager.isAuthenticated {
+                    print("Game Center 인증 완료")
+                }
+            }
     }
 }
 
