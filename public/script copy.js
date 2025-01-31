@@ -25,16 +25,16 @@ const translations = {
   ko: {
     title: "숫자 결!합?",
     startGame: "게임 시작",
-    selectRound: "목표합",
+    selectRound: "목표점수",
     round: "난이도",
-    goal: "목표합",
+    goal: "목표점수",
     score: "점수",
     myScore: "내 점수",
     time: "남은 시간",
     noMore: "결!",
     hint: "힌트",
     restartMenu: "다시 시작하기",
-    backToTitle: "홈으로",
+    backToTitle: "첫화면으로 돌아가기",
     policy: "개인정보 취급방침",
     policyLink: "pp.html",
     noCombinationToast: "더 이상의 조합이 없으니 'Done!'버튼을 누르세요",
@@ -164,7 +164,7 @@ function displayScores(scoreList) {
       const date = new Date(score.timestamp);
       const formattedTime = 
         `${(date.getMonth()+1).toString().padStart(2, '')}/${date.getDate().toString().padStart(2, '0')} ` +
-        `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+        `${date.getHours().toString().padStart(2, '')}:${date.getMinutes().toString().padStart(2, '0')}`;
 
       row.innerHTML = `
         <td>${index + 1}</td>
@@ -324,7 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
  *  - select에서 선택된 난이도(6,8,10...)를 BOARD_ROWS/COLS에 넣는다
  ***************************************************/
 function onStartGame() {
-  // 1) 목표점수
+  // 1) 목표합
   const selectedGoal = parseInt(document.getElementById("round-select").value, 10) || 10;
   targetSum = selectedGoal;
   incrementGameCount();
@@ -840,6 +840,8 @@ function showGameOver() {
     </div>
   `;
 
+  
+  submitScoreToGameCenter(totalScore);
   // 여기서도 스코어 저장
   saveScoreToFirebase(totalScore, BOARD_ROWS, targetSum);
   gameOverEl.style.display = "flex";
@@ -1010,6 +1012,8 @@ function showFinalSuccessOverlay(timeBonus, isFinalRound = false) {
       finalScoreEl.classList.add('animated');
       setTimeout(() => finalScoreEl.classList.remove('animated'), 600);
 
+      // 게임센터에 점수 제출
+      submitScoreToGameCenter(totalScore);
       // DB에 스코어 저장
       saveScoreToFirebase(totalScore, BOARD_ROWS, targetSum);
     });
@@ -1070,3 +1074,13 @@ function triggerHapticFeedback(type) {
   }
 }
 
+
+
+    // 게임센터에 점수 제출 함수
+    function submitScoreToGameCenter(score) {
+      if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.submitScore) {
+        window.webkit.messageHandlers.submitScore.postMessage(score);
+      } else {
+        console.warn("Game Center 점수 제출이 지원되지 않습니다.");
+      }
+    }

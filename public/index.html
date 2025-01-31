@@ -4,6 +4,18 @@
   <meta charset="UTF-8">
   <title>숫자 결합 게임</title>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+  <meta name="description" content="숫자 조합 퍼즐 게임 - 드래그로 숫자를 결합해 목표 점수를 달성하세요!">
+  <meta property="og:title" content="숫자 결합 게임">
+  <meta property="og:image" content="https://dadanddot.com/images/how-to-play.gif">
+  <meta name="google-site-verification" content="your_verification_code">
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-WZLQ6BLJ');</script>
+  <!-- End Google Tag Manager -->
 
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8718440574316852"
      crossorigin="anonymous"></script>
@@ -11,24 +23,93 @@
   <!-- Firebase (v9 compat 예시) -->
   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth-compat.js"></script>
   
   <!-- 스타일 -->
   <link rel="stylesheet" href="style.css">
 
   <!-- 게임 스크립트 -->
+  <script src="router.js"></script>
   <script src="script.js" defer></script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4F9B3DMB67"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4F9B3DMB67');
+  </script>
+
+  <!-- Prerender.io 설정 -->
+  <script>
+    window.prerender = {
+      prerenderHost: 'https://service.prerender.io/',
+      prerenderToken: 'UFHQyXAjlqwexr7OvYot'
+    };
+  </script>
+  <script src="https://cdn.prerender.io/js/prerender.js?token=UFHQyXAjlqwexr7OvYot"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Prerenderer가 전역 변수로 정의되었는지 확인
+      if (typeof Prerenderer !== 'undefined') {
+        Prerenderer.init({
+          followMainDocument: true,
+          timeout: 10000,
+          renderAfterDocumentEvent: 'prerender-trigger'
+        });
+      }
+    });
+  </script>
+
+  <!-- 프리렌더링 라이브러리 로드 방식 수정 -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/prerenderer-library@latest/dist/prerenderer.umd.min.js"></script> -->
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 프리렌더 트리거 유지
+      setTimeout(() => {
+        document.dispatchEvent(new Event('prerender-trigger'));
+      }, 1000);
+      
+      // 기타 초기화 코드
+    });
+  </script>
+
+  <!-- Firebase 스크립트 아래에 GA4 추가 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4F9B3DMB67"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4F9B3DMB67'); // 실제 측정ID 사용
+  </script>
 </head>
 <body>
-  
+  <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WZLQ6BLJ"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
   <!-- [1] 첫화면 -->
-  <div id="title-screen">
+  <div id="title-screen" data-route="home">
+    <header class="main-header">
+      <div class="header-left"></div>
+      <div class="header-right">
+      <div id="auth-buttons">
+        <button id="google-login">Google로 로그인</button>
+        <button id="apple-login">Apple로 로그인</button>
+      </div>
+      
+    
+    </header>
     <div class="title-container">
-    <h2 id="titleLabel" data-key="mainTitle">숫자 결합 게임</h2>
-    <h3 id="version">v.0.8.1</h3>
+    <h2 id="titleLabel" data-i18n="mainTitle">숫자 결합 게임</h2>
+    <h3 id="version">v.0.7.12a</h3>
     
   </div>
-    <p class="subtitle">총 <span id="game-count-value">0</span>번 플레이를 기록한 간단하지만 연산과 집중력이 필요한 숫자 퍼즐게임</p>
+  <p class="subtitle">총 <span id="game-count-value">0</span>번 플레이를 기록한 숫자 퍼즐게임</p>
     <!-- <p class="subtitle" data-key="welcomeMessage">간단하지만 연산과 집중력이 필요한 숫자 퍼즐게임</p> -->
 
     <!-- 게임 옵션 (목표합 & 난이도) -->
@@ -55,17 +136,17 @@
         <option value="10">Hard: 10x10</option>
       </select>
     -->
-      <button id="start-game-btn" data-key="startGame">지금 시작하기 ></button>
+      <button id="start-game-btn" data-i18n="startGame" onclick="onStartGame()">지금 시작하기 ></button>
     </div>
 
     <!-- 내 점수 테이블 -->
     <div id="score-table-title" class="info-section">
       <div class="score-table-title-container">
-        <h3>Scoreboards</h3>
+        <h3 data-i18n="scoreboards">Scoreboards</h3>
         <div class="filter-buttons">
-          <button class="chip active" data-filter="today" onclick="filterScores('today')">오늘</button>
-          <button class="chip" data-filter="week" onclick="filterScores('week')">일주일</button>
-          <button class="chip" data-filter="all" onclick="filterScores('all')">전체</button>
+          <button class="chip active" data-i18n="today" onclick="filterScores('today')">오늘</button>
+          <button class="chip" data-i18n="week" onclick="filterScores('week')">일주일</button>
+          <button class="chip" data-i18n="all" onclick="filterScores('all')">전체</button>
         </div>
       </div>
       
@@ -88,7 +169,7 @@
 
     <!-- How to Play -->
     <section id="how-to-play" class="info-section">
-      <h3>How to Play</h3>
+      <h3 data-i18n="howToPlay">How to Play</h3>
       <div id="how-to-play-image"><img src="images/how-to-play.gif" alt="how-to-play"></div>
       <p><strong>숫자 결!합!</strong>은 보드에 있는 숫자를 드래그해서 '목표합(Goal)'을 만드는 게임이에요. 가로, 세로, 대각선으로 연속된 칸을 선택해 합이 목표값과 일치하면 점수를 얻을 수 있어요.</p>
       <ul>
@@ -101,7 +182,7 @@
 
     <!-- FAQ -->
     <section id="faq" class="info-section">
-      <h3>FAQ</h3>
+      <h3 data-i18n="faq">FAQ</h3>
       <p>
         <strong>Q: 더 이상 조합이 없는 것 같아요. 어떻게 해야 하나요?</strong><br>
         A: 화면 아래 <em>"Done!"</em> 버튼을 눌러보세요. 조합이 정말 없다면 +100점을 얻지만, 조합이 남아있으면 -50점이 감점돼요.
@@ -118,7 +199,7 @@
 
     <!-- About -->
     <section id="about" class="info-section">
-      <h3>About & Updates</h3>
+      <h3 data-i18n="about">About & Updates</h3>
       <p><strong>숫자 결!합!</strong>은 딸아이가 숫자 연산을 즐겁게 배울 수 있도록 만들어진 가벼운 보드게임이에요.</p>
       <p>현재 <em>v0.7</em> 버전을 운영 중이며, 다음 버전에서는 <strong>다양한 타일 이벤트</strong>와 <strong>스페셜 라운드</strong> 등을 추가할 예정이에요!</p>
       <ul>
@@ -129,17 +210,16 @@
     </section>
 
     <footer id="footer">
-      select class="language-selector" id="language-select">
-        
+      <select class="language-selector" id="language-select">
         <option value="ko" selected>KR</option>
-        <!-- 번역 잠시 제외
          <option value="en">EN</option>
         <option value="ja">JP</option>
-        <option value="zh">ZH</option> -->
+        <option value="zh">ZH</option> 
       </select> 
-      <a href="pp.html" id="privacy-policy-link">Privacy Policy</a>
+      <a href="/" data-link>홈</a>
+      <a href="/pp.html" data-link>개인정보처리방침</a>
 
-      <p data-key="footerText">&copy; 2025 Dadanddot.com</p>
+      <p data-i18n="footerText">&copy; 2025 Dadanddot.com</p>
     </footer>
   </div>
 
@@ -156,11 +236,12 @@
       <div class="countdown-number">3</div>
       <div class="countdown-number">2</div>
       <div class="countdown-number">1</div>
+      <div class="countdown-start" style="display: none;">Start!</div>
     </div>
   </div>
 
   <!-- [3] 게임화면 -->
-  <div id="game-container">
+  <div id="game-container" data-route="game" style="display:none;">
    <!-- 헤더 숨김
     <header class="main-header">
       <h1 id="titleLabel"><a href="#" id="home-link">숫자 결!합!</a></h1>
@@ -211,14 +292,15 @@
     
      <select class="language-selector" id="language-select">
         <option value="ko" selected>KR</option>
-        <!-- <option value="en">EN</option>
+        <option value="en">EN</option>
         <option value="ja">JP</option>
-        <option value="zh">ZH</option> -->
+        <option value="zh">ZH</option>
       </select> 
     
-      <a href="pp.html" id="privacy-policy-link">Privacy Policy</a>
+      <a href="/" data-link>홈</a>
+      <a href="/pp.html" data-link>개인정보처리방침</a>
 
-      <p data-key="footerText">&copy; 2025 Dadanddot.com</p>
+      <p data-i18n="footerText">&copy; 2025 Dadanddot.com</p>
     </footer>
   </div>
 
@@ -258,6 +340,19 @@
   };
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Game",
+  "name": "숫자 결합 게임",
+  "description": "드래그 방식의 숫자 조합 퍼즐 게임",
+  "author": {
+    "@type": "Organization",
+    "name": "Dadanddot.com"
+  }
+}
 </script>
 
 </body>
