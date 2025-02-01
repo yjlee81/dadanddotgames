@@ -1,4 +1,4 @@
-import { initRouter } from './public/router.js';
+// import { initRouter } from './SORD/router.js';
 
 /***************************************************
  * Firebase 초기화 
