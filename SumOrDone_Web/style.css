@@ -602,21 +602,21 @@ position: relative;
 
 /* ===== 푸터 ===== */
 #footer-game {
-    padding: 10px;
-    font-size: 0.9rem;
-    background-color: #fafafa;
-    border-top: 1px solid #eee;
-    text-align: center;
-    margin-top: auto;
-    /* width: 100vw; */
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-around;
-    align-items: center;
-    /* height: 94px; */
-    gap: 10px;
-    margin-bottom: 40px;
-    flex-wrap: wrap;
+  padding: 10px;
+  font-size: 0.9rem;
+  background-color: #fafafa;
+  border-top: 1px solid #eee;
+  text-align: center;
+  /* padding-top: 40px; */
+  /* width: 100vw; */
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-around;
+  align-items: center;
+  /* height: 94px; */
+  gap: 10px;
+  margin-top: 40px;
+  flex-wrap: wrap;
 }
 
 /* ===== 푸터 ===== */
