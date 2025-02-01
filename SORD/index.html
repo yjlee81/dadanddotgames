@@ -9,8 +9,8 @@
   <meta property="og:image" content="https://dadanddot.com/images/how-to-play.gif">
   <meta name="google-site-verification" content="your_verification_code">
 
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
@@ -29,28 +29,61 @@
   <link rel="stylesheet" href="style.css">
 
   <!-- 게임 스크립트 -->
+  <script src="router.js"></script>
   <script src="script.js" defer></script>
 
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4F9B3DMB67"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4F9B3DMB67');
+  </script>
+
+  <!-- Prerender.io 설정 -->
   <script>
     window.prerender = {
       prerenderHost: 'https://service.prerender.io/',
       prerenderToken: 'UFHQyXAjlqwexr7OvYot'
     };
   </script>
-  <script src="https://prerender.io/js/prerender.js"></script>
+  <script src="https://cdn.prerender.io/js/prerender.js?token=UFHQyXAjlqwexr7OvYot"></script>
 
   <script>
-    Prerenderer.init({
-      followMainDocument: true,
-      timeout: 10000,
-      renderAfterDocumentEvent: 'prerender-trigger'
-    });
-    
     document.addEventListener('DOMContentLoaded', () => {
+      // Prerenderer가 전역 변수로 정의되었는지 확인
+      if (typeof Prerenderer !== 'undefined') {
+        Prerenderer.init({
+          followMainDocument: true,
+          timeout: 10000,
+          renderAfterDocumentEvent: 'prerender-trigger'
+        });
+      }
+    });
+  </script>
+
+  <!-- 프리렌더링 라이브러리 로드 방식 수정 -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/prerenderer-library@latest/dist/prerenderer.umd.min.js"></script> -->
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 프리렌더 트리거 유지
       setTimeout(() => {
         document.dispatchEvent(new Event('prerender-trigger'));
       }, 1000);
+      
+      // 기타 초기화 코드
     });
+  </script>
+
+  <!-- Firebase 스크립트 아래에 GA4 추가 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4F9B3DMB67"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4F9B3DMB67'); // 실제 측정ID 사용
   </script>
 </head>
 <body>
@@ -68,14 +101,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <button id="google-login">Google로 로그인</button>
         <button id="apple-login">Apple로 로그인</button>
       </div>
+      
     
     </header>
     <div class="title-container">
     <h2 id="titleLabel" data-i18n="mainTitle">숫자 결합 게임</h2>
-    <h3 id="version">v.0.7.11a</h3>
+    <h3 id="version">v.0.7.12a</h3>
     
   </div>
-    <p class="subtitle" data-i18n="welcomeMessage">간단하지만 연산과 집중력이 필요한 숫자 퍼즐게임</p>
+  <p class="subtitle">총 <span id="game-count-value">0</span>번 플레이를 기록한 숫자 퍼즐게임</p>
     <!-- <p class="subtitle" data-key="welcomeMessage">간단하지만 연산과 집중력이 필요한 숫자 퍼즐게임</p> -->
 
     <!-- 게임 옵션 (목표합 & 난이도) -->
@@ -202,6 +236,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="countdown-number">3</div>
       <div class="countdown-number">2</div>
       <div class="countdown-number">1</div>
+      <div class="countdown-start" style="display: none;">Start!</div>
     </div>
   </div>
 
