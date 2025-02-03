@@ -51,7 +51,8 @@ const translations = {
     medium: "Medium",
     hard: "Hard",
     failSum: "Sum {target} required!",
-    hintMessage: "Drag to connect numbers"
+    hintMessage: "Drag to connect numbers",
+    noCombinationToast: "You can't make the TargetSum anymore. Hit Done!"
   },
   ko: {
     mainTitle: "숫자 결!합! 게임",
@@ -81,7 +82,8 @@ const translations = {
     medium: "보통",
     hard: "어려움",
     failSum: "목표합이 {target}이 아니예요",
-    hintMessage: "드래그해서 일렬로 선택하세요"
+    hintMessage: "드래그해서 일렬로 선택하세요",
+    noCombinationToast: "더이상 목표합을 만들수 없으니 Done!을 누르세요"
   },
   ja: {
     mainTitle: "数字結合ゲーム",
@@ -111,7 +113,8 @@ const translations = {
     medium: "普通",
     hard: "難しい",
     failSum: "目標合計 {target} 必要です!",
-    hintMessage: "数字を接続するにはドラッグしてください"
+    hintMessage: "数字を接続するにはドラッグしてください",
+    noCombinationToast: "もう目標合計を作れないので、Done!を押してください"
   },
   zh: {
     mainTitle: "数字合并游戏",
@@ -141,7 +144,8 @@ const translations = {
     medium: "中等",
     hard: "困难",
     failSum: "需要總和 {target}!",
-    hintMessage: "拖動以連接數字"
+    hintMessage: "拖動以連接數字",
+    noCombinationToast: "不能再製作目標總和了，請按Done!"
   }
 };
 let currentLanguage = "ko";
@@ -1028,49 +1032,57 @@ function showFloatingScore(baseScore, lengthBonus, emptyBonus, tileElement) {
   // 타일의 위치 정보를 가져옵니다.
   const rect = tileElement.getBoundingClientRect();
 
-  // floating score 표시를 위한 컨테이너 생성
+  // floating score들을 감싸는 컨테이너 생성 (타일 위 중앙에 위치)
   const container = document.createElement('div');
   container.className = 'floating-score-container';
   container.style.position = 'absolute';
   container.style.left = (rect.left + rect.width / 2) + 'px';
-  container.style.top = (rect.top - 30) + 'px'; // 타일 위쪽에 표시
+  container.style.top = (rect.top - 50) + 'px'; // 타일 위쪽에 약간 더 띄워서 표시
   container.style.transform = 'translateX(-50%)';
   container.style.zIndex = '9999';
+  container.style.display = 'flex';
+  container.style.flexDirection = 'column';
+  container.style.alignItems = 'center';
 
-  // 기본 획득 점수 (목표합점수) 표시
-  const baseElem = document.createElement('div');
-  baseElem.className = 'floating-score base';
-  baseElem.textContent = baseScore;
-  container.appendChild(baseElem);
+  // 각 박스가 순차적으로 나타나기 위한 딜레이 (ms)
+  const delayIncrement = 100;
+  let currentDelay = 0;
 
-  // 길이 보너스 (칸당 +5) 표시
+  // 기본 획득 점수 박스 생성
+  const baseBox = document.createElement('div');
+  baseBox.className = 'floating-score-box base';
+  baseBox.textContent = baseScore;
+  baseBox.style.animationDelay = currentDelay + 'ms';
+  container.appendChild(baseBox);
+  currentDelay += delayIncrement;
+
+  // 길이 보너스 박스 (문구 없이 '+ 점수'만 표시)
   if (lengthBonus > 0) {
-    const lengthElem = document.createElement('div');
-    lengthElem.className = 'floating-score bonus length';
-    lengthElem.textContent = '+ ' + lengthBonus + ' 길이 보너스';
-    container.appendChild(lengthElem);
+    const bonusBox = document.createElement('div');
+    bonusBox.className = 'floating-score-box bonus';
+    bonusBox.textContent = '+ ' + lengthBonus;
+    bonusBox.style.animationDelay = currentDelay + 'ms';
+    container.appendChild(bonusBox);
+    currentDelay += delayIncrement;
   }
 
-  // 빈칸 보너스 (빈칸당 +10) 표시
+  // 빈칸 보너스 박스 (문구 없이 '+ 점수'만 표시)
   if (emptyBonus > 0) {
-    const emptyElem = document.createElement('div');
-    emptyElem.className = 'floating-score bonus empty';
-    emptyElem.textContent = '+ ' + emptyBonus + ' 빈칸 보너스';
-    container.appendChild(emptyElem);
+    const bonusBox = document.createElement('div');
+    bonusBox.className = 'floating-score-box bonus';
+    bonusBox.textContent = '+ ' + emptyBonus;
+    bonusBox.style.animationDelay = currentDelay + 'ms';
+    container.appendChild(bonusBox);
+    currentDelay += delayIncrement;
   }
 
   // 문서에 추가
   document.body.appendChild(container);
 
-  // 애니메이션 효과: 약간의 지연 후 fade-out, 위로 이동 효과 적용
-  setTimeout(() => {
-    container.classList.add('animate');
-  }, 50);
-
-  // 애니메이션 후 DOM에서 제거 (1초 후)
+  // 애니메이션 완료 후 컨테이너 제거 (총 애니메이션 기간 1.5초 정도)
   setTimeout(() => {
     container.remove();
-  }, 1000);
+  }, 2000);
 }
 
 function showFinalScore(score) {

@@ -144,7 +144,9 @@
     
     <h2 id="titleLabel" data-i18n="mainTitle">숫자 결합 게임</h2>
     <p id="version">v.0.7.14</p>
-    <img src="../images/how-to-play.gif" alt="how-to-play" class="how-to-play-image">
+    
+    <!-- <img src="../images/how-to-play.gif" alt="how-to-play" class="how-to-play-image"> -->
+    
     
     <p class="subtitle">총 <span id="game-count-value">0</span>번 플레이를 기록한 숫자 퍼즐게임</p>
     
@@ -175,6 +177,18 @@
       <button id="start-game-btn" data-i18n="startGame" onclick="onStartGame()">지금 시작하기 ></button>  
     </div>
   </div>
+  <section id="tutorial-section" class="info-section">
+    <h3 data-i18n="howToPlay">How to Play</h3>
+    
+    <p><strong>1. 드래그해서 일렬로 숫자들을 선택하세요</strong></p>
+    <img id="tut1" src="../images/tut1.gif" alt="Drag to select numbers in a line">
+    
+    <p><strong>2. 더이상 목표합을 만들수 없으면 "Done!"을 누르세요.</strong></p>
+    <img src="../images/tut2.png" alt="hit Done! when you can't make the TargetSum">
+    
+    <p><strong>3. 숫자칸이 길수록 보너스점수를 얻을 수 있어요.</strong></p>
+    <img src="../images/tut3.png" alt="get bonus scores on lengthy lines">
+  </section>
 </div>
   <!-- [3] 랭킹 화면 -->
 <div id="ranking" class="info-section" style="display: none;">
@@ -235,10 +249,15 @@
   <!-- How to Play -->
   <section id="tutorial-section" class="info-section">
     <h3 data-i18n="howToPlay">How to Play</h3>
-    <div id="how-to-play-image"><img src="../images/how-to-play.gif" alt="how-to-play"></div>
+    
     <p><strong>1. 드래그해서 일렬로 숫자들을 선택하세요</strong></p>
+    <img src="../images/tut1.png" alt="Drag to select numbers in a line">
+    
     <p><strong>2. 더이상 목표합을 만들수 없으면 "Done!"을 누르세요.</strong></p>
+    <img src="../images/tut2.png" alt="hit Done! when you can't make the TargetSum">
+    
     <p><strong>3. 숫자칸이 길수록 보너스점수를 얻을 수 있어요.</strong></p>
+    <img src="../images/tut3.png" alt="get bonus scores on lengthy lines">
   </section>
 
   <!-- FAQ -->

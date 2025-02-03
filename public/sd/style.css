@@ -609,35 +609,56 @@ position: relative;
   
   /* ===== [플로팅 점수] ===== */
   .floating-score-container {
-    transition: opacity 0.8s ease, transform 0.8s ease;
-    opacity: 1;
-    transform: translateY(0);
-    text-align: center;
+    pointer-events: none;
   }
 
-  /* 애니메이션 효과: 점차 사라지며 위로 이동 */
-  .floating-score-container.animate {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-
-  /* 기본 floating score 스타일 */
-  .floating-score {
-    
-    margin: 2px 0;
-  }
-
-  /* 기본 획득 점수 스타일 */
-  .floating-score.base {
+  /* 각 floating score 박스: 둥근 모서리의 배경 박스 형태로 표시 */
+  .floating-score-box {
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 8px;
+    margin: 3px 0;
+    font-family: 'Arial', sans-serif;
     font-size: 2rem;
-    color: #ffffff;
-    text-shadow: 1px 1px 2px #000;
+    opacity: 0;
+    transform: scale(0);
+    /* pop 애니메이션과 fadeOut 애니메이션을 순차적으로 적용
+       (pop: 0.3s, fadeOut: 0.5s 시작은 0.8s 후) */
+    animation: pop 0.3s forwards, fadeOut 0.5s forwards 0.8s;
   }
 
-  /* 보너스 점수 스타일 (길이 및 빈칸 보너스) */
-  .floating-score.bonus {
+  /* 보너스 박스는 기본보다 약간 작은 폰트와 금색 글씨로 표현 */
+  .floating-score-box.bonus {
     font-size: 1.4rem;
-    color: #ffd700; /* 보너스 점수는 금색 효과 */
+    color: #ffd700;
+  }
+
+  /* pop 애니메이션: 박스가 뿅뿅 나타남 */
+  @keyframes pop {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    60% {
+      transform: scale(1.1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* fadeOut 애니메이션: 점차 사라짐 */
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
   }
 
 /***************************************************
@@ -662,26 +683,48 @@ position: relative;
 
 /* ===== how-to-play, faq, about ===== */
 .info-section {
-  width: 90%;
-  max-width: 640px;
-  margin: 5%;
-  
-  background: #fdfdfd;
-  border-radius: 16px;
+  background: #fdfdfd; /* 밝은 배경 */
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 800px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.how-to-play-image {
-  display: flex;
-  justify-content: center;
-  width: 256px;
+/* 섹션 제목 스타일 */
+.info-section h3 {
+  font-size: 2.2rem;
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #eaeaea;
+  padding-bottom: 10px;
 }
-.info-section h2 {
-  margin-top: 0;
-  margin-bottom: 15px;
+
+/* 설명 텍스트 스타일 */
+.info-section p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin: 15px 0;
+  text-align: center;
 }
-.info-section ul {
-  list-style: disc;
-  margin-left: 20px;
+
+/* 튜토리얼 이미지 스타일 */
+.info-section img {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  margin: 0 auto 25px;
+  border-radius: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 이미지 호버 시 확대 및 그림자 효과 */
+.info-section img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* ===== 푸터 ===== */
@@ -1029,13 +1072,3 @@ nav a[data-link] {
   background: rgba(255,255,255,0.8);
 }
 
-
-.how-to-play-image {
-  width: 200px;
-  height: auto;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding: 5px;
-  background: #fafafa;
-  border: 5px;
-}
