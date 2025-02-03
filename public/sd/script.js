@@ -59,7 +59,8 @@ const translations = {
     levelFinal_label: "Final Level (20pts)",
     howToPlayDetail1: "1. Drag to select numbers in a straight line",
     howToPlayDetail2: "2. If you cannot make the TargetSum, press Done!",
-    howToPlayDetail3: "3. Longer lines earn more bonus points!"
+    howToPlayDetail3: "3. Longer lines earn more bonus points!",
+    hintMessage: "Drag to select numbers"
   },
   ko: {
     mainTitle: "숫자 결합 게임",
@@ -97,7 +98,9 @@ const translations = {
     levelFinal_label: "최종 Level (20점)",
     howToPlayDetail1: "1. 드래그해서 일렬로 숫자들을 선택하세요",
     howToPlayDetail2: "2. 더이상 목표합을 만들 수 없으면 Done!을 누르세요.",
-    howToPlayDetail3: "3. 숫자칸이 길수록 보너스점수를 얻을 수 있어요."
+    howToPlayDetail3: "3. 숫자칸이 길수록 보너스점수를 얻을 수 있어요.",
+    hintMessage: "드래그하여 숫자를 선택하세요."
+
   },
   ja: {
     mainTitle: "数字結合ゲーム",
@@ -136,7 +139,8 @@ const translations = {
     levelFinal_label: "最終 Level (20点)",
     howToPlayDetail1: "1. 直線で数字をドラッグして選択",
     howToPlayDetail2: "2. もう合計が作れなければDone!を押す",
-    howToPlayDetail3: "3. 長いラインほどボーナス点を獲得"
+    howToPlayDetail3: "3. 長いラインほどボーナス点を獲得",
+    hintMessage: "ドラッグして数字を選択"
   },
   zh: {
     mainTitle: "数字合并游戏",
@@ -174,7 +178,8 @@ const translations = {
     levelFinal_label: "最终 Level (20分)",
     howToPlayDetail1: "1. 拖动数字成一条线连接",
     howToPlayDetail2: "2. 如果无法再组成目标值，请按Done!",
-    howToPlayDetail3: "3. 数字越长，获得的奖励分数越高"
+    howToPlayDetail3: "3. 数字越长，获得的奖励分数越高",
+    hintMessage: "拖动数字成一条线连接"
   }
 };
 let currentLanguage = "ko";
@@ -1109,62 +1114,78 @@ function showIOSToastMessage(msg, duration = 2000) {
   }, duration);
 }
 
+/**
+ * showFloatingScore - 오른쪽으로 이동하는 점수 이펙트 버전
+ */
 function showFloatingScore(baseScore, lengthBonus, emptyBonus, tileElement) {
-  // 타일의 위치 정보를 가져옵니다.
+  // 타일의 위치
   const rect = tileElement.getBoundingClientRect();
 
-  // floating score들을 감싸는 컨테이너 생성 (타일 위 중앙에 위치)
+  // 점수 컨테이너
   const container = document.createElement('div');
   container.className = 'floating-score-container';
   container.style.position = 'absolute';
   container.style.left = (rect.left + rect.width / 2) + 'px';
-  container.style.top = (rect.top - 50) + 'px'; // 타일 위쪽에 약간 더 띄워서 표시
-  container.style.transform = 'translateX(-50%)';
+  container.style.top = (rect.top + rect.height / 2) + 'px';
+  container.style.transform = 'translate(-50%, -50%)';
   container.style.zIndex = '9999';
-  container.style.display = 'flex';
-  container.style.flexDirection = 'column';
-  container.style.alignItems = 'center';
 
-  // 각 박스가 순차적으로 나타나기 위한 딜레이 (ms)
-  const delayIncrement = 300;
-  let currentDelay = 0;
+  // 점수 박스 생성 함수
+  function createScoreBox(text, extraClass) {
+    const box = document.createElement('div');
+    box.classList.add('floating-score-box', extraClass);
+    box.textContent = text;
+    return box;
+  }
 
-  // 기본 획득 점수 박스 생성
-  const baseBox = document.createElement('div');
-  baseBox.className = 'floating-score-box base';
-  baseBox.textContent = baseScore;
-  baseBox.style.animationDelay = currentDelay + 'ms';
-  container.appendChild(baseBox);
-  currentDelay += delayIncrement;
+  // 점수들을 담는 컨테이너 (가로 방향)
+  const stack = document.createElement('div');
+  stack.style.display = 'flex';
+  stack.style.flexDirection = 'row';   // ← 수평 배열
+  stack.style.alignItems = 'center';
+  stack.style.gap = '8px';            // 점수 박스 간격(가로)
+  container.appendChild(stack);
 
-  // 길이 보너스 박스 (문구 없이 '+ 점수'만 표시)
+  // 기본 점수
+  if (baseScore > 0) {
+    const baseBox = createScoreBox(`+${baseScore}`, 'base-score');
+    stack.appendChild(baseBox);
+  }
+
+  // 길이 보너스
   if (lengthBonus > 0) {
-    const bonusBox = document.createElement('div');
-    bonusBox.className = 'floating-score-box bonus';
-    bonusBox.textContent = /*'+ ' + */ lengthBonus;
-    bonusBox.style.animationDelay = currentDelay + 'ms';
-    container.appendChild(bonusBox);
-    currentDelay += delayIncrement;
+    const lengthBox = createScoreBox(`+${lengthBonus} bonus`, 'length-bonus');
+    stack.appendChild(lengthBox);
   }
 
-  // 빈칸 보너스 박스 (문구 없이 '+ 점수'만 표시)
+  // 빈칸 보너스
   if (emptyBonus > 0) {
-    const bonusBox = document.createElement('div');
-    bonusBox.className = 'floating-score-box bonus';
-    bonusBox.textContent = /*'+ ' + */ emptyBonus;
-    bonusBox.style.animationDelay = currentDelay + 'ms';
-    container.appendChild(bonusBox);
-    currentDelay += delayIncrement;
-    triggerHapticFeedback("selection");
+    const emptyBox = createScoreBox(`+${emptyBonus} bonus`, 'empty-bonus');
+    stack.appendChild(emptyBox);
   }
 
-  // 문서에 추가
   document.body.appendChild(container);
 
-  // 애니메이션 완료 후 컨테이너 제거 (총 애니메이션 기간 1.5초 정도)
+  // 애니메이션 클래스 부여 (간격을 두고 순차로 등장)
+  stack.querySelectorAll('.floating-score-box').forEach((box, index) => {
+    const delay = index * 0.15; 
+    box.style.animationDelay = `${delay}s`;
+    box.classList.add('score-slide-right'); // ← 오른쪽 이동용 CSS 애니메이션
+  });
+
+  // 일정 시간 후 컨테이너 제거
   setTimeout(() => {
     container.remove();
-  }, 5000);
+  }, 3000);
+
+  // info-box의 스코어 업데이트 시 강조 효과
+  const scoreEl = document.getElementById('score');
+  if (scoreEl) {
+    scoreEl.classList.add('score-update-highlight');
+    setTimeout(() => {
+      scoreEl.classList.remove('score-update-highlight');
+    }, 1000);
+  }
 }
 
 function showFinalScore(score) {
