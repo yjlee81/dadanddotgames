@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <base href="/sd/">
   <meta charset="UTF-8">
   <title>숫자 결합 게임</title>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
@@ -44,11 +45,11 @@
   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth-compat.js"></script>
   
   <!-- 스타일 -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/sd/style.css">
 
   <!-- 게임 스크립트 -->
-  <script src="router.js"></script>
-  <script src="script.js" defer></script>
+  <script src="/sd/router.js"></script>
+  <script src="/sd/script.js" defer></script>
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-4F9B3DMB67"></script>
@@ -124,7 +125,7 @@
       <div class="tab-container">
         <button class="tab-link active" data-link="/sd/">Play</button>
         <button class="tab-link" data-link="/sd/ranking">Rank</button>
-        <button class="tab-link" data-link="/sd/tutorial">Tutorial</button>
+        <!-- <button class="tab-link" data-link="/sd/tutorial">Tutorial</button> -->
       </div>
     </nav>
     <!-- </nav>
@@ -179,7 +180,6 @@
   </div>
   <section id="tutorial-section" class="info-section">
     <h3 data-i18n="howToPlay">How to Play</h3>
-    
     <p><strong>1. 드래그해서 일렬로 숫자들을 선택하세요</strong></p>
     <img id="tut1" src="../images/tut1.gif" alt="Drag to select numbers in a line">
     
@@ -329,7 +329,6 @@
 
   <a href="/sd" data-link>홈</a>
   <a href="/sd/ranking" data-link>랭킹</a>
-  <a href="/sd/tutorial" data-link>튜토리얼</a>
   <a href="/pp.html" data-link>개인정보처리방침</a>
 
   <select class="language-selector" id="language-select">

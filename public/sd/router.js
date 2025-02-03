@@ -96,7 +96,9 @@
     document.getElementById('ranking').style.display = 'block';
     document.getElementById('tutorial').style.display = 'none';
     document.getElementById('faq').style.display = 'none';
-    
+
+    // Firebase에서 스코어 데이터를 불러와 표시
+    fetchScoresFromFirebase(displayScores);
   }
 
   // How-to-play 페이지 표시

@@ -440,6 +440,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   fetchAndDisplayGameCount();
 
+
+  // Firebase에서 스코어 데이터를 불러와 표시
+  fetchScoresFromFirebase(displayScores);
+
 });
 
 

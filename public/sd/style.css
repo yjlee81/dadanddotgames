@@ -917,6 +917,16 @@ position: relative;
   background-color: #e0e0e0;
 }
 
+.filter-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+
 .title-container {
   display: flex;
   justify-content: space-between;
