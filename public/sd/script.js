@@ -821,7 +821,7 @@ function checkLine(start, end) {
   } else {
     markLine(linePositions, "fail-line");
     const failMessage = translations[currentLanguage]?.failSum 
-                      || `Sum ${targetSum} required!`;
+                      || `목표합이 ${targetSum}이어야 합니다!`;
     showIOSToastMessage(failMessage.replace("{target}", targetSum), 1500);
     // 실패시 감점 제거
     /* totalScore = Math.max(0, totalScore  - targetSum );
