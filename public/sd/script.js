@@ -1064,7 +1064,7 @@ function showFloatingScore(baseScore, lengthBonus, emptyBonus, tileElement) {
   if (lengthBonus > 0) {
     const bonusBox = document.createElement('div');
     bonusBox.className = 'floating-score-box bonus';
-    bonusBox.textContent = '+ ' + lengthBonus;
+    bonusBox.textContent = /*'+ ' + */ lengthBonus;
     bonusBox.style.animationDelay = currentDelay + 'ms';
     container.appendChild(bonusBox);
     currentDelay += delayIncrement;
@@ -1074,10 +1074,11 @@ function showFloatingScore(baseScore, lengthBonus, emptyBonus, tileElement) {
   if (emptyBonus > 0) {
     const bonusBox = document.createElement('div');
     bonusBox.className = 'floating-score-box bonus';
-    bonusBox.textContent = '+ ' + emptyBonus;
+    bonusBox.textContent = /*'+ ' + */ emptyBonus;
     bonusBox.style.animationDelay = currentDelay + 'ms';
     container.appendChild(bonusBox);
     currentDelay += delayIncrement;
+    triggerHapticFeedback("selection");
   }
 
   // 문서에 추가
