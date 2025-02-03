@@ -19,9 +19,37 @@
   <script src="script.js" defer></script>
 </head>
 <body>
-  
+    <!-- [1] 헤더 -->
+      <header class="main-header">
+        <div class="header-left">
+          <!-- <a href="/" class="logo-link">
+            <img src="/images/dnd_logo_tr_small.png" alt="Dad&Dot Games 로고" class="logo">
+          </a>
+          <div class="logo-divider">|</div> -->
+          <a href="/sd/" class="logo-link">
+            <img src="/images/sd_s_128.png" alt="숫자결합 게임 로고" class="logo">
+          </a>
+        </div>
+        <nav class="gnb">
+          <div class="tab-container">
+            <button class="tab-link active" data-link="/sd/">Play</button>
+            <button class="tab-link" data-link="/sd/ranking">Rank</button>
+            <!-- <button class="tab-link" data-link="/sd/tutorial">Tutorial</button> -->
+          </div>
+        </nav>
 
-  <!-- [1] 첫화면 -->
+        
+        <div class="header-right">
+          <select class="language-selector" id="header-language-select">
+            <option value="ko" selected>KR</option>
+            <option value="en">EN</option>
+            <option value="ja">JP</option>
+            <option value="zh">ZH</option>
+          </select>
+        </div>
+      </header>
+
+      <!-- [2] 타이틀 화면 -->
   <div id="title-screen">
     <div class="title-container">
     <h2 id="titleLabel" data-key="mainTitle">숫자 결합 게임</h2>
@@ -87,17 +115,18 @@
     
 
     <!-- How to Play -->
-    <section id="how-to-play" class="info-section">
-      <h3>How to Play</h3>
-      <div id="how-to-play-image"><img src="images/how-to-play.gif" alt="how-to-play"></div>
-      <p><strong>숫자 결!합!</strong>은 보드에 있는 숫자를 드래그해서 '목표합(Goal)'을 만드는 게임이에요. 가로, 세로, 대각선으로 연속된 칸을 선택해 합이 목표값과 일치하면 점수를 얻을 수 있어요.</p>
-      <ul>
-        <li><strong>목표합(Goal)</strong>: 기본적으로 10~20 사이에서 선택할 수 있어요.</li>
-        <!-- <li><strong>난이도</strong>: 6x6(쉬움), 8x8(보통), 10x10(어려움)</li>   -->
-        <li><strong>드래그 조작</strong>: PC에서는 마우스로 드래그하고, 모바일에서는 터치로 드래그하면 돼요.</li>
-        <li><strong>추가 점수</strong>: 빈칸(사라진 숫자)을 포함하거나, 길이가 길수록 더 많은 점수를 얻을 수 있어요.</li>
-      </ul>
-    </section>
+    <section id="tutorial-section" class="info-section">
+    <h3 data-i18n="howToPlay">How to Play</h3>
+    
+    <p><strong>1. 드래그해서 일렬로 숫자들을 선택하세요</strong></p>
+    <img src="./images/tut1.gif" alt="Drag to select numbers in a line">
+    
+    <p><strong>2. 더이상 목표합을 만들수 없으면 "Done!"을 누르세요.</strong></p>
+    <img src="./images/tut2.png" alt="hit Done! when you can't make the TargetSum">
+    
+    <p><strong>3. 숫자칸이 길수록 보너스점수를 얻을 수 있어요.</strong></p>
+    <img src="./images/tut3.png" alt="get bonus scores on lengthy lines">
+  </section>
 
     <!-- FAQ -->
     <section id="faq" class="info-section">
@@ -129,14 +158,14 @@
     </section>
 
     <footer id="footer">
-      select class="language-selector" id="language-select">
+      <select class="language-selector" id="language-select">
         
         <option value="ko" selected>KR</option>
         <!-- 번역 잠시 제외
          <option value="en">EN</option>
         <option value="ja">JP</option>
         <option value="zh">ZH</option> -->
-      </select> 
+      </select>
       <a href="pp.html" id="privacy-policy-link">Privacy Policy</a>
 
       <p data-key="footerText">&copy; 2025 Dadanddot.com</p>
@@ -175,7 +204,7 @@
             <option value="ja">JP</option>
             <option value="zh">ZH</option>
           </select>
-        </div> 
+        </div>
       </nav> -->
 
     </header>
@@ -214,7 +243,7 @@
         <!-- <option value="en">EN</option>
         <option value="ja">JP</option>
         <option value="zh">ZH</option> -->
-      </select> 
+      </select>
     
       <a href="pp.html" id="privacy-policy-link">Privacy Policy</a>
 

@@ -1,16 +1,16 @@
 /* ===== [기본 리셋] ===== */
 html, body {
-    margin: 0; 
-    padding: 0;
-    font-family: 'Helvetica Neue', 'Nunito', Arial, sans-serif;
-    /* 기존 단색 배경 대신, 은은한 그라데이션 배경 */
-    background: linear-gradient(135deg, #fafafa 0%, #e6f0f3 100%);
-    color: #333;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
+  margin: 0;
+  padding: 0;
+  font-family: 'Helvetica Neue', 'Nunito', Arial, sans-serif;
+  /* background: linear-gradient(135deg, #fafafa 0%, #e6f0f3 100%); */
+  /* background: #fafafa; */
+  color: #333;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
   button, select {
     cursor: pointer;
   }
@@ -33,17 +33,97 @@ html, body {
     --toast-background: rgba(0, 0, 0, 0.8);
   }
   
-  /* ===== [상단 헤더] ===== */
+   /* ===== [상단 헤더] ===== */
   .main-header {
     background: var(--header-background);
     color: var(--header-text-color);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 48px;
-    padding: 0 16px;
+    height: 60px;
+    padding: 0 24px;
     border-bottom: 1px solid var(--header-border-color);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  
+  .logo-link {
+    display: flex;
+    align-items: center;
+    transition: opacity 0.2s ease;
+  }
+  
+  .logo-link:hover {
+    opacity: 0.8;
+  }
+  
+  .logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+    border-radius: 4px;
+}
+  
+  .logo:hover {
+    transform: scale(1.1);
+  }
+  
+  .logo-divider {
+    color: #ccc;
+    font-size: 14px;
+    margin: 0 8px;
+  }
+  
+  .gnb {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .nav-link {
+    text-decoration: none;
+    color: var(--header-text-color);
+    font-size: 15px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+  
+  .nav-link:hover {
+    background-color: rgba(0, 122, 255, 0.1);
+    color: var(--accent-color);
+  }
+  
+  .nav-link[data-link] {
+    border: 1px solid var(--accent-color);
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  #header-language-select {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    font-size: 14px;
+    transition: all 0.2s ease;
+  }
+  
+  #header-language-select:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
   }
   
   .main-header h1 {
@@ -88,6 +168,8 @@ html, body {
     background-color: #fff;
   }
   
+
+
   /* ===== [첫화면] ===== */
   #title-screen {
     display: flex;
@@ -96,6 +178,7 @@ html, body {
     flex: 1;
     padding: 0 20px;
     background-color: #ffffff;
+    overflow-x: hidden;
   }
   #title-screen h2 {
     font-size: 1.8rem;
@@ -161,7 +244,6 @@ html, body {
     border-collapse: collapse;
     text-align: right;
     /* box-shadow: 0 0 6px rgba(0,0,0,0.07); */
-    background-color: #fff;
 }
   .score-table thead {
     background-color: #f9f9f9;
@@ -195,7 +277,7 @@ html, body {
     align-items: center;
     justify-content: flex-start;
     flex-direction: column;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.9);
     color: #fff;
     z-index: 9999;
     font-size: 3rem;
@@ -221,26 +303,12 @@ html, body {
     text-align: center;
     line-height: 100px;
     opacity: 0;
-    animation: countdownAnimation 1s ease-out forwards;
+    animation: countdown 1s ease-in-out forwards;
   }
   
-  @keyframes countdownAnimation {
-    0% {
-      transform: translateY(20px);
-      opacity: 0;
-    }
-    20% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    80% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    100% {
-      transform: translateY(-20px);
-      opacity: 0;
-    }
+  @keyframes countdown {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.5); }
   }
   
   .countdown-number:nth-child(1) {
@@ -285,6 +353,7 @@ html, body {
     border-bottom: 1px solid #ccc;
     height: 40px;
     align-content: center;
+    z-index: 5;
 }
 .info-box {
 display: inline-block;
@@ -292,12 +361,12 @@ text-align: center;
 width: 100px;
 }
 .info-box .label {
-font-size: 14px; 
+font-size: 14px;
 color: #333;
 display: block;
 }
 .info-box .data {
-font-size: 20px; 
+font-size: 20px;
 font-weight: bold;
 }
 
@@ -329,14 +398,14 @@ position: relative;
     font-weight: 600;
     color: #333;
     cursor: pointer;
-    /* transition: background-color 0.2s, transform 0.15s, box-shadow 0.15s; */
     user-select: none;
+    transition: font-size 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
   }
-
 
   #game-board td.drag-select-highlight {
     background-color: var(--tile-selected-color) !important;
     font-size: 1.4rem;
+    transform: scale(0.9);
   }
   /* ===== [하단버튼] ===== */
   .buttons-container {
@@ -516,56 +585,81 @@ position: relative;
   
   /* ===== [토스트 메시지] ===== */
   #toast-message {
-    position: fixed;
-    bottom: 168px;
+    position: absolute;
     left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background-color: var(--toast-background);
-    color: #fff;
-    padding: 14px 20px;
-    border-radius: 14px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    font-size: 0.95rem;
-    max-width: 300px;
-    width: 80vw;
-    white-space: nowrap;
-    text-align: center;
-    transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+    transform: translate(-50%, -150%);
     opacity: 0;
-    pointer-events: none;
-    z-index: 9999;
-  }
+    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 4;
+    margin-top: 130px;
+    min-width: 240px;
+    display: flex;
+    justify-content: center;
+}
+
+  /* .show 클래스가 적용되면 실제 위치(토스트 엘리먼트의 top 값 기준)로 내려오면서 보임 */
   #toast-message.show {
-    transform: translateX(-50%) translateY(0);
+    transform: translate(-50%, 0);
     opacity: 1;
   }
   
   /* ===== [플로팅 점수] ===== */
-  .floating-score {
-    position: absolute;
-    transform: translate(-50%, -50%) scale(1);
-    font-size: 24px;
-    font-weight: 700;
+  .floating-score-container {
     pointer-events: none;
-    animation: float-up-scale 1s forwards;
-    z-index: 1000;
   }
-  @keyframes float-up-scale {
+
+  /* 각 floating score 박스: 둥근 모서리의 배경 박스 형태로 표시 */
+  .floating-score-box {
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 8px;
+    margin: 3px 0;
+    font-family: 'Arial', sans-serif;
+    font-size: 2rem;
+    opacity: 0;
+    transform: scale(0);
+    /* pop 애니메이션과 fadeOut 애니메이션을 순차적으로 적용
+       (pop: 0.3s, fadeOut: 0.5s 시작은 0.8s 후) */
+    animation: pop 0.3s forwards, fadeOut 0.5s forwards 0.8s;
+  }
+
+  /* 보너스 박스는 기본보다 약간 작은 폰트와 금색 글씨로 표현 */
+  .floating-score-box.bonus {
+    font-size: 1.4rem;
+    color: #ffd700;
+  }
+
+  /* pop 애니메이션: 박스가 뿅뿅 나타남 */
+  @keyframes pop {
     0% {
+      transform: scale(0);
       opacity: 0;
-      transform: translate(-50%, -50%) scale(0.8);
     }
-    50% {
+    60% {
+      transform: scale(1.1);
       opacity: 1;
-      transform: translate(-50%, -50%) scale(1.2);
     }
     100% {
-      opacity: 0;
-      transform: translate(-50%, -50%) scale(1.0) translateY(-20px);
+      transform: scale(1);
+      opacity: 1;
     }
   }
 
-
+  /* fadeOut 애니메이션: 점차 사라짐 */
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
 
 /***************************************************
 30초 경고 애니메이션 (time-warning)
@@ -589,48 +683,66 @@ position: relative;
 
 /* ===== how-to-play, faq, about ===== */
 .info-section {
-  width: 90%;
-  max-width: 640px;
-  margin: 30px auto;
+  background: #fdfdfd;
+  border: 1px solid #ddd;
+  /* border-radius: 12px; */
   padding: 20px;
-  
-  background: rgba(255, 255, 255, 0.25); /* 반투명 흰색 */
-    backdrop-filter: blur(10px);           /* 글래스 효과의 핵심: 흐림(blur) */
-    -webkit-backdrop-filter: blur(10px);   /* Safari 등 WebKit 호환성 */
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* 살짝 그림자 */
-    border-radius: 16px;
+  /* margin: 20px auto; */
+  max-width: 800px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
-.how-to-play-image {
-  display: flex;
-  justify-content: center;
-  width: 256px;
+/* 섹션 제목 스타일 */
+.info-section h3 {
+  font-size: 2.2rem;
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #eaeaea;
+  padding-bottom: 10px;
 }
-.info-section h2 {
-  margin-top: 0;
-  margin-bottom: 15px;
+
+/* 설명 텍스트 스타일 */
+.info-section p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin: 15px 0;
+  text-align: center;
 }
-.info-section ul {
-  list-style: disc;
-  margin-left: 20px;
+
+/* 튜토리얼 이미지 스타일 */
+.info-section img {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  margin: 0 auto 25px;
+  border-radius: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 이미지 호버 시 확대 및 그림자 효과 */
+.info-section img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* ===== 푸터 ===== */
 #footer-game {
-    padding: 10px;
-    font-size: 0.9rem;
-    background-color: #fafafa;
-    border-top: 1px solid #eee;
-    text-align: center;
-    margin-top: auto;
-    /* width: 100vw; */
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-around;
-    align-items: center;
-    /* height: 94px; */
-    gap: 10px;
-    margin-bottom: 40px;
-    flex-wrap: wrap;
+  padding: 10px;
+  font-size: 0.9rem;
+  /* background-color: #fafafa; */
+  border-top: 1px solid #eee;
+  text-align: center;
+  /* padding-top: 40px; */
+  /* width: 100vw; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  /* height: 94px; */
+  gap: 10px;
+  margin-top: 40px;
+  flex-wrap: wrap;
 }
 
 /* ===== 푸터 ===== */
@@ -643,7 +755,7 @@ position: relative;
     margin-top: auto;
     width: 100vw;
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: row;
     justify-content: space-around;
     align-items: center;
     /* height: 94px; */
@@ -764,7 +876,7 @@ position: relative;
 
 #countdown-number {
     /* position: absolute;
-    font-size: 24px; 
+    font-size: 24px;
     bottom: 40%; */
     margin-top: 50px;
     display: inline-block;
@@ -776,12 +888,13 @@ position: relative;
 
 
 .score-table-title-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    align-content: center;
-    flex-direction: column;
-    margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  flex-direction: column;
+  /* margin: 12px; */
+  gap: 20px;
 }
 
 .chip {
@@ -804,13 +917,24 @@ position: relative;
   background-color: #e0e0e0;
 }
 
+.filter-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+
 .title-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   align-content: center;
   flex-direction: column;
   margin: 20px 0 10px 0;
+  min-height: 500px;
 }
 
 /* 폭죽 애니메이션 */
@@ -848,3 +972,114 @@ position: relative;
 .final-round .modal-button:hover {
   background-color: #ff8c00;
 }
+
+/* Start! 메시지 애니메이션 추가 */
+.countdown-start {
+  
+  font-size: 4rem;
+  font-weight: 900;
+  color: #ffd700;
+  text-shadow:
+    0 0 8px rgba(255, 215, 0, 0.8),
+    0 0 16px rgba(255, 215, 0, 0.6);
+  animation: startMessage 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) 3s forwards;
+}
+
+@keyframes startMessage {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.1) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* 파티클 효과 추가 */
+.countdown-start::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,215,0,0.3) 10%, transparent 10.01%);
+  animation: particles 0.5s ease-out 3.2s forwards;
+}
+
+@keyframes particles {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+#game-count-value {
+  font-weight: bold;
+}
+
+/* 네비게이션 스타일 추가 */
+nav {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--accent-color);
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+nav a:hover {
+  background-color: rgba(0, 122, 255, 0.1);
+}
+
+nav a[data-link] {
+  border: 1px solid var(--accent-color);
+}
+
+/* 탭 컨테이너 */
+.tab-container {
+  display: flex;
+  gap: 4px;
+  background: #f0f0f0;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+/* 탭 버튼 */
+.tab-link {
+  flex: 1;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+/* 활성화된 탭 */
+.tab-link.active {
+  background: #fff;
+  color: #000;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* 탭 호버 효과 */
+.tab-link:hover {
+  background: rgba(255,255,255,0.8);
+}
+

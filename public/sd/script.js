@@ -25,7 +25,6 @@ const db = firebase.database();
 const translations = {
   en: {
     mainTitle: "Number Merge Game",
-    version: "v.0.7.10",
     gameCount: "Total Played",
     startGame: "Start Now >",
     goal: "Goal",
@@ -43,20 +42,27 @@ const translations = {
     about: "About & Updates",
     privacyPolicy: "Privacy Policy",
     footerText: "© 2025 Dadanddot.com",
-    // 추가 문구들
-    welcomeMessage: "A simple but challenging number puzzle game that requires calculation and concentration",
-    rules: "Rules",
-    difficulty: "Difficulty",
-    easy: "Easy",
-    medium: "Medium",
-    hard: "Hard",
-    failSum: "Sum {target} required!",
-    hintMessage: "Drag to connect numbers",
-    noCombinationToast: "You can't make the TargetSum anymore. Hit Done!"
+    // 추가/수정된 key들
+    rank: "Rank",
+    playCountSubtitle1: "A number puzzle game with a total of ",
+    playCountSubtitle2: "plays",
+    level1_label: "Level 1 (10pts)",
+    level2_label: "Level 2 (11pts)",
+    level3_label: "Level 3 (12pts)",
+    level4_label: "Level 4 (13pts)",
+    level5_label: "Level 5 (14pts)",
+    level6_label: "Level 6 (15pts)",
+    level7_label: "Level 7 (16pts)",
+    level8_label: "Level 8 (17pts)",
+    level9_label: "Level 9 (18pts)",
+    level10_label: "Level 10 (19pts)",
+    levelFinal_label: "Final Level (20pts)",
+    howToPlayDetail1: "1. Drag to select numbers in a straight line",
+    howToPlayDetail2: "2. If you cannot make the TargetSum, press Done!",
+    howToPlayDetail3: "3. Longer lines earn more bonus points!"
   },
   ko: {
-    mainTitle: "숫자 결!합! 게임",
-    version: "v.0.7.10",
+    mainTitle: "숫자 결합 게임",
     gameCount: "총 플레이 횟수",
     startGame: "지금 시작하기 >",
     goal: "목표합",
@@ -74,20 +80,28 @@ const translations = {
     about: "소개 & 업데이트",
     privacyPolicy: "개인정보 처리방침",
     footerText: "© 2025 Dadanddot.com",
-    // 추가 문구들
-    welcomeMessage: "간단하지만 연산과 집중력이 필요한 숫자 퍼즐 게임",
-    rules: "규칙",
-    difficulty: "난이도",
-    easy: "쉬움",
-    medium: "보통",
-    hard: "어려움",
-    failSum: "목표합이 {target}이 아니예요",
-    hintMessage: "드래그해서 일렬로 선택하세요",
-    noCombinationToast: "더이상 목표합을 만들수 없으니 Done!을 누르세요"
+    // 추가/수정된 key들
+    rank: "순위",
+    playCountSubtitl1: "총 ",
+    playCountSubtitl2: "번 플레이를 기록한 숫자 퍼즐게임",
+    level1_label: "Level 1 (10점)",
+    level2_label: "Level 2 (11점)",
+    level3_label: "Level 3 (12점)",
+    level4_label: "Level 4 (13점)",
+    level5_label: "Level 5 (14점)",
+    level6_label: "Level 6 (15점)",
+    level7_label: "Level 7 (16점)",
+    level8_label: "Level 8 (17점)",
+    level9_label: "Level 9 (18점)",
+    level10_label: "Level 10 (19점)",
+    levelFinal_label: "최종 Level (20점)",
+    howToPlayDetail1: "1. 드래그해서 일렬로 숫자들을 선택하세요",
+    howToPlayDetail2: "2. 더이상 목표합을 만들 수 없으면 Done!을 누르세요.",
+    howToPlayDetail3: "3. 숫자칸이 길수록 보너스점수를 얻을 수 있어요."
   },
   ja: {
     mainTitle: "数字結合ゲーム",
-    version: "v.0.7.10",
+    version: "v.0.7.15",
     gameCount: "総プレイ回数",
     startGame: "今すぐ始める >",
     goal: "目標値",
@@ -105,20 +119,27 @@ const translations = {
     about: "紹介 & 更新",
     privacyPolicy: "プライバシーポリシー",
     footerText: "© 2025 Dadanddot.com",
-    // 추가 문구들
-    welcomeMessage: "計算力と集中力が必要なシンプルな数字パズルゲーム",
-    rules: "ルール",
-    difficulty: "難易度",
-    easy: "簡単",
-    medium: "普通",
-    hard: "難しい",
-    failSum: "目標合計 {target} 必要です!",
-    hintMessage: "数字を接続するにはドラッグしてください",
-    noCombinationToast: "もう目標合計を作れないので、Done!を押してください"
+    // 추가분
+    rank: "順位",
+    playCountSubtitle1: "全",
+    playCountSubtitle2: "回遊ばれた数字パズルゲーム",
+    level1_label: "Level 1 (10点)",
+    level2_label: "Level 2 (11点)",
+    level3_label: "Level 3 (12点)",
+    level4_label: "Level 4 (13点)",
+    level5_label: "Level 5 (14点)",
+    level6_label: "Level 6 (15点)",
+    level7_label: "Level 7 (16点)",
+    level8_label: "Level 8 (17点)",
+    level9_label: "Level 9 (18点)",
+    level10_label: "Level 10 (19点)",
+    levelFinal_label: "最終 Level (20点)",
+    howToPlayDetail1: "1. 直線で数字をドラッグして選択",
+    howToPlayDetail2: "2. もう合計が作れなければDone!を押す",
+    howToPlayDetail3: "3. 長いラインほどボーナス点を獲得"
   },
   zh: {
     mainTitle: "数字合并游戏",
-    version: "v.0.7.10",
     gameCount: "总游戏次数",
     startGame: "立即开始 >",
     goal: "目标值",
@@ -136,16 +157,24 @@ const translations = {
     about: "关于 & 更新",
     privacyPolicy: "隐私政策",
     footerText: "© 2025 Dadanddot.com",
-    // 추가 문구들
-    welcomeMessage: "简单但需要计算和专注力的数字益智游戏",
-    rules: "规则",
-    difficulty: "难度",
-    easy: "简单",
-    medium: "中等",
-    hard: "困难",
-    failSum: "需要總和 {target}!",
-    hintMessage: "拖動以連接數字",
-    noCombinationToast: "不能再製作目標總和了，請按Done!"
+    // 추가분
+    rank: "排名",
+    playCountSubtitle1: "一款总共可玩 ", 
+    playCountSubtitle2: " 次游玩的数字益智游戏",
+    level1_label: "Level 1 (10分)",
+    level2_label: "Level 2 (11分)",
+    level3_label: "Level 3 (12分)",
+    level4_label: "Level 4 (13分)",
+    level5_label: "Level 5 (14分)",
+    level6_label: "Level 6 (15分)",
+    level7_label: "Level 7 (16分)",
+    level8_label: "Level 8 (17分)",
+    level9_label: "Level 9 (18分)",
+    level10_label: "Level 10 (19分)",
+    levelFinal_label: "最终 Level (20分)",
+    howToPlayDetail1: "1. 拖动数字成一条线连接",
+    howToPlayDetail2: "2. 如果无法再组成目标值，请按Done!",
+    howToPlayDetail3: "3. 数字越长，获得的奖励分数越高"
   }
 };
 let currentLanguage = "ko";
@@ -181,9 +210,15 @@ const timerEl = document.getElementById("timer");
 
 let scores = []; // 전체 점수 데이터를 저장할 배열
 
-// 전역 변수: 현재 선택된 필터 값들
-let currentPeriodFilter = "today";  // 기본 기간 필터 (예: "today", "week", "all")
-let currentGoalFilter = 10;         // 기본 목표합 필터 (10부터 시작)
+// 전역 변수: 기본 필터 값을 전체로 변경
+let currentPeriodFilter = "all";  // 기본 기간 필터 (전체)
+let currentGoalFilter = "all";    // 기본 목표합 필터 (전체)
+
+/** 
+ * 최초 보드 렌더링 여부 확인 플래그 
+ * true면 첫 렌더에서만 샤라락 효과 적용 후 false로 바뀜
+ */
+let isFirstRender = true;
 
 /***************************************************
  * 게임 카운트 관련 (Firebase)
@@ -239,13 +274,14 @@ function fetchScoresFromFirebase(callback) {
   });
   
 }
+
 function displayScores(scoreList) {
   const tbody = document.querySelector("#score-table tbody");
   tbody.innerHTML = ""; // 기존 점수 목록 초기화
 
   scoreList
     .sort((a, b) => b.score - a.score) // 점수 내림차순 정렬
-    .slice(0, 10) // 상위 10개 선택
+    .slice(0, 100) // 상위 10개 선택
     .forEach((score, index) => {
       const row = document.createElement("tr");
       
@@ -278,10 +314,13 @@ function updateCompositeFiltering() {
     const row = rows[i];
     let showRow = true;
 
-    // 목표합 필터: 데이터 속성에서 'data-target' 값을 읽습니다.
+    // 목표합 필터: data-target 값은 숫자 형태 (예: 10, 11, ...)로 설정되어 있다고 가정합니다.
     const rowTarget = Number(row.getAttribute('data-target'));
-    if (!isNaN(rowTarget) && rowTarget !== currentGoalFilter) {
-      showRow = false;
+    // 현재 목표합 필터가 "all"이 아닐 경우에만 비교합니다.
+    if (currentGoalFilter !== 'all') {
+      if (!isNaN(rowTarget) && rowTarget !== Number(currentGoalFilter)) {
+        showRow = false;
+      }
     }
 
     // 기간 필터 검사 ('all'이면 기간 조건 무시)
@@ -296,12 +335,12 @@ function updateCompositeFiltering() {
     console.log(`Row ${i} display: ${row.style.display}`);
   }
 }
+  
 
 // 기간 필터 버튼 클릭 시 호출되는 함수
 function filterScores(period) {
   currentPeriodFilter = period;
-
-  // 기간 필터 그룹의 버튼 active 처리 (data-filter 속성 사용)
+  // 날짜 필터 그룹의 버튼 active 처리 (data-filter 속성 사용)
   const periodChips = document.querySelectorAll('.ranking-filters .filter-group:first-child .chip');
   periodChips.forEach(chip => {
     if (chip.getAttribute('data-filter') === period) {
@@ -310,14 +349,13 @@ function filterScores(period) {
       chip.classList.remove('active');
     }
   });
-
+  // 두 필터가 모두 반영되도록 업데이트 호출
   updateCompositeFiltering();
 }
 
 // 목표합 필터 버튼 클릭 시 호출되는 함수
 function filterScoresByGoal(goal) {
   currentGoalFilter = goal;
-
   // 목표합 필터 그룹의 버튼 active 처리
   const goalChips = document.querySelectorAll('.ranking-filters .filter-group:last-child .chip');
   goalChips.forEach(chip => {
@@ -327,7 +365,7 @@ function filterScoresByGoal(goal) {
       chip.classList.remove('active');
     }
   });
-
+  // 두 필터가 모두 반영되도록 업데이트 호출
   updateCompositeFiltering();
 }
 
@@ -405,13 +443,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   
-// 스코어 데이터 불러오기 + 테이블 렌더
-  fetchScoresFromFirebase((scores) => {
-    currentPeriodFilter = "all";
-    // 초기 필터링 적용
-    updateCompositeFiltering();
-    
-  });
   
   // 게임 시작 버튼
   const startGameBtn = document.getElementById("start-game-btn");
@@ -442,11 +473,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   // Firebase에서 스코어 데이터를 불러와 표시
-  fetchScoresFromFirebase(displayScores);
+  // fetchScoresFromFirebase(displayScores);
 
+  // 기본 필터 설정: 전체기간, 전체 라운드
+  const dateFilterElement = document.getElementById("dateFilter");
+  if (dateFilterElement) {
+    dateFilterElement.value = "all";
+  }
+  
+  const goalFilterElement = document.getElementById("goalFilter");
+  if (goalFilterElement) {
+    goalFilterElement.value = "all";
+  }
+  
+  // 페이지 로드 시 기본 필터에 맞게 필터 적용
+  applyFilters();
 });
 
 
+// 스코어 데이터 불러오기 + 테이블 렌더
+fetchScoresFromFirebase((scores) => {
+  document.getElementById("dateFilter").value = "all";
+  document.getElementById("goalFilter").value = "all";
+  applyFilters();
+  displayScores(scores);
+});
 /***************************************************
  * 게임 초기화
  ***************************************************/
@@ -460,38 +511,51 @@ function initializeGame() {
 }
 
 /***************************************************
- * 게임 시작 핸들러 (원래 버전 복구)
+ * 게임 시작 핸들러 (롤백된 카운트다운 버전)
  ***************************************************/
 window.onStartGame = function() {
   const selectedGoal = parseInt(document.getElementById("round-select").value, 10) || 10;
   targetSum = selectedGoal;
   
-  // URL 업데이트
+  // URL 업데이트(옵션)
   window.history.pushState(null, '', `/sd/play/${targetSum}`);
-  
+
   incrementGameCount();
 
-  // 2) 난이도 설정
-  const diffValue = 6; // 기본 6x6
-  BOARD_ROWS = diffValue;
-  BOARD_COLS = diffValue;
+  // 난이도(6x6)는 고정
+  BOARD_ROWS = 6;
+  BOARD_COLS = 6;
 
-  // 3) 화면 전환
+  // (1) 먼저 타이틀 숨기고 로딩바 오버레이 표시
   titleScreenEl.style.display = "none";
   countdownOverlayEl.style.display = "flex";
   gameContainerEl.style.display = "none";
 
-  // 4) 목표점수 표시
   showGoalOnCountdownOverlay(targetSum);
 
-  // 5) 3초 카운트다운 후 게임 시작
+  // (2) 로딩바 초기화 → 0%에서 시작
+  const loadingBarEl = document.getElementById("loading-bar");
+  loadingBarEl.style.width = "0%";
+
+  // (3) 아주 살짝 지연 후 3초 동안 0% → 100%
+  setTimeout(() => {
+    loadingBarEl.style.width = "100%";
+  }, 50);
+
+  /** 
+   * (4) 3초 뒤에 오버레이를 닫고, 
+   *     그 시점에 initRound()를 호출해야 '최초 렌더링' 시점과 화면 표출 시점 맞춤
+   */
   setTimeout(() => {
     countdownOverlayEl.style.display = "none";
     gameContainerEl.style.display = "flex";
-    initRound();
+
+    // 이 시점에 보드를 실제로 구성 (최초 렌더) → 샤라락
+    initRound();   // ← 여기서 처음 renderBoard()가 실행됨
     startTimer();
+
   }, 3000);
-}
+};
 
 /**
  * 카운트다운 오버레이에서 목표점수를 표시하는 헬퍼 함수
@@ -539,9 +603,9 @@ function renderBoard() {
   const boardEl = document.getElementById("game-board");
   boardEl.innerHTML = "";
 
-  for (let r=0; r<BOARD_ROWS; r++){
+  for (let r = 0; r < BOARD_ROWS; r++) {
     const tr = document.createElement("tr");
-    for (let c=0; c<BOARD_COLS; c++){
+    for (let c = 0; c < BOARD_COLS; c++) {
       const td = document.createElement("td");
       const val = boardData[r][c];
       td.textContent = (val !== null) ? val : "";
@@ -575,9 +639,22 @@ function renderBoard() {
         stopDragSelect();
       }, {passive:false});
 
+      // [핵심] isFirstRender가 true면 샤라락 클래스 부여
+      if (isFirstRender) {
+        td.classList.add("cell-appear");
+        // 순차 딜레이(선택)
+        const delay = 0.02 * (r * BOARD_COLS + c);
+        td.style.animationDelay = `${delay}s`;
+      }
+
       tr.appendChild(td);
     }
     boardEl.appendChild(tr);
+  }
+
+  // 렌더 종료 후 플래그 OFF → 이후에는 샤라락 없음
+  if (isFirstRender) {
+    isFirstRender = false;
   }
 
   // 힌트 라인 제거
@@ -699,7 +776,7 @@ function getLinePositions([r1, c1], [r2, c2]) {
   for (let i=0; i<steps; i++){
     curR += stepR;
     curC += stepC;
-    if (curR<0||curR>=BOARD_ROWS||curC<0||curC>=BOARD_COLS) return null;
+    if (curR<0||curR>=BOARD_ROWS||curC<0||curC>=BOARD_COLS) break;
     pos.push([curR, curC]);
   }
   return pos;
@@ -1049,7 +1126,7 @@ function showFloatingScore(baseScore, lengthBonus, emptyBonus, tileElement) {
   container.style.alignItems = 'center';
 
   // 각 박스가 순차적으로 나타나기 위한 딜레이 (ms)
-  const delayIncrement = 100;
+  const delayIncrement = 300;
   let currentDelay = 0;
 
   // 기본 획득 점수 박스 생성
@@ -1087,7 +1164,7 @@ function showFloatingScore(baseScore, lengthBonus, emptyBonus, tileElement) {
   // 애니메이션 완료 후 컨테이너 제거 (총 애니메이션 기간 1.5초 정도)
   setTimeout(() => {
     container.remove();
-  }, 2000);
+  }, 5000);
 }
 
 function showFinalScore(score) {
@@ -1304,4 +1381,147 @@ document.querySelectorAll('.tab-link').forEach(tab => {
 // 초기 로드 시 현재 경로에 맞는 탭 활성화
 const currentPath = window.location.pathname;
 updateTabState(currentPath);
+
+function applyFilters() {
+  const dateFilter = document.getElementById("dateFilter").value;
+  const goalFilter = document.getElementById("goalFilter").value;
+
+  // 필터 실행
+  const filteredData = scores.filter(function(item) {
+    // 1. 기간 필터
+    let dateMatch = false;
+    const itemDate = new Date(item.timestamp);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // 시간을 00:00으로 초기화해 당일 비교
+    const itemDateOnly = new Date(
+      itemDate.getFullYear(),
+      itemDate.getMonth(),
+      itemDate.getDate()
+    );
+    
+    if (dateFilter === "today") {
+      // 오늘과 같은 날짜만
+      dateMatch = (itemDateOnly.getTime() === today.getTime());
+    } else if (dateFilter === "week") {
+      // 최근 7일 이내 (오늘 포함)
+      const weekAgo = new Date(today);
+      // 6일 빼면 오늘 포함 7일간
+      weekAgo.setDate(today.getDate() - 6);
+      dateMatch = (itemDateOnly >= weekAgo && itemDateOnly <= today);
+    } else {
+      // 'all'인 경우
+      dateMatch = true;
+    }
+
+    // 2. 목표합 필터
+    let goalMatch = (goalFilter === "all") 
+                    || (item.target === parseInt(goalFilter, 10));
+
+    return dateMatch && goalMatch;
+  });
+
+  // 필터링된 데이터를 테이블에 렌더
+  renderRanking(filteredData);
+}
+
+function renderRanking(filteredData) {
+  const tbody = document.querySelector("#score-table tbody");
+  if (!tbody) {
+    console.error("Score table body not found");
+    return;
+  }
+  // 기존 행 초기화
+  tbody.innerHTML = "";
+
+  // 점수 높은 순으로 정렬
+  const sortedData = filteredData.sort((a, b) => b.score - a.score);
+
+  // 상위 n개만 표시 (예: 100개 또는 필요 개수)
+  const limitedData = sortedData.slice(0, 100);
+
+  limitedData.forEach((item, index) => {
+    const tr = document.createElement("tr");
+
+    // 순위
+    const tdRank = document.createElement("td");
+    tdRank.textContent = index + 1;
+    tr.appendChild(tdRank);
+
+    // 점수
+    const tdScore = document.createElement("td");
+    tdScore.textContent = item.score;
+    tr.appendChild(tdScore);
+
+    // 목표합
+    const tdTarget = document.createElement("td");
+    tdTarget.textContent = item.target;
+    tr.appendChild(tdTarget);
+
+    // 등록 시간 (item.timestamp)
+    const tdTime = document.createElement("td");
+    const time = new Date(item.timestamp);
+    tdTime.textContent = time.toLocaleString(); 
+    tr.appendChild(tdTime);
+
+    tbody.appendChild(tr);
+  });
+}
+
+function setFilter(filterType, value) {
+  if (filterType === 'date') {
+    currentPeriodFilter = value;
+    // 필요하다면 날짜 필터 UI 업데이트 코드 추가
+  } else if (filterType === 'goal') {
+    currentGoalFilter = value;
+    // 필요하다면 목표합 필터 UI 업데이트 코드 추가
+  }
+  updateCompositeFiltering();
+}
+
+function applyTranslations() {
+  const elements = document.querySelectorAll("[data-i18n]");
+  elements.forEach(element => {
+    const key = element.getAttribute("data-i18n");
+    if (translations[currentLanguage] && translations[currentLanguage][key]) {
+      element.textContent = translations[currentLanguage][key];
+    } else {
+      console.warn(`번역 키 "${key}"가 ${currentLanguage} 언어에 존재하지 않습니다.`);
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", applyTranslations);
+
+// 언어 변경 이벤트 리스너 추가
+document.getElementById('language-select').addEventListener('change', function(event) {
+  const selectedLanguage = event.target.value;
+  changeLanguage(selectedLanguage);
+});
+
+// 언어 변경 함수
+function changeLanguage(lang) {
+  currentLanguage = lang;
+  applyTranslations(); // 번역 적용
+  saveLanguagePreference(lang); // 언어 설정 저장 (옵션)
+}
+
+// 언어 설정 저장 (옵션: localStorage 사용)
+function saveLanguagePreference(lang) {
+  localStorage.setItem('preferredLanguage', lang);
+}
+
+// 초기 언어 설정 로드 (옵션: localStorage 사용)
+function loadLanguagePreference() {
+  const savedLanguage = localStorage.getItem('preferredLanguage');
+  if (savedLanguage) {
+    currentLanguage = savedLanguage;
+    document.getElementById('language-select').value = savedLanguage;
+    applyTranslations();
+  }
+}
+
+// DOM 로드 시 초기 언어 설정 적용
+document.addEventListener('DOMContentLoaded', function() {
+  loadLanguagePreference();
+});
 

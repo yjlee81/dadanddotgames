@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "sd_512.png",
+      "filename" : "tut1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "sd_1024.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "sd_2048.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

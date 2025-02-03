@@ -45,14 +45,14 @@
 		C6957C0B2D3A7FF5007AF6A1 /* Exceptions for "SumOrDoneGame" folder in "SumOrDoneGameTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				index.html,
+				router.js,
 			);
 			target = C6957BE42D392C15007AF6A1 /* SumOrDoneGameTests */;
 		};
 		C6957C0C2D3A7FF5007AF6A1 /* Exceptions for "SumOrDoneGame" folder in "SumOrDoneGameUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				index.html,
+				router.js,
 			);
 			target = C6957BEE2D392C15007AF6A1 /* SumOrDoneGameUITests */;
 		};
