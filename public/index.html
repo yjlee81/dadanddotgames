@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Dad&Dot Games - 모두가 즐길 수 있는 게임 포털</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="description" content="Dad&Dot Games에서는 최신 UX/UI와 정밀한 인터랙션 애니메이션을 통해 가족과 게이머 모두에게 특별한 경험을 제공합니다.">
+  <meta property="og:title" content="Dad&Dot Games - 모두가 즐길 수 있는 게임 포털">
+  <meta property="og:description" content="Dad&Dot Games에서는 최신 UX/UI와 정밀한 인터랙션 애니메이션을 통해 가족과 게이머 모두에게 특별한 경험을 제공합니다.">
+  <meta property="og:image" content="https://dadanddot.com/images/og-image.png">
+  <meta name="google-site-verification" content="your_verification_code">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Google Fonts: Nunito -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){
+      w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+      var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;
+      j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-WZLQ6BLJ');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8718440574316852" crossorigin="anonymous"></script>
+
+  <!-- Firebase (v9 compat 예시) -->
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth-compat.js"></script>
+  
+  <!-- 스타일 -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- 메인 스크립트 -->
+  <script src="router.js"></script>
+  <script src="script.js" defer></script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4F9B3DMB67"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4F9B3DMB67');
+  </script>
+
+  <!-- Prerender.io 설정 -->
+  <script>
+    window.prerender = {
+      prerenderHost: 'https://service.prerender.io/',
+      prerenderToken: 'UFHQyXAjlqwexr7OvYot'
+    };
+  </script>
+  <script src="https://cdn.prerender.io/js/prerender.js?token=UFHQyXAjlqwexr7OvYot"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof Prerenderer !== 'undefined') {
+        Prerenderer.init({
+          followMainDocument: true,
+          timeout: 10000,
+          renderAfterDocumentEvent: 'prerender-trigger'
+        });
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.dispatchEvent(new Event('prerender-trigger'));
+      }, 1000);
+    });
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyA98GLfDWJiLMwqnnHiFCqV9ptfwyyXNrk",
+      authDomain: "dadanddotgames.firebaseapp.com",
+      databaseURL: "https://dadanddotgames-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "dadanddotgames",
+      storageBucket: "dadanddotgames.appspot.com",
+      messagingSenderId: "205533056842",
+      appId: "1:205533056842:web:059897d5da4ab626c6bbb3",
+      measurementId: "G-4F9B3DMB67"
+    };
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Dad&Dot Games",
+    "url": "https://dadanddot.com/",
+    "description": "Dad&Dot Games에서는 최신 UX/UI와 정밀한 인터랙션 애니메이션을 통해 가족과 게이머 모두에게 특별한 경험을 제공합니다."
+  }
+  </script>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WZLQ6BLJ" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <!-- 메인 컨테이너 -->
+  <div id="main-container">
+    <header class="main-header">
+        <div class="header-left">
+          <a href="/" class="logo-link">
+            <img src="/images/dnd_logo_small.png" alt="Dad&Dot Games 로고" class="logo">
+          </a>
+          <div class="logo-divider">|</div>
+          <a href="/sd/" class="logo-link">
+            <img src="/images/sd_s_128.png" alt="숫자결합 게임 로고" class="logo">
+          </a>
+          <a href="/mm/" class="logo-link">
+            <img src="/images/mm_logo.png" alt="마스터몬스터 게임 로고" class="logo">
+          </a>
+        </div>
+      </div>
+      <nav class="gnb">
+        <ul>
+          <li><a href="/sd">숫자결합</a></li>
+          <li><a href="/mm">마스터몬스터</a></li>
+          <li><a href="#about">About</a></li>
+        </ul>
+      </nav>
+      <div class="header-right">
+        <!-- <div id="auth-buttons">
+          <button id="google-login" class="auth-button">Google로 로그인</button>
+          <button id="apple-login" class="auth-button">Apple로 로그인</button>
+        </div> -->
+      </div>
+    </header>
+
+    <div class="intro-section parallax">
+      <div class="intro-overlay"></div>
+      <div class="intro-content">
+        <h2>모두가 즐길 수 있는 게임</h2>
+        <p>연령과 지역 경계없이 쉽게 즐길 수 있는 게임을 만들어요</p>
+        <a href="#game-list" class="scroll-down">아래로 스크롤</a>
+      </div>
+    </div>
+
+    <!-- 게임 목록 섹션 -->
+    <section id="game-list" class="info-section">
+      <h3>게임 목록</h3>
+      <ul>
+        <li class="game-item" id="game-sumd">
+          <a href="/sd" class="game-link">
+            <div class="game-image">
+              <img src="../images/sumordone_screenshot.png" alt="숫자결합 게임 스크린샷">
+            </div>
+            <div class="game-info">
+              <h4>숫자결합</h4>
+              <p>드래그로 숫자를 결합해 목표 점수를 달성하는 숫자 연산 퍼즐 게임</p>
+            </div>
+          </a>
+        </li>
+        <li class="game-item" id="game-mm">
+          <a href="/mm" class="game-link">
+            <div class="game-image">
+              <img src="/images/mastermonster_screenshot.png" alt="마스터몬스터 게임 스크린샷">
+            </div>
+            <div class="game-info">
+              <h4>마스터몬스터</h4>
+              <p>몬스터를 모으고 타일들을 전략적 배치해 몬스터를 레벨업하는 퍼즐게임</p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <!-- About 섹션 -->
+    <section id="about" class="about-section">
+      <h3>About Dad&Dot Games</h3>
+      <div class="about-content">
+        <div class="about-text">
+          <p>Dad&Dot Games는 모든 사람이 쉽게 즐길 수 있는 게임을 만듭니다.  
+             단순한 조작으로도 다양한 재미를 경험할 수 있도록, 언제나 새로운 콘텐츠를 준비하고 있어요.</p>
+        </div>
+        <div class="about-illustration">
+          <img src="/images/dadanddot.png" alt="귀여운 캐릭터" class="cute-character">
+        </div>
+      </div>
+    </section>
+
+  
+  </div>
+
+  <!-- 추가 오버레이 및 모달 (필요시) -->
+  <div id="overlay">
+    <div id="overlay-message"></div>
+  </div>
+
+  <div id="game-over-overlay" class="game-over-overlay" style="display: none;">
+    <div id="game-over-message" class="game-over-message"></div>
+  </div>
+
+  <div id="ad-modal" style="display: none;">
+    <div class="ad-content">
+      <p>힌트가 회색으로 표시됩니다.</p>
+      <button id="ad-close-btn">힌트보기</button>
+    </div>
+  </div>
+
+  <div id="toast-message"></div>
+
+  <!-- 아래로 스크롤 클릭 시 자연스럽게 스크롤 -->
+  <script>
+    document.querySelector('.scroll-down').addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetID = this.getAttribute('href');
+      document.querySelector(targetID).scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+    <footer id="footer">
+      <div class="footer-content">
+        <select class="language-selector" id="language-select">
+          <option value="ko" selected>KR</option>
+          <option value="en">EN</option>
+          <option value="ja">JP</option>
+          <option value="zh">ZH</option> 
+        </select> 
+        <nav class="footer-nav">
+          <a href="/" data-link>홈</a>
+          <a href="/pp.html" data-link>개인정보처리방침</a>
+        </nav>
+        <p>&copy; 2025 Dad&Dot.com</p>
+      </div>
+    </footer>
+</body>
+</html>

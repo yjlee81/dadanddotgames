@@ -1,0 +1,425 @@
+/*********************************************
+ * DESIGN SYSTEM
+ *********************************************/
+:root {
+  /* 컬러 시스템 */
+  --color-background: #1c1c1c;       /* 전체 배경색 (다크테마) */
+  --color-header-bg: #242424;        /* 헤더 배경색 */
+  --color-overlay: rgba(0, 0, 0, 0.6);
+  --color-card-bg: #2a2a2a;          /* 카드 배경색 */
+  --color-text-primary: #f0f0f0;     /* 기본 텍스트 */
+  --color-text-secondary: #d0d0d0; 
+  --color-accent: #f4f4f4;           /* 악센트 컬러(흰계열) */
+  --color-accent-hover: #ffffff;     /* 호버 시 살짝 더 밝게 */
+  --color-border: #3a3a3a;
+
+  /* 폰트 시스템 */
+  --font-family-base: 'Nunito', sans-serif;
+
+  /* 공간, 크기 등 */
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 32px;
+  --spacing-xl: 60px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --transition-fast: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+/*********************************************
+ * GLOBAL RESET
+ *********************************************/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family-base);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#main-container {
+  flex: 1;
+}
+
+/*********************************************
+ * HEADER & NAV
+ *********************************************/
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: var(--color-header-bg);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: background var(--transition-fast);
+}
+
+.main-header h1 {
+  font-size: 1.8rem;
+  color: var(--color-accent);
+}
+
+.gnb ul {
+  display: flex;
+  list-style: none;
+  gap: var(--spacing-md);
+}
+
+.gnb a {
+  text-decoration: none;
+  color: var(--color-text-primary);
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.gnb a:hover {
+  color: var(--color-accent-hover);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+
+/* 로고 스타일 */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+
+.logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+  border-radius: 4px;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+/*********************************************
+ * PARALLAX INTRO SECTION
+ *********************************************/
+.parallax {
+  background-attachment: fixed;  /* 패럴랙스 효과 */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.intro-section {
+  height: 100vh;
+  background: linear-gradient(135deg, #2b2b2b, #1c1c1c);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.intro-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-overlay);
+}
+
+.intro-content {
+  position: relative;
+  z-index: 1;
+  color: var(--color-accent);
+  animation: fadeInUp var(--transition-fast) forwards;
+}
+
+.intro-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-md);
+  animation: fadeInUp 1s ease-out forwards;
+  opacity: 0;
+}
+
+.intro-content p {
+  font-size: 1.2rem;
+  margin-bottom: var(--spacing-lg);
+  animation: fadeInUp 1.2s ease-out forwards;
+  opacity: 0;
+}
+
+.scroll-down {
+  display: inline-block;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-accent);
+  color: #000;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-weight: 600;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.scroll-down:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-5px);
+}
+
+/*********************************************
+ * ABOUT SECTION
+ *********************************************/
+ .about-section {
+  padding: var(--spacing-lg) var(--spacing-md);
+  max-width: 1200px;
+  margin: var(--spacing-lg) auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: var(--color-card-bg);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  animation: fadeInUp var(--transition-fast) forwards;
+  opacity: 0;
+}
+
+.about-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.about-text {
+  flex: 1;
+}
+
+.about-text p {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.about-illustration {
+  flex: 1;
+  text-align: center;
+}
+
+.cute-character {
+  width: 100%;
+  max-width: 300px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translatey(0px);
+  }
+  50% {
+    transform: translatey(-10px);
+  }
+}
+
+/*********************************************
+ * GAME LIST SECTION
+ *********************************************/
+.info-section {
+  padding: var(--spacing-lg) var(--spacing-md);
+  max-width: 1200px;
+  margin: var(--spacing-lg) auto;
+  animation: fadeInUp var(--transition-fast) forwards;
+  opacity: 0;
+}
+
+.info-section h3 {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-accent);
+  font-size: 2rem;
+}
+
+.info-section ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.game-item {
+  background: var(--color-card-bg);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: transform var(--transition-fast);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.game-item:hover {
+  transform: scale(1.02);
+}
+
+.game-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.game-image {
+  width: 100%;
+  height: 300px; /* 스크린샷 높이를 넉넉하게 조정 */
+  overflow: hidden;
+}
+
+.game-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.game-item:hover .game-image img {
+  transform: scale(1.1);
+}
+
+.game-info {
+  padding: var(--spacing-lg);
+  text-align: left;
+}
+
+.game-info h4 {
+  font-size: 1.2rem;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.game-info p {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+}
+
+/*********************************************
+ * FOOTER
+ *********************************************/
+#footer {
+  padding: var(--spacing-lg);
+  background: var(--color-header-bg);
+  border-top: 1px solid var(--color-border);
+  margin-top: var(--spacing-lg);
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer-nav a {
+  margin: 0 var(--spacing-md);
+  text-decoration: none;
+  color: var(--color-accent);
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.footer-nav a:hover {
+  color: var(--color-accent-hover);
+}
+
+.language-selector {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+  background: transparent;
+  color: var(--color-accent);
+}
+
+/*********************************************
+ * ANIMATIONS
+ *********************************************/
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*********************************************
+ * RESPONSIVE
+ *********************************************/
+@media (max-width: 768px) {
+  .main-header {
+    padding: var(--spacing-md);
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .intro-content h2 {
+    font-size: 1.8rem;
+  }
+
+  .intro-content p {
+    font-size: 1rem;
+  }
+
+  .about-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .about-illustration {
+    margin-top: var(--spacing-lg);
+  }
+
+  .info-section ul {
+    grid-template-columns: 1fr;
+  }
+
+  .game-item {
+    width: 90%;
+  }
+}
+
+/*********************************************
+ * MAIN CONTAINER ORDERING
+ *********************************************/
+#main-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#game-list {
+  order: 1;
+}
+
+#about {
+  order: 2;
+}

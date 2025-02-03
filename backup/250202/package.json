@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "express": "^4.21.2",
+    "firebase": "^11.2.0",
+    "prerender-node": "^3.8.0",
+    "prerender-spa-plugin": "^2.1.0"
+  }
+}
