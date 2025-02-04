@@ -1336,7 +1336,7 @@ function closeFinalOverlay() {
     gameContainerEl.style.display = "flex";
     initRound();
     startTimer();
-  }, 3000); // 3초 후 게임 시작
+  }, 2000); // 2초 후 게임 시작
 
 }
 

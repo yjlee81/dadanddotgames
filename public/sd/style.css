@@ -409,20 +409,18 @@ position: relative;
   }
   /* ===== [하단버튼] ===== */
   .buttons-container {
-    position: relative;
-    bottom: 64px;
+    position: fixed;
+    bottom: 0;
     left: 0;
     width: 100%;
-    padding: 8px 16px;
-    /* border-top: 1px solid #ccc; */
-    box-sizing: border-box;
+    /* 기본 패딩 값(예: 8px)과 안전 영역 값을 합산 */
+    padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
     display: flex;
     justify-content: center;
-    /* border-radius: 12px; */
     gap: 12px;
-    align-items: flex-start;
-    /* height: 160px; */
-}
+    z-index: 1000; /* 다른 요소 위에 표시되도록 */
+    background-color: rgba(245, 245, 245, 0.95); /* 배경색 추가 (선택사항) */
+  }
   
   .primary-button {
     flex: 1;

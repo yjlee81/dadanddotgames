@@ -361,12 +361,12 @@ text-align: center;
 width: 100px;
 }
 .info-box .label {
-font-size: 14px;
+font-size: 14px; 
 color: #333;
 display: block;
 }
 .info-box .data {
-font-size: 20px;
+font-size: 20px; 
 font-weight: bold;
 }
 
@@ -876,7 +876,7 @@ position: relative;
 
 #countdown-number {
     /* position: absolute;
-    font-size: 24px;
+    font-size: 24px; 
     bottom: 40%; */
     margin-top: 50px;
     display: inline-block;
@@ -979,24 +979,24 @@ position: relative;
   font-size: 4rem;
   font-weight: 900;
   color: #ffd700;
-  text-shadow:
+  text-shadow: 
     0 0 8px rgba(255, 215, 0, 0.8),
     0 0 16px rgba(255, 215, 0, 0.6);
   animation: startMessage 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) 3s forwards;
 }
 
 @keyframes startMessage {
-  0% {
-    opacity: 0;
-    transform: scale(0.8) translateY(20px);
+  0% { 
+    opacity: 0; 
+    transform: scale(0.8) translateY(20px); 
   }
-  70% {
-    opacity: 1;
-    transform: scale(1.1) translateY(0);
+  70% { 
+    opacity: 1; 
+    transform: scale(1.1) translateY(0); 
   }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
+  100% { 
+    opacity: 1; 
+    transform: scale(1) translateY(0); 
   }
 }
 

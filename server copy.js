@@ -48,11 +48,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 });
 
-// 만약 '/sd' 경로에 대한 정적 파일이 public/sd 폴더에 있다면 아래와 같이 지정합니다.
-app.use('/sd', express.static(path.join(__dirname, 'public', 'sd')));
-
-const port = 3001;  // 고정된 포트 번호
-
+const port = 3001;
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
