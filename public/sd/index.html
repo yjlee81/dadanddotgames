@@ -119,46 +119,43 @@
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WZLQ6BLJ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
-  <!-- [1] 헤더 -->
-  <header class="main-header">
-    <div class="header-left">
-      <!-- <a href="/" class="logo-link">
-        <img src="/images/dnd_logo_tr_small.png" alt="Dad&Dot Games 로고" class="logo">
-      </a>
-      <div class="logo-divider">|</div> -->
-      <a href="/sd/" class="logo-link">
-        <img src="/images/sd_s_128.png" alt="숫자결합 게임 로고" class="logo">
-      </a>
+ <!-- [1] 헤더 -->
+ <header class="main-header">
+  <div class="header-left">
+    <!-- <a href="/" class="logo-link">
+      <img src="/images/dnd_logo_tr_small.png" alt="Dad&Dot Games 로고" class="logo">
+    </a>
+    <div class="logo-divider">|</div> -->
+    <a href="/sd/" class="logo-link">
+      <img src="/images/sd_s_128.png" alt="숫자결합 게임 로고" class="logo">
+    </a>
+  </div>
+  <nav class="gnb">
+    <div class="tab-container">
+      <button class="tab-link active" data-link="/sd/">Main</button>
+      <button class="tab-link" data-link="/sd/ranking">Rank</button>
+      <!-- <button class="tab-link" data-link="/sd/tutorial">Tutorial</button> -->
     </div>
-    <nav class="gnb">
-      <div class="tab-container">
-        <button class="tab-link active" data-link="/sd/">Play</button>
-        <button class="tab-link" data-link="/sd/ranking">Rank</button>
-        <!-- <button class="tab-link" data-link="/sd/tutorial">Tutorial</button> -->
-      </div>
-    </nav>
+  </nav>
 
-    
-    <div class="header-right">
-      <select class="language-selector" id="language-select">
-        <option value="ko" selected>KR</option>
-        <option value="en">EN</option>
-        <option value="ja">JP</option>
-        <option value="zh">ZH</option>
-      </select> 
-    </div> 
-  </header>
+  
+  <div class="header-right">
+    <select class="language-selector" id="language-select">
+      <option value="ko" selected>KR</option>
+      <option value="en">EN</option>
+      <option value="ja">JP</option>
+      <option value="zh">ZH</option>
+    </select> 
+  </div> 
+</header>
 
   <!-- [2] 타이틀 화면 -->
 <div id="title-screen" data-route="home">
+   
   <div class="title-container">
     
     <h2 id="titleLabel" data-i18n="mainTitle">숫자 결합 게임</h2>
-    <p id="version">v.0.7.16a</p>
-    
     <!-- <img src="../images/how-to-play.gif" alt="how-to-play" class="how-to-play-image"> -->
-    
-    
     <p> 
       <span class="subtitle" data-i18n="playCountSubtitle1">총 </span><span id='game-count-value'>0</span><span class="subtitle" data-i18n="playCountSubtitle2">번 플레이를 기록한 숫자 퍼즐게임</span>
     </p>
@@ -187,27 +184,39 @@
       <option value="10">Hard: 10x10</option>
       </select>
       --> 
+
+
       <button id="start-game-btn" data-i18n="startGame" onclick="onStartGame()">지금 시작하기 ></button>  
+      
     </div>
+          <!-- [동의 문구 추가 부분] -->
+
+          <span class="tos-consent">
+          <span data-i18n="tos_consent1">위의 [지금 시작하기 >] 버튼을 선택함으로써</span>
+          <a href="/terms-of-service.html" data-link data-i18n="tos">이용약관</a><span data-i18n="tos_consent2">에 동의해요.</span>
+          </span>
+          <!-- [동의 문구 추가 끝] -->
   </div>
+  <div class="how-to-play-container">
   <h3 data-i18n="howToPlay">How to Play</h3>
   <section id="tutorial-section" class="info-section">
     
-    <p data-i18n="howToPlayDetail1"><strong>1. 드래그해서 일렬로 숫자들을 선택하세요</strong></p>
+    <p data-i18n="howToPlayDetail1"><strong>1. 드래그로 일렬/대각선 숫자들을 선택해요.</strong></p>
     <img id="tut1" src="../images/tut1.gif" alt="Drag to select numbers in a line">
   </section>
   <section id="tutorial-section" class="info-section">
-    <p data-i18n="howToPlayDetail2"><strong>2. 더이상 목표합을 만들수 없으면 "Done!"을 누르세요.</strong></p>
+    <p data-i18n="howToPlayDetail2"><strong>2. 목표합을 만들수 없으면 "결!"을 눌러요.</strong></p>
     <img src="../images/tut2.png" alt="hit Done! when you can't make the TargetSum">
   </section>
     <section id="tutorial-section" class="info-section">
-    <p data-i18n="howToPlayDetail3"><strong>3. 숫자칸이 길수록 보너스점수를 얻을 수 있어요.</strong></p>
+    <p data-i18n="howToPlayDetail3"><strong>3. 숫자칸이 길수록 보너스점수를 얻어요.</strong></p>
     <img src="../images/tut3.png" alt="get bonus scores on lengthy lines">
   </section>
+</div>
   <footer id="footer-game">
     <p data-i18n="footerText">&copy; 2025 Dadanddot.com</p>
     
-  
+    <p id="version">v.0.7.17</p>
     <a href="/sd" data-link data-i18n="home">홈으로</a>
     <a href="/sd/ranking" data-link data-i18n="scoreboards">스코어보드</a>
     <a href="/pp.html" data-link data-i18n="privacyPolicy">개인정보 처리방침</a>
@@ -217,7 +226,7 @@
   
 </div>
   <!-- [3] 랭킹 화면 -->
-<div id="ranking" class="info-section" style="display: none;">
+<div id="ranking" class="info-section-scoreboards" style="display: none;">
   <div class="score-table-title-container">
     <h3 data-i18n="scoreboards">스코어보드</h3>
         
@@ -225,7 +234,7 @@
     <div class="ranking-filters">
       <!-- 기간 필터 그룹 (드롭다운) -->
       <div class="filter-group">
-        <label for="dateFilter" class="filter-label">기간</label>
+        <label for="dateFilter" class="filter-label">기간 </label>
         <select id="dateFilter" onchange="applyFilters()">
           <option value="today" data-i18n="today">오늘</option>
           <option value="week" data-i18n="week">일주일</option>
@@ -235,9 +244,9 @@
       
       <!-- 목표합 필터 그룹 (드롭다운) -->
       <div class="filter-group">
-        <label for="goalFilter" class="filter-label">목표합</label>
+        <label for="goalFilter" class="filter-label">목표합 </label>
         <select id="goalFilter" onchange="applyFilters()">
-          <option value="all" selected>전체 라운드</option>
+          <option value="all" selected>All Levels</option>
           <option value="10">10</option>
           <option value="11">11</option>
           <option value="12">12</option>
@@ -279,7 +288,7 @@
     <p data-i18n="howToPlayDetail1"><strong>1. 드래그해서 일렬로 숫자들을 선택하세요</strong></p>
     <img src="../images/tut1.png" alt="Drag to select numbers in a line">
     
-    <p data-i18n="howToPlayDetail2"><strong>2. 더이상 목표합을 만들수 없으면 "Done!"을 누르세요.</strong></p>
+    <p data-i18n="howToPlayDetail2"><strong>2. 더이상 목표합을 만들수 없으면 결!을 누르세요.</strong></p>
     <img src="../images/tut2.png" alt="hit Done! when you can't make the TargetSum">
     
     <p data-i18n="howToPlayDetail3"><strong>3. 숫자칸이 길수록 보너스점수를 얻을 수 있어요.</strong></p>
@@ -343,16 +352,18 @@
   
   <!-- 하단 버튼 -->
   <div class="buttons-container">
+    <button id="home-button" class="tertiary-button"><a href="/sd">Home</a></button>
     <button id="hint-btn" class="secondary-button" data-i18n="hint">Hint</button>
     <button id="no-more" class="primary-button" data-i18n="done">Done!</button>
   </div>
-
+  <!--
   <footer id="footer-game">
     <p data-i18n="footerText">&copy; 2025 Dadanddot.com</p>  
     <a href="/sd" data-link data-i18n="home">홈으로</a>
     <a href="/sd/ranking" data-link data-i18n="scoreboards">스코어보드</a>
     <a href="/pp.html" data-link data-i18n="privacyPolicy">개인정보 처리방침</a>
   </footer>
+  --> 
 </div>
 
 

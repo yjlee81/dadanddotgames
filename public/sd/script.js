@@ -24,7 +24,7 @@ const db = firebase.database();
  ***************************************************/
 const translations = {
   en: {
-    mainTitle: "Number Merge Game",
+    mainTitle: "Sum or Done Game",
     gameCount: "Total Played",
     startGame: "Start Now >",
     goal: "Goal",
@@ -45,7 +45,7 @@ const translations = {
     // 추가/수정된 key들
     rank: "Rank",
     playCountSubtitle1: "A number puzzle game with a total of ",
-    playCountSubtitle2: "plays",
+    playCountSubtitle2: " plays",
     level1_label: "Level 1 (10pts)",
     level2_label: "Level 2 (11pts)",
     level3_label: "Level 3 (12pts)",
@@ -60,7 +60,8 @@ const translations = {
     howToPlayDetail1: "1. Drag to select numbers in a straight line",
     howToPlayDetail2: "2. If you cannot make the TargetSum, press Done!",
     howToPlayDetail3: "3. Longer lines earn more bonus points!",
-    hintMessage: "Drag to select numbers"
+    hintMessage: "Drag to select numbers",
+    noCombinationToast: "No more. Press Done!",
   },
   ko: {
     mainTitle: "숫자 결합 게임",
@@ -83,8 +84,8 @@ const translations = {
     footerText: "© 2025 Dadanddot.com",
     // 추가/수정된 key들
     rank: "순위",
-    playCountSubtitl1: "총 ",
-    playCountSubtitl2: "번 플레이를 기록한 숫자 퍼즐게임",
+    playCountSubtitle1: "총 ",
+    playCountSubtitle2: "번 플레이를 기록한 숫자 퍼즐게임",
     level1_label: "Level 1 (10점)",
     level2_label: "Level 2 (11점)",
     level3_label: "Level 3 (12점)",
@@ -96,11 +97,14 @@ const translations = {
     level9_label: "Level 9 (18점)",
     level10_label: "Level 10 (19점)",
     levelFinal_label: "최종 Level (20점)",
-    howToPlayDetail1: "1. 드래그해서 일렬로 숫자들을 선택하세요",
-    howToPlayDetail2: "2. 더이상 목표합을 만들 수 없으면 Done!을 누르세요.",
-    howToPlayDetail3: "3. 숫자칸이 길수록 보너스점수를 얻을 수 있어요.",
-    hintMessage: "드래그하여 숫자를 선택하세요."
-
+    howToPlayDetail1: "1. 드래그로 일렬/대각선 숫자들을 선택해요.",
+    howToPlayDetail2: "2. 목표합을 만들수 없으면 결!을 눌러요.",
+    howToPlayDetail3: "3. 숫자칸이 길수록 보너스점수를 얻어요.",
+    hintMessage: "드래그하여 숫자를 선택하세요.",
+    noCombinationToast: "더이상 없어요. 결!을 선택하세요",
+    tos_consent1: "위의 [지금 시작하기 >] 버튼을 선택함으로써",
+    tos: "이용약관",
+    tos_consent2: "에 동의해요."
   },
   ja: {
     mainTitle: "数字結合ゲーム",
@@ -140,7 +144,8 @@ const translations = {
     howToPlayDetail1: "1. 直線で数字をドラッグして選択",
     howToPlayDetail2: "2. もう合計が作れなければDone!を押す",
     howToPlayDetail3: "3. 長いラインほどボーナス点を獲得",
-    hintMessage: "ドラッグして数字を選択"
+    hintMessage: "ドラッグして数字を選択",
+    noCombinationToast: "もうないよ。Done!を押す",
   },
   zh: {
     mainTitle: "数字合并游戏",
@@ -179,8 +184,10 @@ const translations = {
     howToPlayDetail1: "1. 拖动数字成一条线连接",
     howToPlayDetail2: "2. 如果无法再组成目标值，请按Done!",
     howToPlayDetail3: "3. 数字越长，获得的奖励分数越高",
-    hintMessage: "拖动数字成一条线连接"
-  }
+    hintMessage: "拖动数字成一条线连接",
+    noCombinationToast: "没有更多了。请按Done!"
+  },
+  
 };
 let currentLanguage = "ko";
 
@@ -475,7 +482,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   fetchAndDisplayGameCount();
-
+  // 언어 설정 표시
+  loadLanguagePreference();
 
   // Firebase에서 스코어 데이터를 불러와 표시
   // fetchScoresFromFirebase(displayScores);
@@ -518,7 +526,10 @@ function initializeGame() {
 /***************************************************
  * 게임 시작 핸들러 (롤백된 카운트다운 버전)
  ***************************************************/
-window.onStartGame = function() {
+function onStartGame() {
+  // 헤더 숨기기
+  document.querySelector('.main-header').style.display = 'none';
+  
   const selectedGoal = parseInt(document.getElementById("round-select").value, 10) || 10;
   targetSum = selectedGoal;
   
@@ -540,7 +551,7 @@ window.onStartGame = function() {
 
   // (2) 로딩바 초기화 → 0%에서 시작
   const loadingBarEl = document.getElementById("loading-bar");
-  loadingBarEl.style.width = "0%";
+  loadingBarEl.style.width = "30%";
 
   // (3) 아주 살짝 지연 후 3초 동안 0% → 100%
   setTimeout(() => {
@@ -559,8 +570,8 @@ window.onStartGame = function() {
     initRound();   // ← 여기서 처음 renderBoard()가 실행됨
     startTimer();
 
-  }, 3000);
-};
+  }, 2000);
+}
 
 /**
  * 카운트다운 오버레이에서 목표점수를 표시하는 헬퍼 함수
@@ -804,7 +815,7 @@ function checkLine(start, end) {
     // 성공 시 햅틱
     triggerHapticFeedback('success');
 
-    const gapBonus = gapCount * 10;
+    const gapBonus = gapCount * 5;
     const lengthBonus = (linePositions.length >= 3) ? (linePositions.length - 2) * 5 : 0;
     const addScore = sumVal + gapBonus + lengthBonus;
     
@@ -1073,8 +1084,9 @@ function showGameOver() {
  * 첫화면 복귀
  ***************************************************/
 function backToTitleScreen() {
-  const overlayEl = document.getElementById("overlay");
-  const overlayMsgEl = document.getElementById("overlay-message");
+  // 헤더 다시 표시
+  document.querySelector('.main-header').style.display = 'flex';
+  
   // 게임화면 숨기고, 타이머 중지
   gameContainerEl.style.display = "none";
   document.getElementById("game-over-overlay").style.display = "none";
@@ -1106,11 +1118,11 @@ function showIOSToastMessage(msg, duration = 2000) {
     toastEl.style.top = "10px";
   }
   
-  // 슬라이드 다운 효과를 위한 .show 클래스 추가
-  toastEl.classList.add("show");
+  // 애플 아일랜드 박스 효과를 위한 클래스 추가
+  toastEl.classList.add("show", "island-effect");
   
   setTimeout(() => {
-    toastEl.classList.remove("show");
+    toastEl.classList.remove("show", "island-effect");
   }, duration);
 }
 
@@ -1118,6 +1130,7 @@ function showIOSToastMessage(msg, duration = 2000) {
  * showFloatingScore - 오른쪽으로 이동하는 점수 이펙트 버전
  */
 function showFloatingScore(baseScore, lengthBonus, emptyBonus, tileElement) {
+  
   // 타일의 위치
   const rect = tileElement.getBoundingClientRect();
 
@@ -1125,8 +1138,8 @@ function showFloatingScore(baseScore, lengthBonus, emptyBonus, tileElement) {
   const container = document.createElement('div');
   container.className = 'floating-score-container';
   container.style.position = 'absolute';
-  container.style.left = (rect.left + rect.width / 2) + 'px';
-  container.style.top = (rect.top + rect.height / 2) + 'px';
+  container.style.left = '50%';
+  container.style.top = '65px';
   container.style.transform = 'translate(-50%, -50%)';
   container.style.zIndex = '9999';
 
@@ -1137,6 +1150,7 @@ function showFloatingScore(baseScore, lengthBonus, emptyBonus, tileElement) {
     box.textContent = text;
     return box;
   }
+
 
   // 점수들을 담는 컨테이너 (가로 방향)
   const stack = document.createElement('div');
@@ -1336,7 +1350,7 @@ function closeFinalOverlay() {
     gameContainerEl.style.display = "flex";
     initRound();
     startTimer();
-  }, 2000); // 2초 후 게임 시작
+  }, 1000); // 1초 후 게임 시작
 
 }
 
@@ -1390,14 +1404,21 @@ function handleRouteChange(route) {
   updateTabState(route);
   // ... 기존 라우터 로직 ...
 }
-
-// 탭 클릭 이벤트 리스너 추가
+// 탭의 활성화 상태 유지
 document.querySelectorAll('.tab-link').forEach(tab => {
   tab.addEventListener('click', () => {
+    // 모든 탭에서 active 제거
+    document.querySelectorAll('.tab-link').forEach(t => t.classList.remove('active'));
+    // 클릭한 탭에 active 추가
+    tab.classList.add('active');
+    
+    // (추가) data-link 값을 이용하여 해당 화면으로 라우팅하는 로직이 있다면 호출
+    // 예: router.navigate(tab.getAttribute('data-link'));
     const route = tab.dataset.link;
     handleRouteChange(route);
   });
 });
+
 
 // 초기 로드 시 현재 경로에 맞는 탭 활성화
 const currentPath = window.location.pathname;
@@ -1540,9 +1561,3 @@ function loadLanguagePreference() {
     applyTranslations();
   }
 }
-
-// DOM 로드 시 초기 언어 설정 적용
-document.addEventListener('DOMContentLoaded', function() {
-  loadLanguagePreference();
-});
-
