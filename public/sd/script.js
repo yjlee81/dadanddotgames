@@ -62,6 +62,10 @@ const translations = {
     howToPlayDetail3: "3. Longer lines earn more bonus points!",
     hintMessage: "Drag to select numbers",
     noCombinationToast: "No more. Press Done!",
+    // 새로 추가된 tos 관련 항목
+    tos_consent1: "By selecting the 'Start Now >' above, you agree to the ",
+    tos: "Terms of Service",
+    tos_consent2: "."
   },
   ko: {
     mainTitle: "숫자 결합 게임",
@@ -102,7 +106,7 @@ const translations = {
     howToPlayDetail3: "3. 숫자칸이 길수록 보너스점수를 얻어요.",
     hintMessage: "드래그하여 숫자를 선택하세요.",
     noCombinationToast: "더이상 없어요. 결!을 선택하세요",
-    tos_consent1: "위의 [지금 시작하기 >] 버튼을 선택함으로써",
+    tos_consent1: "위의 '지금 시작하기 >'를 선택함으로써",
     tos: "이용약관",
     tos_consent2: "에 동의해요."
   },
@@ -146,6 +150,10 @@ const translations = {
     howToPlayDetail3: "3. 長いラインほどボーナス点を獲得",
     hintMessage: "ドラッグして数字を選択",
     noCombinationToast: "もうないよ。Done!を押す",
+    // 새로 추가된 tos 관련 항목
+    tos_consent1: "上記の「今すぐ始める >」ボタンを選択することで、",
+    tos: "利用規約",
+    tos_consent2: "に同意します。"
   },
   zh: {
     mainTitle: "数字合并游戏",
@@ -185,7 +193,11 @@ const translations = {
     howToPlayDetail2: "2. 如果无法再组成目标值，请按Done!",
     howToPlayDetail3: "3. 数字越长，获得的奖励分数越高",
     hintMessage: "拖动数字成一条线连接",
-    noCombinationToast: "没有更多了。请按Done!"
+    noCombinationToast: "没有更多了。请按Done!",
+    // 새로 추가된 tos 관련 항목
+    tos_consent1: "通过选择上面的'立即开始>'按钮，您同意",
+    tos: "使用条款",
+    tos_consent2: "。"
   },
   
 };
@@ -530,8 +542,12 @@ function onStartGame() {
   // 헤더 숨기기
   document.querySelector('.main-header').style.display = 'none';
   
-  const selectedGoal = parseInt(document.getElementById("round-select").value, 10) || 10;
-  targetSum = selectedGoal;
+
+  const roundSlider = document.getElementById("round-slider");
+  const selectedRound = parseInt(roundSlider.value, 10) || 10;
+  currentRound = selectedRound;
+  
+  targetSum = selectedRound;
   
   // URL 업데이트(옵션)
   window.history.pushState(null, '', `/sd/play/${targetSum}`);
@@ -570,7 +586,9 @@ function onStartGame() {
     initRound();   // ← 여기서 처음 renderBoard()가 실행됨
     startTimer();
 
-  }, 2000);
+  }, 3000);
+
+  loadingBarEl.style.width = "30%";
 }
 
 /**
@@ -607,6 +625,9 @@ function initRound() {
   remainingSeconds = 150;
   isTimerPaused = false;
   updateTimerDisplay();
+
+  hintsLeft = 3;
+  updateHintButtonLabel(); // (2) 라운드 시작 시 힌트 버튼 표시 업데이트
 
   // 보드 렌더
   renderBoard();
@@ -823,14 +844,22 @@ function checkLine(start, end) {
     const previousScore = parseInt(scoreEl.textContent, 10) || 0;
     const newScore = previousScore + addScore;
     
-    // 애니메이션 적용
     animateNumber(scoreEl, previousScore, newScore, 500, () => {
       totalScore = newScore;
     });
 
-    markLine(linePositions, "success-line");
-    showFloatingScore(sumVal, lengthBonus, gapBonus, document.getElementById("game-board").rows[end[0]].cells[end[1]]);
+    // ------------------------------------------------------------
+    // [중요] 보드 데이터에서 즉시 타일 제거 (논리적 제거)
+    for (const [r, c] of linePositions) {
+      boardData[r][c] = null;
+    }
+    // ------------------------------------------------------------
 
+    markLine(linePositions, "success-line");
+    showFloatingScore(sumVal, lengthBonus, gapBonus,
+                     document.getElementById("game-board").rows[end[0]].cells[end[1]]);
+
+    // 시각적 효과(애니메이션)는 조금 뒤에 제거
     setTimeout(() => {
       removeLineTiles(linePositions);
     }, 600);
@@ -839,10 +868,6 @@ function checkLine(start, end) {
     const failMessage = translations[currentLanguage]?.failSum 
                       || `목표합이 ${targetSum}이어야 합니다!`;
     showIOSToastMessage(failMessage.replace("{target}", targetSum), 1500);
-    // 실패시 감점 제거
-    /* totalScore = Math.max(0, totalScore  - targetSum );
-    document.getElementById("score").textContent = totalScore;
-    showFloatingScore("-" + targetSum, end[0], end[1], true); */
 
     setTimeout(() => {
       markLine(linePositions, null, "fail-line");
@@ -860,17 +885,16 @@ function markLine(positions, addClass=null, removeClass=null) {
 }
 
 function removeLineTiles(linePositions) {
+  // (애니메이션을 위해 css 클래스를 부여)
   const trList = document.querySelectorAll("#game-board tr");
-  // 애니메이션
-  for (const [r,c] of linePositions) {
-    let td = trList[r].children[c];
+  for (const [r, c] of linePositions) {
+    const td = trList[r].children[c];
     td.classList.remove("success-line");
-    td.classList.add("removing");
+    td.classList.add("removing"); // 사라지는 스타일
   }
+
+  // 600ms 뒤 실제로 renderBoard() 실행
   setTimeout(() => {
-    for (const [r,c] of linePositions) {
-      boardData[r][c] = null;
-    }
     renderBoard();
   }, 600);
 }
@@ -969,18 +993,33 @@ function closeOverlay(){
  * 힌트 (광고 모달)
  ***************************************************/
 function onHintClick() {
-  pauseTimer();
-  document.getElementById("ad-modal").style.display = "flex";
-}
-function useHint() {
+  // 남은 힌트 횟수가 0 이하라면 사용 불가
+  if (hintsLeft <= 0) {
+    showIOSToastMessage(`더 이상 힌트를 사용할 수 없어요.`);
+    return;
+  }
+
+  hintsLeft--; // 힌트 1회 차감
+
+  // 기존 힌트 로직
   let lines = findAllPossibleLines();
   if (!lines.length) {
     showIOSToastMessage(translations[currentLanguage].noCombinationToast);
     return;
   }
-  hintLinePositions = lines[0];
-  markLine(hintLinePositions, "hint-line");
-  showIOSToastMessage(translations[currentLanguage].hintMessage);
+  // 기존 힌트가 있으면 제거
+  if (hintLinePositions) {
+    markLine(hintLinePositions, null, "hint-line");
+    hintLinePositions = null;
+  }
+  // 첫 번째 라인 선택
+  let picked = lines[0];
+  hintLinePositions = picked;
+  // 표시
+  markLine(picked, "hint-line");
+  
+  
+  showIOSToastMessage(translations[currentLanguage].hintMessage + `(남은 힌트: ${hintsLeft}회)`);
 }
 
 /***************************************************
@@ -1320,6 +1359,8 @@ function showFinalSuccessOverlay(timeBonus, isFinalRound = false) {
 function restartGame() {
   // 게임 초기화 로직
   currentRound = 1;
+  hintsLeft = 3;
+  updateHintButtonLabel(); // (3) 재시작 시 힌트 버튼 표시 업데이트
   totalScore = 0;
   document.getElementById("score").textContent = totalScore;
   closeFinalOverlay();
@@ -1561,3 +1602,501 @@ function loadLanguagePreference() {
     applyTranslations();
   }
 }
+
+
+/***************************************************
+ * Firebase Authentication 및 프로필 관리
+ ***************************************************/
+
+// Firebase Auth 객체 (이미 firebase.initializeApp() 호출 후 사용 가능)
+const auth = firebase.auth();
+const database = firebase.database();
+
+// 로그인 모달 DOM 요소
+const loginModal = document.getElementById("login-modal");
+
+// 로그인 상태 감지: 사용자가 로그인되어 있으면 모달 숨김, 아니면 모달 표시
+auth.onAuthStateChanged(user => {
+  if (user) {
+    console.log("로그인된 사용자:", user);
+    loginModal.style.display = "none";
+    // 사용자 프로필이 DB에 등록되어 있는지 확인
+    checkAndCreateUserProfile(user);
+    // (선택사항) 헤더 등에 사용자 닉네임/포인트 표시하는 로직 추가 가능
+  } else {
+    loginModal.style.display = "flex";
+  }
+});
+
+// 프로필 확인 및 최초 가입 시 DB에 저장
+function checkAndCreateUserProfile(user) {
+  const userRef = database.ref('users/' + user.uid);
+  userRef.once('value')
+    .then(snapshot => {
+      if (!snapshot.exists()) {
+        // 최초 가입 – displayName가 없으면 이메일 가입폼의 닉네임 사용
+        const nickname = user.displayName || document.getElementById("nickname").value || "익명";
+        userRef.set({
+          email: user.email,
+          nickname: nickname,
+          points: 0,
+          createdAt: firebase.database.ServerValue.TIMESTAMP
+        });
+      }
+    })
+    .catch(error => {
+      console.error("프로필 확인/생성 에러:", error);
+    });
+}
+
+// 구글 로그인 버튼 처리
+document.getElementById("google-signin-btn").addEventListener("click", () => {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider)
+    .then(result => {
+      console.log("구글 로그인 성공:", result.user);
+      // checkAndCreateUserProfile(result.user) → onAuthStateChanged에서 처리됨.
+    })
+    .catch(error => {
+      console.error("구글 로그인 실패:", error);
+    });
+});
+
+// 애플 로그인 버튼 처리
+document.getElementById("apple-signin-btn").addEventListener("click", () => {
+  const provider = new firebase.auth.OAuthProvider('apple.com');
+  auth.signInWithPopup(provider)
+    .then(result => {
+      console.log("애플 로그인 성공:", result.user);
+    })
+    .catch(error => {
+      console.error("애플 로그인 실패:", error);
+    });
+});
+
+// 이메일 로그인/회원가입 폼 처리
+document.getElementById("email-signin-form").addEventListener("submit", e => {
+  e.preventDefault();
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const nickname = document.getElementById("nickname").value;
+  
+  // 먼저 회원가입 시도
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(result => {
+      // 가입 후 닉네임 업데이트 (Auth displayName)
+      return result.user.updateProfile({ displayName: nickname })
+        .then(() => {
+          console.log("이메일 가입 성공:", result.user);
+          // 프로필 생성은 onAuthStateChanged에서 처리됨.
+        });
+    })
+    .catch(error => {
+      // 만약 이미 가입된 이메일이면 로그인 시도
+      if (error.code === "auth/email-already-in-use") {
+        auth.signInWithEmailAndPassword(email, password)
+          .then(result => {
+            console.log("이메일 로그인 성공:", result.user);
+          })
+          .catch(err => {
+            console.error("이메일 로그인 실패:", err);
+          });
+      } else {
+        console.error("이메일 가입 실패:", error);
+      }
+    });
+});
+
+/***************************************************
+ * 게임 점수 저장 시 사용자 누적 포인트 업데이트
+ ***************************************************/
+// 기존의 saveScoreToFirebase 함수 내부 혹은 별도의 함수에서
+// 게임 스코어 저장 후, 현재 로그인한 사용자의 누적 포인트를 갱신합니다.
+
+function saveScoreToFirebase(score, diff, target) {
+  const newRecord = {
+    score: score,
+    diff: diff,
+    target: target,
+    timestamp: Date.now()
+  };
+
+  // 게임 스코어는 기존 방식대로 저장
+  database.ref("scores").push(newRecord)
+    .then(() => {
+      console.log("점수 저장 성공:", newRecord);
+    })
+    .catch((error) => {
+      console.error("점수 저장 실패:", error);
+    });
+  
+  // 현재 사용자가 로그인 되어 있다면 프로필의 누적 포인트도 업데이트
+  const user = auth.currentUser;
+  if (user) {
+    const userRef = database.ref('users/' + user.uid);
+    userRef.once('value')
+      .then(snapshot => {
+        const currentPoints = snapshot.val().points || 0;
+        // 게임에서 획득한 점수를 누적
+        userRef.update({ points: currentPoints + score });
+      })
+      .catch(error => {
+        console.error("포인트 업데이트 실패:", error);
+      });
+  }
+}
+
+// UI 개선 및 추가 기능
+document.getElementById("logout-btn").addEventListener("click", () => {
+  auth.signOut().then(() => {
+    console.log("로그아웃 성공");
+    // 필요 시 UI 업데이트
+  });
+});
+
+
+
+function generateRandomNickname() {
+  const adjectives = ["Happy", "Brave", "Calm", "Clever", "Gentle", "Lively", "Noble", "Quick", "Smart", "Witty"];
+  const animals = ["Lion", "Tiger", "Bear", "Wolf", "Fox", "Eagle", "Shark", "Panda", "Leopard", "Falcon"];
+  const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const animal = animals[Math.floor(Math.random() * animals.length)];
+  const number = Math.floor(1000 + Math.random() * 9000);
+  return `${adj}${animal}${number}`;
+}
+
+
+/***************************************************
+ * Firebase Authentication 및 프로필 관리
+ ***************************************************/
+
+// 이미 firebase.initializeApp(firebaseConfig) 호출 후 사용 가능
+// const auth = firebase.auth();
+// const database = firebase.database();
+
+// 로그인 상태 감지: 로그인된 경우 헤더에 사용자 정보 표시, 아니면 로그인 모달(기존 로그인 UI가 있다면) 표시
+auth.onAuthStateChanged(user => {
+  const userProfileInfo = document.getElementById("user-profile-info");
+  const userAvatar = document.getElementById("user-avatar");
+  const userEmailElem = document.getElementById("user-email");
+  
+  if (user) {
+    // 로그인된 경우 사용자 정보 표시
+    userProfileInfo.style.display = "flex";
+    userEmailElem.textContent = user.email;
+    if (user.photoURL) {
+      userAvatar.src = user.photoURL;
+    } else {
+      // 기본 아바타 이미지 (직접 준비한 이미지 경로 사용)
+      userAvatar.src = "/images/default-avatar.png";
+    }
+    // 프로필이 DB에 등록되어 있는지 확인하고 없으면 생성 (자동 닉네임 적용)
+    checkAndCreateUserProfile(user);
+  } else {
+    userProfileInfo.style.display = "none";
+    // (로그인 모달 표시 등 추가 처리 가능)
+  }
+});
+
+// 프로필 확인 및 최초 가입 시 DB에 저장 (자동 닉네임 적용)
+function checkAndCreateUserProfile(user) {
+  const userRef = database.ref('users/' + user.uid);
+  userRef.once('value')
+    .then(snapshot => {
+      if (!snapshot.exists()) {
+        // 만약 Auth 프로필의 displayName이 없다면 자동 생성
+        let nickname = user.displayName;
+        if (!nickname) {
+          nickname = generateRandomNickname();
+          // Auth 프로필 업데이트 (비동기 처리)
+          user.updateProfile({ displayName: nickname })
+            .catch(error => console.error("닉네임 자동 업데이트 에러:", error));
+        }
+        // DB에 사용자 프로필 저장
+        userRef.set({
+          email: user.email,
+          nickname: nickname,
+          points: 0,
+          createdAt: firebase.database.ServerValue.TIMESTAMP
+        });
+      }
+    })
+    .catch(error => {
+      console.error("프로필 확인/생성 에러:", error);
+    });
+}
+
+// "user-profile-info" 클릭 시 프로필 페이지 열기
+document.getElementById("user-profile-info").addEventListener("click", () => {
+  document.getElementById("profile-page").style.display = "flex";
+  loadUserProfile();
+});
+
+// 프로필 페이지 닫기 버튼
+document.getElementById("close-profile-btn").addEventListener("click", () => {
+  document.getElementById("profile-page").style.display = "none";
+});
+
+// 프로필 정보 로드: DB에서 사용자 정보를 불러와 프로필 페이지 업데이트
+function loadUserProfile() {
+  const user = auth.currentUser;
+  if (user) {
+    const userRef = database.ref("users/" + user.uid);
+    userRef.once("value")
+      .then(snapshot => {
+        const data = snapshot.val();
+        if (data) {
+          document.getElementById("profile-email").textContent = data.email;
+          document.getElementById("profile-nickname").textContent = data.nickname;
+          document.getElementById("profile-points").textContent = data.points;
+          // 프로필 페이지의 아바타: Auth의 photoURL 우선, 없으면 기본 이미지
+          const profileAvatar = document.getElementById("profile-avatar");
+          if (user.photoURL) {
+            profileAvatar.src = user.photoURL;
+          } else {
+            profileAvatar.src = "/images/default-avatar.png";
+          }
+        }
+      })
+      .catch(error => {
+        console.error("프로필 로드 에러:", error);
+      });
+  }
+}
+
+// 닉네임 수정 버튼: 수정 폼 보이기
+document.getElementById("edit-nickname-btn").addEventListener("click", () => {
+  document.getElementById("edit-nickname-form").style.display = "block";
+});
+
+// 저장 버튼: 새로운 닉네임을 DB와 Auth 프로필에 업데이트
+document.getElementById("save-nickname-btn").addEventListener("click", () => {
+  const newNickname = document.getElementById("new-nickname").value;
+  if(newNickname.trim().length > 0) {
+    const user = auth.currentUser;
+    if(user) {
+      const userRef = database.ref("users/" + user.uid);
+      userRef.update({ nickname: newNickname })
+        .then(() => {
+          // Auth 프로필도 업데이트 (선택사항)
+          return user.updateProfile({ displayName: newNickname });
+        })
+        .then(() => {
+          document.getElementById("profile-nickname").textContent = newNickname;
+          alert("닉네임이 업데이트되었습니다.");
+          document.getElementById("edit-nickname-form").style.display = "none";
+        })
+        .catch(error => {
+          console.error("닉네임 업데이트 에러:", error);
+        });
+    }
+  }
+});
+
+/***************************************************
+ * 게임 점수 저장 시 사용자 누적 포인트 업데이트
+ ***************************************************/
+// 기존 saveScoreToFirebase 함수 내부 또는 별도 함수에서, 점수 저장 후 현재 사용자의 누적 포인트도 갱신합니다.
+function saveScoreToFirebase(score, diff, target) {
+  const newRecord = {
+    score: score,
+    diff: diff,
+    target: target,
+    timestamp: Date.now()
+  };
+
+  // 게임 스코어 저장 (기존 방식)
+  database.ref("scores").push(newRecord)
+    .then(() => {
+      console.log("점수 저장 성공:", newRecord);
+    })
+    .catch(error => {
+      console.error("점수 저장 실패:", error);
+    });
+  
+  // 현재 로그인 사용자의 누적 포인트 업데이트
+  const user = auth.currentUser;
+  if (user) {
+    const userRef = database.ref('users/' + user.uid);
+    userRef.once('value')
+      .then(snapshot => {
+        const currentPoints = snapshot.val().points || 0;
+        userRef.update({ points: currentPoints + score });
+      })
+      .catch(error => {
+        console.error("포인트 업데이트 실패:", error);
+      });
+  }
+}
+
+// 로그아웃 버튼 이벤트 리스너
+const logoutBtn = document.getElementById('logout-btn');
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', () => {
+    firebase.auth().signOut().then(() => {
+      console.log('로그아웃 성공');
+      // 로그아웃 후 리다이렉트 또는 상태 업데이트
+      window.location.reload(); // 페이지 새로고침
+    }).catch((error) => {
+      console.error('로그아웃 실패:', error);
+    });
+  });
+}
+
+// 로그인 상태 감지 시 UI 업데이트
+auth.onAuthStateChanged(user => {
+  const userProfile = document.querySelector('.user-profile');
+  const logoutBtn = document.getElementById('logout-btn');
+  
+  if (user) {
+    // 로그인 상태
+    if (userProfile) {
+      userProfile.style.display = 'flex';
+    }
+    if (logoutBtn) {
+      logoutBtn.style.display = 'block';
+    }
+  } else {
+    // 로그아웃 상태
+    if (userProfile) {
+      userProfile.style.display = 'none';
+    }
+    if (logoutBtn) {
+      logoutBtn.style.display = 'none';
+    }
+  }
+});
+
+/***************************************************
+ * 숫자 타일 랜덤 배치 & 애니메이션
+ ***************************************************/
+function createRandomTiles(numTiles = 30) {
+  const backgroundTiles = document.getElementById('background-tiles');
+  if (!backgroundTiles) return;
+  
+  // [1] 기존 타일 초기화
+  backgroundTiles.innerHTML = '';
+  
+  // [2] numTiles개의 랜덤 숫자 타일 생성
+  for (let i = 0; i < numTiles; i++) {
+    const tile = document.createElement('div');
+    tile.classList.add('tile');
+    
+    // 랜덤 숫자 (0~9)
+    const randomNumber = Math.floor(Math.random() * 10);
+    tile.textContent = randomNumber;
+    
+    // 화면 크기에 맞춰 무작위 위치 배치
+    const posX = Math.random() * 100; // 0~100 (vw%)
+    const posY = Math.random() * 100; // 0~100 (vh%)
+    tile.style.left = `${posX}%`;
+    tile.style.top = `${posY}%`;
+    
+    // 살짝 다른 크기를 주어 변화를 줄 수도 있음 (선택사항)
+    tile.style.fontSize = `${1 + Math.random() * 2}rem`;
+
+    // [3] 배경 타일에 추가
+    backgroundTiles.appendChild(tile);
+
+    // [4] (옵션) 랜덤한 이동 애니메이션
+    setTimeout(() => {
+      tile.style.transform = `translate(${(Math.random() - 0.5) * 50}px, ${(Math.random() - 0.5) * 50}px) rotate(${(Math.random() - 0.5) * 20}deg)`;
+    }, 100);
+  }
+}
+
+// 페이지 로드 후 첫화면 배경 타일 생성
+window.addEventListener('DOMContentLoaded', () => {
+  createRandomTiles(30);
+});
+
+// onAuthStateChanged: 로그인/로그아웃 상태 감지
+auth.onAuthStateChanged(async (user) => {
+  const userProfileInfo = document.getElementById("user-profile-info");
+  if (!userProfileInfo) return; // 해당 요소가 없으면 종료
+
+  if (user) {
+    // 1) 로그인된 상태
+    //    DB에서 nickname 가져오기
+    const userRef = database.ref("users/" + user.uid);
+    try {
+      const snapshot = await userRef.once("value");
+      if (snapshot.exists()) {
+        const userData = snapshot.val();
+        userProfileInfo.textContent =  userData.nickname + " >" || "익명";
+      } else {
+        // DB에 프로필이 없다면, Firebase Auth의 displayName 사용
+        userProfileInfo.textContent = user.displayName + " >" || "익명";
+      }
+    } catch (error) {
+      console.error("유저 닉네임 로드 실패:", error);
+      userProfileInfo.textContent = user.displayName + " >" || "익명";
+    }
+  } else {
+    // 2) 로그아웃 상태
+    //    기본 문구로 "로그인" 표시
+    userProfileInfo.textContent = "로그인";
+  }
+});
+
+// 슬라이더 UI 값 변경에 따라 레이블 업데이트
+document.getElementById("round-slider").addEventListener("input", function() {
+  const sliderValue = parseInt(this.value, 10);
+  let label = "";
+  
+  // 10~19 값은 Level 순서대로, 20인 경우는 "최종 Level"로 표시
+  if (sliderValue === 20) {
+    label = "최종 Level (" + sliderValue + "점)";
+  } else {
+    label = "Level " + (sliderValue - 9) + " (" + sliderValue + "점)";
+  }
+  
+  document.getElementById("round-slider-label").textContent = label;
+});
+
+/***************************************************
+ * 전역 변수
+ ***************************************************/
+let hintsLeft = 3;
+
+/***************************************************
+ * 힌트 버튼 텍스트 업데이트 함수
+ ***************************************************/
+function updateHintButtonLabel() {
+  const hintBtn = document.getElementById("hint-btn");
+  if (!hintBtn) return;
+  hintBtn.textContent = `Hint(${hintsLeft})`;
+}
+
+/***************************************************
+ * 힌트 버튼 클릭 핸들러
+ ***************************************************/
+function onHintClick(isInitialHint = false) {
+  // 남은 힌트 횟수가 0 이하라면 사용 불가
+  if (hintsLeft <= 0) {
+    showIOSToastMessage("더 이상 힌트를 사용할 수 없습니다.");
+    return;
+  }
+
+  hintsLeft--; // 힌트 1회 차감
+  updateHintButtonLabel(); // (1) 힌트 버튼에 남은 횟수 표시
+
+  // 기존 힌트 로직
+  let lines = findAllPossibleLines();
+  if (lines.length === 0) {
+    showIOSToastMessage(translations[currentLanguage].no_more_hints);
+    return;
+  }
+
+  if (hintLinePositions) {
+    markLine(hintLinePositions, null, "hint-line");
+    showIOSToastMessage(translations[currentLanguage].hintMessage);
+    hintLinePositions = null;
+  }
+  let picked = lines[0];
+  hintLinePositions = picked;
+  markLine(picked, "hint-line");
+  showIOSToastMessage(translations[currentLanguage].hintMessage + '(남은 힌트: ' + hintsLeft + '회)');
+
+}
+
