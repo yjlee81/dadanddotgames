@@ -124,10 +124,11 @@
   
  <!-- [1] 헤더 -->
  <header class="main-header">
-  <div  class="header-left">
-      <a id="user-profile-info" onclick="user-profile-info" selected>Hi!</a>
+  <div class="header-left">
+    <!-- 헤더 왼쪽에 있던 프로필 관련 버튼 제거/주석 -->
+    <!-- <a id="user-profile-info" selected>Hi!</a> -->
+    <!-- ...기존 다른 로고/메뉴가 있다면 유지... -->
   </div>
-
 
   <div class="header-center">
     <nav class="gnb">
@@ -138,6 +139,7 @@
       </div>
     </nav>
   </div>
+
   <div class="header-right">
     <select class="language-selector" id="language-select">
       <option value="ko" selected>KR</option>
@@ -145,9 +147,15 @@
       <option value="ja">JP</option>
       <option value="zh">ZH</option>
     </select> 
-      <!-- 로그인 상태일 때 표시할 사용자 정보 (기본 숨김) -->
-  </div>  
-  
+
+    <!-- 새로 추가된 인증 컨테이너 -->
+    <div id="auth-container" style="display: flex; gap: 8px;">
+      <!-- 1) 로그인되지 않았을 때 표시할 버튼 -->
+      <button id="login-btn" class="tertiary-button-small" style="display:none;">로그인</button>
+      <!-- 2) 로그인되었을 때 사용자 닉네임 표시할 버튼 -->
+      <button id="profile-btn" class="tertiary-button-small" style="display:none;">닉네임 ></button>
+    </div>
+  </div>
 </header>
 
 
@@ -159,7 +167,7 @@
     <h2 style="font-weight: 600; font-size: 1.4rem; margin-bottom: 12px;">내 프로필</h2>
     <img id="profile-avatar" src="" alt="Avatar" style="width:80px; height:80px; border-radius:50%; margin-bottom: 10px; object-fit: cover;">
 
-    <p style="margin-bottom: 12px;">
+    <p style="margin-bottom: 8px;">
       <strong>이메일:</strong> <span id="profile-email"></span> 
       <button id="logout-btn" class="tertiary-button-small" style="margin-left:6px;">Logout</button>
     </p>
@@ -248,7 +256,6 @@
         </tr>
       </table>
     </section>
-    <!--
     <footer id="footer-game">
       <p data-i18n="footerText">&copy; 2025 Dadanddot.com</p>
       <p id="version">v.0.8.0</p>
@@ -256,7 +263,7 @@
       <a href="/sd/ranking" data-link data-i18n="scoreboards">스코어보드</a>
       <a href="/pp.html" data-link data-i18n="privacyPolicy">개인정보 처리방침</a>
     </footer>
-    -->
+    
   </div>
 </section>
 

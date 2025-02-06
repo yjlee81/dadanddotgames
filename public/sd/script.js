@@ -1614,18 +1614,44 @@ const database = firebase.database();
 
 // 로그인 모달 DOM 요소
 const loginModal = document.getElementById("login-modal");
+// (A) 로그인 상태 감지에서 '강제 모달 열기' 제거
 
-// 로그인 상태 감지: 사용자가 로그인되어 있으면 모달 숨김, 아니면 모달 표시
 auth.onAuthStateChanged(user => {
+  // 사용자 상태에 따라 헤더 버튼 노출 변경
+  const loginBtn = document.getElementById("login-btn");
+  const profileBtn = document.getElementById("profile-btn");
+
   if (user) {
-    console.log("로그인된 사용자:", user);
-    loginModal.style.display = "none";
-    // 사용자 프로필이 DB에 등록되어 있는지 확인
-    checkAndCreateUserProfile(user);
-    // (선택사항) 헤더 등에 사용자 닉네임/포인트 표시하는 로직 추가 가능
+    // 로그인된 경우: 로그인 버튼 숨김, 프로필 버튼 보이기
+    loginBtn.style.display = "none";
+    profileBtn.style.display = "inline-block";
+
+    // 프로필 버튼 텍스트에 닉네임 또는 “사용자님” 표시
+    const nickname = user.displayName || "사용자";
+    profileBtn.textContent = nickname + " >";
+
+    // 로그인 모달은 강제로 열지 않음
+    // loginModal.style.display = "none"; // 필요 시 강제로 닫기만
   } else {
-    loginModal.style.display = "flex";
+    // 로그아웃 상태: 프로필 버튼 숨기고, 로그인 버튼 보이기
+    profileBtn.style.display = "none";
+    loginBtn.style.display = "inline-block";
+
+    // 이전처럼 모달을 강제 노출하지 않음
+     loginModal.style.display = "none"; // 이 부분 주석 처리
   }
+});
+
+// (B) "로그인" 버튼 클릭 → 로그인 모달 열기
+document.getElementById("login-btn").addEventListener("click", () => {
+  const loginModal = document.getElementById("login-modal");
+  loginModal.style.display = "flex";
+});
+
+// (C) "profile-btn" 프로필 표시
+document.getElementById("profile-btn").addEventListener("click", () => {
+  document.getElementById("profile-page").style.display = "flex";
+  loadUserProfile();
 });
 
 // 프로필 확인 및 최초 가입 시 DB에 저장
@@ -2099,4 +2125,3 @@ function onHintClick(isInitialHint = false) {
   showIOSToastMessage(translations[currentLanguage].hintMessage + '(남은 힌트: ' + hintsLeft + '회)');
 
 }
-
