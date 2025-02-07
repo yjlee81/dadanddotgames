@@ -422,6 +422,17 @@ function saveScoreToFirebase(score, diff, target) {
     .catch((error) => {
       console.error("점수 저장 실패:", error);
     });
+    
+  // 누적점수 업데이트
+  updateCumulativeScore(currentNickname, finalScore)
+  .then(newScore => {
+    console.log("새로운 누적점수:", newScore);
+    // 누적점수를 화면에 표시하려면 아래처럼 DOM에 표시 가능
+    // document.getElementById('cumulative-score').textContent = newScore;
+  })
+  .catch(err => {
+    console.error("누적점수 업데이트 오류:", err);
+  });
 }
 
 // 스코어보드 렌더링
@@ -527,6 +538,9 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // 페이지 로드 시 기본 필터에 맞게 필터 적용
   applyFilters();
+
+  // 누적점수를 화면에 표시하려면 아래처럼 DOM에 표시 가능
+  document.getElementById('cumulative-score').textContent = newScore;
 });
 
 
@@ -984,7 +998,7 @@ function showOverlay(msg, isSuccess){
     <h2>${isSuccess?"결 성공!":"조합 남음!"}</h2>
     <p>${isSuccess?"+100 포인트!":"-50 포인트!"}</p>
     <div style="margin:15px 0;">현재 점수: ${totalScore}</div>
-    <button class="modal-button" onclick="closeOverlay()">확인</button>
+    <button class="primary-button" onclick="closeOverlay()">확인</button>
   `;
   overlayEl.style.display = "flex";
 
@@ -1136,7 +1150,7 @@ function backToTitleScreen() {
   gameContainerEl.style.display = "none";
   document.getElementById("game-over-overlay").style.display = "none";
   document.getElementById("overlay").style.display = "none";
-  titleScreenEl.style.display = "flex";
+  titleScreenEl.style.display = "block";
   overlayEl.classList.remove('final-round');
   stopTimer();
   
@@ -1771,3 +1785,44 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeNickname();
   setupNicknameChangeEvent();
 });
+
+/**
+ * 누적점수를 업데이트하는 함수
+ * @param {string} nickname - 사용자 닉네임
+ * @param {number} additionalScore - 이번 게임에서 획득한 점수
+ * @returns {Promise<number>} 업데이트 후의 새로운 누적점수
+ */
+async function updateCumulativeScore(nickname, additionalScore) {
+  // Firebase 주소 (cumulativeScores/"닉네임")
+  const ref = firebase.database().ref(`cumulativeScores/${nickname}`);
+
+  // 현재 누적점수 불러오기
+  const snapshot = await ref.once('value');
+  const currentScore = snapshot.val() || 0;
+
+  // 새 점수 = 기존 + 이번 게임 점수
+  const newScore = currentScore + additionalScore;
+
+  // Firebase에 저장
+  await ref.set(newScore);
+
+  return newScore;
+}
+
+// 누적점수를 DOM에 표시하는 함수
+function showCumulativeScore(newScore) {
+  const scoreEl = document.getElementById('cumulative-score');
+  if (scoreEl) {
+    scoreEl.textContent = newScore;
+  }
+}
+
+// onGameOver 함수에서 사용 예시:
+function onGameOver(finalScore) {
+  updateCumulativeScore(currentNickname, finalScore)
+    .then(newScore => {
+      console.log("새로운 누적점수:", newScore);
+      showCumulativeScore(newScore);
+    });
+}
+

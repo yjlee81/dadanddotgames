@@ -53,7 +53,7 @@ html, body {
     --background-color: #f5ebe0;
     --text-color: #003049;
     --font-family: 'Nunito', sans-serif;
-    --header-background: #f9dcc4;
+    --header-background-color: #e3d5ca;
     --header-text-color: #111111;
     --header-border-color: #dedede;
     --button-hover-color: #0081a7;
@@ -66,19 +66,20 @@ html, body {
     --overlay-background: #3d405b;
     --modal-background: #3d405b;
     --toast-background: #3d405b;
-    --hint-color: #cecece;
+    --hint-color: #a6a6a6;
+    --white-color: #fdfbf5;
     
   }
   
    /* ===== [상단 헤더] ===== */
    .main-header {
-    /* background: var(--header-background); */
+    background: var(--header-background-color);
     color: var(--header-text-color);
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     height: 60px;
-    /* padding: 0 24px; */
+    padding: 0 8px 0 16px;
     /* border-bottom: 1px solid var(--header-border-color); */
     /* box-shadow: 0 2px 8px rgba(0,0,0,0.05); */
     position: sticky;
@@ -92,6 +93,24 @@ html, body {
     display: flex;
     align-items: center;
     gap: 4px;
+  }
+
+  .title-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 6px;
+  }
+  .profile-container {
+    display: flex;
+    align-items: flex-start;
+    margin: 16px;
+    flex-direction: column;
+    /* padding: 0px 20px; */
+}
+
+  .profile-container h1 {
+    margin: 0;
   }
   
   .logo-link {
@@ -168,6 +187,7 @@ html, body {
     margin-top: 12px;
     width: 100%;
     border: 1px solid var(--accent-color);
+    background: var(--header-background-color);
 }
 
   .language-selector {
@@ -203,7 +223,7 @@ html, body {
   .main-header nav {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 1px;
   }
   
   .main-header nav a {
@@ -241,6 +261,9 @@ html, body {
     font-size: 1.8rem;
     color: #333;
     margin: 0px;
+
+    margin: 0;
+    color: var(--bloodorange-color);
 }
   #title-screen .subtitle {
     font-size: 1rem;
@@ -410,7 +433,7 @@ html, body {
     justify-content: space-around;
     align-items: flex-start;
     padding: 8px;
-    background: var(--header-background);
+    background: var(--header-background-color);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid #ccc;
     height: 40px;
@@ -793,13 +816,13 @@ margin-bottom: 65px;
 
 /* ===== how-to-play, faq, about ===== */
 .info-section {
-  background: #fefefe;
+  background: var(--white-color);
   border: 0px solid #ddd;
   border-radius: 12px;
   padding: 20px;
   /* margin: 20px auto; */
   max-width: 380px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
   margin: 16px;
   align-self: center;
 }
@@ -1182,7 +1205,7 @@ nav a[data-link] {
 .tab-container {
   display: flex;
   gap: 4px;
-  background: #f0f0f0;
+  background: var(--white-color);
   border-radius: 8px;
   padding: 4px;
 }
@@ -1202,7 +1225,7 @@ nav a[data-link] {
 
 /* 활성 탭 스타일 및 애니메이션 효과 */
 .tab-link.active {
-  background-color: #fff;
+  background-color: var(--white-color);
   color: #000;
   font-weight: 600;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -1399,7 +1422,7 @@ nav a[data-link] {
   margin: 10px 0;
 }
 .tos-consent a {
-  color: #007aff; /* iOS 스타일 파랑 */
+  color: var(--accent-color); /* iOS 스타일 파랑 */
   text-decoration: underline;
 }
 .tos-consent a:hover {
@@ -1410,27 +1433,7 @@ nav a[data-link] {
    Settings 섹션 디자인 개선
    ========================= */
 
-#settings {
-  /* display를 none/block 전환은 자바스크립트에서 하기에 CSS에서는 변경 불필요 */
-  max-width: 600px;  /* 너비 제한을 주어 가운데 정렬 시 보기 좋음 */
-  margin: 2rem auto; /* 수직 여백과 가운데 정렬 */
-  padding: 1rem;
-}
 
-#settings h3 {
-  font-size: 1.4rem;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 0.5rem;
-}
-
-#settings h2 {
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #333;
-}
 
 #settings p {
   line-height: 1.6;
@@ -1438,7 +1441,7 @@ nav a[data-link] {
 }
 
 #settings a {
-  color: #007aff; /* 하이라이트 색 */
+  color: var(--accent-color); /* 하이라이트 색 */
   text-decoration: none;
 }
 #settings a:hover {
@@ -1456,15 +1459,6 @@ nav a[data-link] {
   border-radius: 4px;
   border: 1px solid #ccc;
   font-size: 0.9rem;
-}
-
-#settings h3 + p {
-  margin-top: 0.8rem;
-}
-
-/* 버전정보 구역에 약간의 포인트 주기 */
-#settings h3 + p + h3 {
-  margin-top: 1.5rem;
 }
 
 /* [Settings 페이지 행 배치] */
@@ -1487,25 +1481,6 @@ nav a[data-link] {
   flex: 1;
 }
 
-/* 다른 전반적인 디자인 (이미 있을 수 있으므로 필요에 맞춰 조정) */
-#settings {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 1rem;
-}
-
-#settings h3 {
-  font-size: 1.4rem;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 0.5rem;
-}
-
-#settings .setting-label h2 {
-  margin: 0;
-  font-size: 1.1rem;
-  color: #333;
-}
 
 #settings .setting-value p {
   margin: 0.5rem 0;
@@ -1551,7 +1526,7 @@ nav a[data-link] {
   border-radius: 50%;
 }
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: var(--background-color);
 }
 input:checked + .slider:before {
   transform: translateX(18px);

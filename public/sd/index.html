@@ -125,15 +125,14 @@
  <!-- [1] 헤더 -->
  <header class="main-header">
   <div class="header-left">
-    <h2 id="titleLabel" ><span id="nickname">닉네임</span></h2> 
-    <a id="nickname-change-btn" ><i class="fi fi-rr-angle-small-down" style="font-size: 16px;"></i></a>
+    
     <!-- 헤더 왼쪽에 있던 프로필 관련 버튼 제거/주석 -->
     <!-- <a id="user-profile-info" selected>Hi!</a> -->
     <!-- ...기존 다른 로고/메뉴가 있다면 유지... -->
-    <!-- <a href="/" class="logo-link">
-      <img src="/images/dnd_logo_tr_small.png" alt="Dad&Dot Games 로고" class="logo">
-    </a>
-    <div class="logo-divider">|</div> -->
+    
+      <img src="/images/256.png" alt="Sumordone logo" class="title-logo">
+    
+    
     
   </div>
 
@@ -172,12 +171,17 @@
 
   <!-- [2] 타이틀 화면 -->
 <div id="title-screen" data-route="home">
-  <div class="title-container">
+    <div class="profile-container">
+      <h1 id="titleLabel" ><span id="nickname">닉네임</span><i id="nickname-change-btn" class="fi fi-rr-pencil" style="font-size: 16px;"></i></h1> 
+      <!-- <h2 id="cumulative-score">000점</h2> -->
+    </div>
+  <!-- <div class="title-container">
     <div class="tab-container">
       <option value="classic" data-link="/sd/" class="tab-link active">클래식 모드</option>
       <option value="daily" data-link="/sd/daily" class="tab-link">일일 도전 모드(준비중)</option>
     </div>
-
+  -->
+    
     <!-- 게임 옵션 (목표합 & 난이도) -->
     <div class="info-section" id="classic-mode-options">
       <h2>클래식 모드</h2>
@@ -223,9 +227,11 @@
 
 
   <!-- [3] 랭킹 화면 -->
-<div id="ranking" class="info-section-scoreboards" style="display: none;">
-  <div class="score-table-title-container">
-    <h3 data-i18n="scoreboards">스코어보드</h3>
+<div id="ranking"  style="display: none; text-align: center;">
+  <h3 data-i18n="scoreboards">스코어보드</h3>
+
+  <div class="info-section">
+    
         
     <!-- 개선된 필터 UI: 드롭다운 메뉴를 활용 -->
     <div class="ranking-filters">
@@ -282,7 +288,7 @@
 <div id="tutorial"  style="display: none;">
   <!-- How to Play -->
   <section id="tutorial-section">
-    <h3 data-i18n="howToPlay" style="text-align: center;">How to Play</h3>
+    <h3 data-i18n="howToPlay" style="text-align: center;">게임 방법</h3>
     
     <div class="info-section">
     <p data-i18n="howToPlayDetail1"><strong>1. 드래그해서 일렬로 숫자들을 선택하세요</strong></p>
@@ -318,28 +324,30 @@
 </div>  
 <!-- 설정 화면 -->
 <div id="settings" style="display: none;">
-  <h3 data-i18n="settings" style="text-align: center;">Settings</h3>
+
+  <h3 data-i18n="settings" style="text-align: center;">설정</h3>
+  
   <div class="info-section">
-  <div class="setting-row">
-    
-    <div class="setting-value">
-      <p>
-        <span class="subtitle" data-i18n="playCountSubtitle1">총 </span>
-        <span id='game-count-value'>0</span>
-        <span class="subtitle" data-i18n="playCountSubtitle2">번 플레이를 기록한 숫자 퍼즐게임</span>
-      </p>
-    </div>
+    <div class="setting-row">
+      
+      <div class="setting-value">
+        <p>
+          <span class="subtitle" data-i18n="playCountSubtitle1">총 </span>
+          <span id='game-count-value'>0</span>
+          <span class="subtitle" data-i18n="playCountSubtitle2">번 플레이를 기록한 숫자 퍼즐게임</span>
+        </p>
+      </div>
   </div>
   <div class="setting-row">
     <div class="setting-value">
-      <p>Ver.0.9.0</p>
+      <p>Version.0.9.0</p>
     </div>
   </div>
 </div>
 <div class="info-section">
   <div class="setting-row">
     <div class="setting-label">
-      <h2>Language</h2>
+      <h4>Language</h4>
     </div>
     <div class="setting-value">
       <select class="language-selector" id="language-select">
@@ -354,7 +362,7 @@
 <div class="info-section">
   <div class="setting-row">
     <div class="setting-label">
-      <h2>이용약관</h2>
+      <h4>이용약관</h4>
     </div>
     <div class="setting-value">
       <a href="/terms-of-service.html" data-link data-i18n="tos">이용약관</a>
@@ -363,7 +371,7 @@
 
   <div class="setting-row">
     <div class="setting-label">
-      <h2>개인정보 처리방침</h2>
+      <h4>개인정보 처리방침</h4>
     </div>
     <div class="setting-value">
       <a href="/pp.html" data-link data-i18n="privacyPolicy">개인정보 처리방침</a>
@@ -372,7 +380,7 @@
 
   <div class="setting-row">
     <div class="setting-label">
-      <h2>라이센스 정보</h2>
+      <h4>라이센스 정보</h4>
     </div>
     <div class="setting-value">
       <p>
@@ -385,7 +393,7 @@
 
   <div class="setting-row">
     <div class="setting-label">
-      <h2>Dark Mode</h2>
+      <h4>Dark Mode</h4>
     </div>
     <div class="setting-value">
       <label class="toggle-switch">
