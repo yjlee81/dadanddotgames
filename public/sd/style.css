@@ -53,7 +53,7 @@ html, body {
     --background-color: #f5ebe0;
     --text-color: #003049;
     --font-family: 'Nunito', sans-serif;
-    --header-background: #f9f9f9;
+    --header-background: #f9dcc4;
     --header-text-color: #111111;
     --header-border-color: #dedede;
     --button-hover-color: #0081a7;
@@ -410,7 +410,7 @@ html, body {
     justify-content: space-around;
     align-items: flex-start;
     padding: 8px;
-    background: var(--background-color);
+    background: var(--header-background);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid #ccc;
     height: 40px;
