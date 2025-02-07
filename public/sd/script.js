@@ -27,7 +27,7 @@ const translations = {
     mainTitle: "Sum or Done Game",
     gameCount: "Total Played",
     startGame: "Start Now >",
-    goal: "Goal",
+    goal: "TargetSum",
     score: "Score",
     time: "Time",
     home: "Home",
@@ -66,7 +66,9 @@ const translations = {
     tos_consent1: "By selecting the \"Start Now >\" button above,",
     tos: "Terms of Service",
     tos_consent2: "agree to the",
-    no_more_hints: "You cannot get any more hints."
+    no_more_hints: "You cannot get any more hints.",
+    lengthBonusLabel: "Length",
+    emptyBonusLabel: "Empty"
   },
   ko: {
     mainTitle: "숫자 결합",
@@ -111,7 +113,9 @@ const translations = {
     tos_consent1: "위의 [지금 시작하기 >] 버튼을 선택함으로써",
     tos: "이용약관",
     tos_consent2: "에 동의해요.",
-    no_more_hints: "더이상 힌트를 얻을 수 없어요."
+    no_more_hints: "더이상 힌트를 얻을 수 없어요.",
+    lengthBonusLabel: "길이",
+    emptyBonusLabel: "빈칸"
   },
   ja: {
     mainTitle: "数字結合ゲーム",
@@ -157,7 +161,9 @@ const translations = {
     tos_consent1: "上記の「今すぐ始める >」ボタンを選択することで、",
     tos: "利用規約",
     tos_consent2: "に同意します。",
-    no_more_hints: "ヒントを取得できません。"
+    no_more_hints: "ヒントを取得できません。",
+    lengthBonusLabel: "長さ",
+    emptyBonusLabel: "空き"
   },
   zh: {
     mainTitle: "数字合并游戏",
@@ -202,7 +208,9 @@ const translations = {
     tos_consent1: "上記の「今すぐ始める >」ボタンを選択することで、",
     tos: "利用規約",
     tos_consent2: "に同意します。",
-    no_more_hints: "ヒントを取得できません。"
+    no_more_hints: "ヒントを取得できません。",
+    lengthBonusLabel: "長さ",
+    emptyBonusLabel: "空き"
   },
   
 };
@@ -605,6 +613,20 @@ function showGoalOnCountdownOverlay(value) {
  * 라운드 초기화
  ***************************************************/
 function initRound() {
+  const loadingBar = document.getElementById('loading-bar');
+
+  // 기존 transition 제거 후 width를 0%로 리셋
+  loadingBar.style.transition = 'none';
+  loadingBar.style.width = '0%';
+
+  // 강제로 reflow를 발생시켜서 style 변경을 적용
+  void loadingBar.offsetWidth;
+
+  // transition을 재설정하고, 애니메이션이 시작되도록 width를 100%로 변경
+  loadingBar.style.transition = 'width 3s linear';
+  loadingBar.style.width = '100%';
+
+  // 나머지 라운드 초기화 로직이 있다면 이어서 진행
   totalScore = 0;
 
   boardData = [];
@@ -1161,7 +1183,7 @@ function showFloatingScore(baseScore, lengthBonus, emptyBonus, tileElement) {
   const container = document.createElement('div');
   container.className = 'floating-score-container';
   container.style.position = 'absolute';
-  container.style.left = '50%';
+  container.style.left = '45%';
   container.style.top = '78px';
   container.style.transform = 'translate(-50%, -50%)';
   container.style.zIndex = '9999';
@@ -1191,13 +1213,13 @@ function showFloatingScore(baseScore, lengthBonus, emptyBonus, tileElement) {
 
   // 길이 보너스
   if (lengthBonus > 0) {
-    const lengthBox = createScoreBox(`+${lengthBonus} bonus`, 'length-bonus');
+    const lengthBox = createScoreBox(`${translations[currentLanguage].lengthBonusLabel} +${lengthBonus}`, 'length-bonus');
     stack.appendChild(lengthBox);
   }
 
   // 빈칸 보너스
   if (emptyBonus > 0) {
-    const emptyBox = createScoreBox(`+${emptyBonus} bonus`, 'empty-bonus');
+    const emptyBox = createScoreBox(`${translations[currentLanguage].emptyBonusLabel} +${emptyBonus}`, 'empty-bonus');
     stack.appendChild(emptyBox);
   }
 

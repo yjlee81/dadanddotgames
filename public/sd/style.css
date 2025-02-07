@@ -16,10 +16,15 @@ html, body {
     cursor: pointer;
   }
   :root {
-    --accent-color: #003049; /* iOS 느낌의 파랑 */
+    /* 1번 세트 
+    --accent-color: #003049;
     --accent-color-hover: #005481;
+    --yellow-color: #fcbf49;
+    --bloodorange-color: #f77f00;
+    --hotpink-color: #ff0080;
+    --darkpink-color: #d62828;
     --tile-color: #fcbf49;
-    --tile-selected-color: #eae2b7;
+    --tile-selected-color: #b98d34;
     --background-color: #eae2b7;
     --text-color: #003049;
     --tile-hover-color: #f8f8f8;
@@ -33,6 +38,31 @@ html, body {
     --overlay-background: #003049
     --modal-background: #fff;
     --toast-background: #003049;
+    */
+
+    /* 2번 세트 */
+    --accent-color: #cb997e;
+    --accent-color-hover: #a17963;
+    --yellow-color: #fcbf49;
+    --bloodorange-color: #f07167;
+    --hotpink-color: #f07167;
+    --darkpink-color: #f07167;
+    --tile-color: #d5bdaf;
+    --tile-selected-color: #a79388;
+    --tile-hover-color: #f8f8f8;
+    --background-color: #f5ebe0;
+    --text-color: #003049;
+    --font-family: 'Nunito', sans-serif;
+    --header-background: #f9f9f9;
+    --header-text-color: #111111;
+    --header-border-color: #dedede;
+    --button-hover-color: #0081a7;
+    --secondary-button-color: #003049;
+    --secondary-button-hover-color: #005481;
+    --overlay-background: #3d405b;
+    --modal-background: #3d405b;
+    --toast-background: #3d405b;
+    
   }
   
    /* ===== [상단 헤더] ===== */
@@ -49,6 +79,8 @@ html, body {
     position: sticky;
     top: 0;
     z-index: 1000;
+    background: var(--background-color);
+    backdrop-filter: blur(10px);
 }
   
   .header-left {
@@ -360,7 +392,8 @@ html, body {
     background: #fafafa;
     height: 100%;
     transition: opacity 0.3s ease, display 0.3s ease;
-  }
+    background: var(--background-color);
+}
   
   #game-container.hide {
     opacity: 0;
@@ -372,7 +405,8 @@ html, body {
     justify-content: space-around;
     align-items: flex-start;
     padding: 8px;
-    background: #f9f9f9;
+    background: var(--background-color);
+    backdrop-filter: blur(10px);
     border-bottom: 1px solid #ccc;
     height: 40px;
     align-content: center;
@@ -393,6 +427,12 @@ display: block;
 font-size: 20px; 
 font-weight: bold;
 }
+
+.info-box .targetsum {
+  font-size: 20px; 
+  font-weight: bold;
+  color: var(--bloodorange-color);
+  }
 
 /* ===== [보드컨테이너 & 보드] ===== */
 .board-container {
@@ -415,11 +455,11 @@ margin-bottom: 65px;
     background: var(--tile-color); /* 반투명 흰색 */
     backdrop-filter: blur(10px);           /* 글래스 효과의 핵심: 흐림(blur) */
     -webkit-backdrop-filter: blur(10px);   /* Safari 등 WebKit 호환성 */
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* 살짝 그림자 */
-    border-radius: 16px;                   /* 모서리 둥글게 */
+    /* box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); /* 살짝 그림자 */
+    border-radius: 30px;                   /* 모서리 둥글게 */
     text-align: center;
     vertical-align: middle;
-    font-size: 28px;
+    font-size: 1.2rem;
     font-weight: 600;
     color: #333;
     cursor: pointer;
@@ -444,7 +484,8 @@ margin-bottom: 65px;
     justify-content: center;
     gap: 12px;
     z-index: 1000; /* 다른 요소 위에 표시되도록 */
-    background-color: rgba(245, 245, 245, 0.95); /* 배경색 추가 (선택사항) */
+    background: var(--background-color);
+    backdrop-filter: blur(10px);  
   }
   
   .primary-button {
@@ -453,7 +494,7 @@ margin-bottom: 65px;
     font-size: 1rem;
     border: none;
     border-radius: 8px;
-    background-color: var(--accent-color);
+    background-color: var(--darkpink-color);
     color: #fff;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -918,7 +959,7 @@ margin-bottom: 65px;
 #goal-label {
   font-size: 24px; /* 큰 글씨 크기 */
   font-weight: bold; /* 굵은 글씨 */
-  color: #999; /* 강조 색상 (주황색 예시) */
+  color: #eee; /* 강조 색상 (주황색 예시) */
   margin-top: 20px; /* 위쪽 여백 */
   text-align: center; /* 중앙 정렬 */
 }
@@ -926,7 +967,7 @@ margin-bottom: 65px;
 #goal-value {
     font-size: 100px; /* 큰 글씨 크기 */
     font-weight: bold; /* 굵은 글씨 */
-    color: #fff; /* 강조 색상 (주황색 예시) */
+    color: var(--bloodorange-color); /* 강조 색상 (주황색 예시) */
     text-align: center; /* 중앙 정렬 */
 }
 
@@ -1242,7 +1283,7 @@ nav a[data-link] {
 #loading-bar {
   width: 0%;                  /* 처음 0%에서 시작 */
   height: 100%;
-  background-color: #fafafa;  /* 파란색으로 변경 */
+  background-color: var(--background-color);  /* 파란색으로 변경 */
   transition: width 3s linear; 
 }
 
