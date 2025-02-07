@@ -125,7 +125,8 @@
  <!-- [1] 헤더 -->
  <header class="main-header">
   <div class="header-left">
-
+    <h2 id="titleLabel" ><span id="nickname">닉네임</span></h2> 
+    <a id="nickname-change-btn" ><i class="fi fi-rr-angle-small-down" style="font-size: 16px;"></i></a>
     <!-- 헤더 왼쪽에 있던 프로필 관련 버튼 제거/주석 -->
     <!-- <a id="user-profile-info" selected>Hi!</a> -->
     <!-- ...기존 다른 로고/메뉴가 있다면 유지... -->
@@ -133,8 +134,7 @@
       <img src="/images/dnd_logo_tr_small.png" alt="Dad&Dot Games 로고" class="logo">
     </a>
     <div class="logo-divider">|</div> -->
-    <a href="/sd/" class="logo-link">
-      <img src="/images/sd_s_128.png" alt="숫자결합 게임 로고" class="logo"></a>
+    
   </div>
 
 
@@ -144,17 +144,25 @@
   
   <div class="header-right">
     <nav class="icon-menu">
-      <!-- Home 아이콘 -->
-      <a href="/sd/" data-link><i class="fi fi-rr-house-blank"></i></a>
+      <!-- 1) Home 아이콘 -->
+      <a href="/sd/" data-link="/sd/">
+        <i class="fi fi-rr-house-blank"></i>
+      </a>
 
-      <!-- Rank 아이콘 -->
-      <a href="/sd/ranking" data-link><i class="fi fi-rr-crown"></i></a>
+      <!-- 2) Rank 아이콘 -->
+      <a href="/sd/ranking" data-link="/sd/ranking">
+        <i class="fi fi-rr-crown"></i>
+      </a>
 
-      <!-- Tutorial 아이콘 -->
-      <a href="/sd/tutorial" data-link><i class="fi fi-rr-interrogation"></i></a>
+      <!-- 3) Tutorial 아이콘 -->
+      <a href="/sd/tutorial" data-link="/sd/tutorial">
+        <i class="fi fi-rr-interrogation"></i>
+      </a>
 
-      <!-- Settings 아이콘 -->
-      <a href="/sd/settings" data-link>  <i class="fi fi-rr-menu-dots-vertical"></i></a>
+      <!-- 4) Settings 아이콘 -->
+      <a href="/sd/settings" data-link="/sd/settings">
+        <i class="fi fi-rr-menu-dots-vertical"></i>
+      </a>
   
   </nav>
     
@@ -165,12 +173,17 @@
   <!-- [2] 타이틀 화면 -->
 <div id="title-screen" data-route="home">
   <div class="title-container">
-    <h2 id="titleLabel" ><span id="nickname">닉네임</span><span data-i18n="welcome"> 님 👋</span></h2>
-    <!-- <img src="../images/how-to-play.gif" alt="how-to-play" class="how-to-play-image"> -->
-    
-    
+    <div class="tab-container">
+      <option value="classic" data-link="/sd/" class="tab-link active">클래식 모드</option>
+      <option value="daily" data-link="/sd/daily" class="tab-link">일일 도전 모드(준비중)</option>
+    </div>
+
     <!-- 게임 옵션 (목표합 & 난이도) -->
-    <div class="options-container">
+    <div class="info-section" id="classic-mode-options">
+      <h2>클래식 모드</h2>
+      <p>라운드마다 목표합이 커집니다.</p>
+      
+      <label>시작 라운드</label>
       <select id="round-select" class="selector">
         <!-- 라운드(목표합) -->
         <option value="10" data-i18n="level1_label">Level 1 (10점)</option>
@@ -198,7 +211,13 @@
 
     
     </div>
-          
+<!--
+      <button id="start-game-btn" data-i18n="startGame" onclick="onStartGame()">지금 시작하기 ></button>  
+      
+
+    
+    </div>
+  -->
   </div>
 </div>
 
@@ -245,9 +264,11 @@
 
         <tr>
           <th data-i18n="rank">순위</th>
+          <th>Nickname</th>
           <th data-i18n="score">점수</th>
           <th data-i18n="goal">목표합</th>
           <th data-i18n="time">시간</th>
+          
         </tr>
       </thead>
       <tbody>
@@ -258,19 +279,19 @@
 </div>
   
   <!-- [4] 게임방법 화면 -->  
-<div id="tutorial" class="info-section" style="display: none;">
+<div id="tutorial"  style="display: none;">
   <!-- How to Play -->
-  <section id="tutorial-section" >
+  <section id="tutorial-section" class="info-section">
     <h3 data-i18n="howToPlay">How to Play</h3>
     
     <p data-i18n="howToPlayDetail1"><strong>1. 드래그해서 일렬로 숫자들을 선택하세요</strong></p>
-    <img src="../images/tut1.png" alt="Drag to select numbers in a line">
+    <img src="../images/tut1.png" alt="Drag to select numbers in a line" style="width: 200px; filter: grayscale(100%);">
     
     <p data-i18n="howToPlayDetail2"><strong>2. 더이상 목표합을 만들수 없으면 결!을 누르세요.</strong></p>
-    <img src="../images/tut2.png" alt="hit Done! when you can't make the TargetSum">
+    <img src="../images/tut2.png" alt="hit Done! when you can't make the TargetSum" style="width: 200px; filter: grayscale(100%);">
     
     <p data-i18n="howToPlayDetail3"><strong>3. 숫자칸이 길수록 보너스점수를 얻을 수 있어요.</strong></p>
-    <img src="../images/tut3.png" alt="get bonus scores on lengthy lines">
+    <img src="../images/tut3.png" alt="get bonus scores on lengthy lines" style="width: 200px; filter: grayscale(100%);">
   </section>
 
   <!-- FAQ -->
@@ -292,35 +313,84 @@
 </div>  
 <!-- 설정 화면 -->
 <div id="settings" class="info-section" style="display: none;">
-  <h3 data-i18n="settings">Settings</h3>
+  <h3 data-i18n="settings">About & Settings</h3>
 
-  <h2 data-i18n="about">About</h2>
-  <p data-i18n="aboutDetail">Dad&Dot Games is a game development company that specializes in creating fun and challenging games for all ages.</p>
-  <p> 
-    <span class="subtitle" data-i18n="playCountSubtitle1">총 </span><span id='game-count-value'>0</span><span class="subtitle" data-i18n="playCountSubtitle2">번 플레이를 기록한 숫자 퍼즐게임</span>
-  </p>
-  <h3>Language</h3>
-  <select class="language-selector" id="language-select">
-    <option value="ko" selected>KR</option>
-    <option value="en">EN</option>
-    <option value="ja">JP</option>
-    <option value="zh">ZH</option>
-  </select> 
+  <div class="setting-row">
+    <div class="setting-label">
+      <h2 data-i18n="about">About</h2>
+    </div>
+    <div class="setting-value">
+      <p>
+        <span class="subtitle" data-i18n="playCountSubtitle1">총 </span>
+        <span id='game-count-value'>0</span>
+        <span class="subtitle" data-i18n="playCountSubtitle2">번 플레이를 기록한 숫자 퍼즐게임</span>
+      </p>
+    </div>
+  </div>
 
-  <h2>이용약관</h2>
-  <a href="/terms-of-service.html" data-link data-i18n="tos">이용약관</a>
+  <div class="setting-row">
+    <div class="setting-label">
+      <h2>Language</h2>
+    </div>
+    <div class="setting-value">
+      <select class="language-selector" id="language-select">
+        <option value="ko" selected>KR</option>
+        <option value="en">EN</option>
+        <option value="ja">JP</option>
+        <option value="zh">ZH</option>
+      </select>
+    </div>
+  </div>
 
-  <h2>개인정보 처리방침</h2>
-  <a href="/pp.html" data-link data-i18n="privacyPolicy">개인정보 처리방침</a>
+  <div class="setting-row">
+    <div class="setting-label">
+      <h2>이용약관</h2>
+    </div>
+    <div class="setting-value">
+      <a href="/terms-of-service.html" data-link data-i18n="tos">이용약관</a>
+    </div>
+  </div>
 
-  <h2>라이센스 정보</h2>
-  Uicons by <a href="https://www.flaticon.com/uicons">Flaticon</a>
-  
-  
-<h3>버전정보</h3>
-  
-  
+  <div class="setting-row">
+    <div class="setting-label">
+      <h2>개인정보 처리방침</h2>
+    </div>
+    <div class="setting-value">
+      <a href="/pp.html" data-link data-i18n="privacyPolicy">개인정보 처리방침</a>
+    </div>
+  </div>
 
+  <div class="setting-row">
+    <div class="setting-label">
+      <h2>라이센스 정보</h2>
+    </div>
+    <div class="setting-value">
+      <p>
+        Uicons by <a href="https://www.flaticon.com/uicons" target="_blank">Flaticon</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="setting-row">
+    <div class="setting-label">
+      <h2>버전정보</h2>
+    </div>
+    <div class="setting-value">
+      <p>0.9.0</p>
+    </div>
+  </div>
+
+  <div class="setting-row">
+    <div class="setting-label">
+      <h2>Dark Mode</h2>
+    </div>
+    <div class="setting-value">
+      <label class="toggle-switch">
+        <input type="checkbox" id="dark-mode-switch">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
 </div>
   
 <!-- [5] 카운트다운 오버레이 -->
@@ -362,7 +432,9 @@
   
   <!-- 하단 버튼 -->
   <div class="buttons-container">
-    <button id="home-button" class="tertiary-button"><a href="/sd/" data-link><i class="fi fi-rr-house-blank"></i></a></button>
+    <button id="home-button" class="tertiary-button">      <a href="/sd/" data-link="/sd/">
+      <i class="fi fi-rr-house-blank"></i>
+    </a></button>
     <button id="hint-btn" class="secondary-button" data-i18n="hint">Hint (3)</button>
     <button id="no-more" class="primary-button" data-i18n="done">Done!</button>
   </div>

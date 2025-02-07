@@ -70,7 +70,7 @@ const translations = {
   },
   ko: {
     mainTitle: "숫자 결합",
-    welcome: " 님 👋",
+    welcome: " 님,",
     gameCount: "총 플레이 횟수",
     startGame: "지금 시작하기 >",
     goal: "목표합",
@@ -85,7 +85,7 @@ const translations = {
     all: "전체",
     howToPlay: "게임 방법",
     faq: "FAQ",
-    about: "소개 & 업데이트",
+    about: "About",
     privacyPolicy: "개인정보 처리방침",
     footerText: "© 2025 Dadanddot.com",
     // 추가/수정된 key들
@@ -623,6 +623,7 @@ function initRound() {
 
   // 타이머 리셋
   remainingSeconds = 150;
+  hintsLeft = 3
   isTimerPaused = false;
   updateTimerDisplay();
   updateHintButtonLabel()
@@ -1137,7 +1138,7 @@ function showIOSToastMessage(msg, duration = 2000) {
     // 인포박스 바로 아래(예: 10px 간격)로 설정
     toastEl.style.top = `${infoBoxRect.bottom + 10}px`;
   } else {
-    toastEl.style.top = "150px";
+    toastEl.style.top = "30px";
   }
   
   // 애플 아일랜드 박스 효과를 위한 클래스 추가
@@ -1161,7 +1162,7 @@ function showFloatingScore(baseScore, lengthBonus, emptyBonus, tileElement) {
   container.className = 'floating-score-container';
   container.style.position = 'absolute';
   container.style.left = '50%';
-  container.style.top = '65px';
+  container.style.top = '78px';
   container.style.transform = 'translate(-50%, -50%)';
   container.style.zIndex = '9999';
 
@@ -1622,3 +1623,124 @@ function onHintClick(isInitialHint = false) {
 function updateHintButtonLabel() {
   document.getElementById('hint-btn').textContent = translations[currentLanguage].hint + ' (' + hintsLeft + ')';
 }
+
+/***************************************************
+ * 닉네임 관련 로직 (페이지 새로고침해도 유지)
+ ***************************************************/
+
+// 랜덤 단어 목록 (형용사/동물)
+const adjectives = ["Sunny", "Flying", "Brave", "Happy", "Swift", "Crazy", "Tiny"];
+const animals = ["Tiger", "Elephant", "Lion", "Panda", "Fox", "Rabbit", "Koala"];
+
+// 전역 닉네임 변수
+let currentNickname = "";
+
+/**
+ * 랜덤 닉네임 생성 함수
+ */
+function generateRandomNickname() {
+  const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const ani = animals[Math.floor(Math.random() * animals.length)];
+  const num = Math.floor(1000 + Math.random() * 9000); // 4자리
+  return `${adj}${ani}${num}`;
+}
+
+/**
+ * 닉네임 중복 여부 확인 함수
+ */
+async function isNicknameDuplicated(nickname) {
+  const snapshot = await firebase.database().ref('nicknames').orderByValue().equalTo(nickname).once('value');
+  return snapshot.exists(); // 해당 닉네임이 있으면 true
+}
+
+/**
+ * 닉네임을 Firebase에 저장 (중복 없을 시)
+ */
+async function saveNicknameToFirebase(nickname) {
+  // 중복인지 확인
+  const duplicated = await isNicknameDuplicated(nickname);
+  if (duplicated) {
+    return false; // 저장 불가
+  }
+  // 중복이 아니라면, push나 set으로 저장
+  const newRef = firebase.database().ref('nicknames').push();
+  await newRef.set(nickname);
+  return true;
+}
+
+/**
+ * 페이지 로드시 닉네임 초기화
+ *  1) localStorage에서 닉네임을 꺼냄.
+ *  2) 만약 없으면 새 닉네임 생성 후 Firebase & localStorage에 저장.
+ */
+async function initializeNickname() {
+  const storedNickname = localStorage.getItem("myNickname");
+  if (storedNickname) {
+    // 이미 저장된 닉네임이 있으면 그대로 사용
+    currentNickname = storedNickname;
+    document.getElementById("nickname").textContent = currentNickname;
+    return;
+  }
+
+  // 저장된 닉네임이 없으면 새로 생성
+  let tempNickname = generateRandomNickname();
+  let success = false;
+  let loopCount = 0;
+
+  // 중복이면 재생성하여 시도
+  while (!success && loopCount < 10) {
+    success = await saveNicknameToFirebase(tempNickname);
+    if (!success) {
+      tempNickname = generateRandomNickname();
+    }
+    loopCount++;
+  }
+
+  currentNickname = tempNickname;
+  // 화면에 표시
+  document.getElementById("nickname").textContent = currentNickname;
+  // 로컬 스토리지에 저장
+  localStorage.setItem("myNickname", currentNickname);
+}
+
+/**
+ * "닉네임 변경" 버튼 클릭 이벤트 설정
+ *  1) prompt로 새 닉네임 입력
+ *  2) 중복 확인
+ *  3) 통과 시 기존 닉네임 별도 처리 없이 Firebase·localStorage에 새로 저장
+ */
+function setupNicknameChangeEvent() {
+  const changeBtn = document.getElementById('nickname-change-btn');
+  changeBtn.addEventListener('click', async () => {
+    // 사용자 입력
+    const newName = prompt("새 닉네임을 입력하세요:", currentNickname);
+    if (!newName || newName.trim() === "") {
+      return; // 취소 시 아무 것도 안 함
+    }
+
+    // 중복 검사
+    const duplicated = await isNicknameDuplicated(newName);
+    if (duplicated) {
+      alert("이미 존재하는 닉네임입니다. 다른 닉네임을 사용해주세요.");
+      return;
+    }
+
+    // 중복이 아니면 새 닉네임 DB 및 localStorage에 갱신
+    await firebase.database().ref('nicknames').push(newName);
+
+    // 현재 닉네임을 새 이름으로 교체
+    currentNickname = newName;
+    document.getElementById('nickname').textContent = currentNickname;
+
+    // 로컬 스토리지도 업데이트
+    localStorage.setItem("myNickname", currentNickname);
+
+    alert("닉네임이 변경되었습니다!");
+  });
+}
+
+// DOMContentLoaded 이후에 닉네임 초기화, 버튼 이벤트 연결
+document.addEventListener("DOMContentLoaded", () => {
+  initializeNickname();
+  setupNicknameChangeEvent();
+});

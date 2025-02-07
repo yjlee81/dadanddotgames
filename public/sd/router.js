@@ -18,9 +18,11 @@
     });
 
     document.body.addEventListener('click', e => {
-      if (e.target.matches('[data-link]')) {
+      const anchorTag = e.target.closest('a[data-link]');
+      if (anchorTag) {
         e.preventDefault();
-        navigateTo(e.target.href);
+        const route = anchorTag.getAttribute('data-link');
+        navigateTo(route);
       }
     });
   };
