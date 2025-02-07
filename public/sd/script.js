@@ -1165,7 +1165,7 @@ function showIOSToastMessage(msg, duration = 2000) {
   
   // 애플 아일랜드 박스 효과를 위한 클래스 추가
   toastEl.classList.add("show", "island-effect");
-  
+
   setTimeout(() => {
     toastEl.classList.remove("show", "island-effect");
   }, duration);
@@ -1183,10 +1183,14 @@ function showFloatingScore(baseScore, lengthBonus, emptyBonus, tileElement) {
   const container = document.createElement('div');
   container.className = 'floating-score-container';
   container.style.position = 'absolute';
-  container.style.left = '45%';
-  container.style.top = '78px';
+  container.style.left = `45%`;
+  container.style.top = `75`;
   container.style.transform = 'translate(-50%, -50%)';
   container.style.zIndex = '9999';
+  container.style.flexWrap = 'wrap';
+  container.style.alignItems = 'center';
+  container.style.justifyContent = 'center';
+  container.style.width = '100%';
 
   // 점수 박스 생성 함수
   function createScoreBox(text, extraClass) {
@@ -1203,6 +1207,7 @@ function showFloatingScore(baseScore, lengthBonus, emptyBonus, tileElement) {
   stack.style.flexDirection = 'row';   // ← 수평 배열
   stack.style.alignItems = 'center';
   stack.style.gap = '8px';            // 점수 박스 간격(가로)
+  stack.style.flexWrap = 'wrap';
   container.appendChild(stack);
 
   // 기본 점수

@@ -45,8 +45,8 @@ html, body {
     --accent-color-hover: #a17963;
     --yellow-color: #fcbf49;
     --bloodorange-color: #f07167;
-    --hotpink-color: #f07167;
-    --darkpink-color: #f07167;
+    --success-color: #00afb9;
+    --fail-color: #f07167;
     --tile-color: #d5bdaf;
     --tile-selected-color: #a79388;
     --tile-hover-color: #f8f8f8;
@@ -57,11 +57,16 @@ html, body {
     --header-text-color: #111111;
     --header-border-color: #dedede;
     --button-hover-color: #0081a7;
-    --secondary-button-color: #003049;
-    --secondary-button-hover-color: #005481;
+    --primary-button-color: #e09f3e;
+    --primary-button-hover-color: #ad7b30;
+    --secondary-button-color: #f07167;
+    --secondary-button-hover-color: #c45a52;
+    --tertiary-button-color: #cecece;
+    --tertiary-button-hover-color: #ababab;;
     --overlay-background: #3d405b;
     --modal-background: #3d405b;
     --toast-background: #3d405b;
+    --hint-color: #cecece;
     
   }
   
@@ -272,7 +277,7 @@ html, body {
   }
   #start-game-btn {
     padding: 10px 20px;
-    background-color: var(--accent-color);
+    background-color: var(--primary-button-color);
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -285,7 +290,7 @@ html, body {
     width: 100%;
   }
   #start-game-btn:hover {
-    background-color: #005bb5;
+    background-color: var(--primary-button-hover-color);
   }
   #start-game-btn:active {
     transform: scale(0.98);
@@ -494,14 +499,14 @@ margin-bottom: 65px;
     font-size: 1rem;
     border: none;
     border-radius: 8px;
-    background-color: var(--darkpink-color);
+    background-color: var(--primary-button-color);
     color: #fff;
     cursor: pointer;
     transition: background-color 0.2s ease;
     min-width: 80px;
   }
   .primary-button:hover {
-    background-color: #005bb5;
+    background-color: var(--primary-button-hover-color);
   }
   .secondary-button {
     flex: 1;
@@ -521,8 +526,8 @@ margin-bottom: 65px;
 
   .tertiary-button {
     text-decoration: none;
-    color: var(--secondary-button-color);
-    border: 1px solid var(--secondary-button-color);
+    background-color: var(--tertiary-button-color);
+    border: 1px solid var(--tertiary-button-color);
     border-radius: 8px;
     padding: 10px 20px;
     font-size: 1rem;
@@ -536,7 +541,7 @@ margin-bottom: 65px;
   
   /* 성공/실패/제거 에니메이션 */
   .fail-line {
-    background-color: #f1602c !important;
+    background-color: var(--fail-color)!important;
     animation: shake-fail 0.4s ease;
   }
   @keyframes shake-fail {
@@ -547,7 +552,7 @@ margin-bottom: 65px;
     100% { transform: translateX(0); }
   }
   .success-line {
-    background-color: #007aff !important; /* 기존보다 좀 더 강렬한 색상 */
+    background-color: var(--success-color) !important; /* 기존보다 좀 더 강렬한 색상 */
     color: #fff !important;
     position: relative;
     overflow: hidden;
@@ -568,7 +573,7 @@ margin-bottom: 65px;
     100% { transform: scale(0.8); opacity:0; }
   }
   .hint-line {
-    background-color: var(--text-color) !important;
+    background-color: var(--hint-color) !important;
     color: var(--background-color) !important;
     box-shadow: 0px 0px 10px #DDD;
   }
@@ -704,6 +709,17 @@ margin-bottom: 65px;
   /* ===== [플로팅 점수] ===== */
   .floating-score-container {
     pointer-events: none;
+    position: absolute;
+    left: 20%;
+    top: 78px;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    flex-wrap: nowrap;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
   }
 
   /* 각 floating score 박스: 둥근 모서리의 배경 박스 형태로 표시 */
