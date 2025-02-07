@@ -53,6 +53,8 @@
       showRankingPage();
     } else if (path === '/tutorial') {
       showTutorialPage();
+    } else if (path === '/settings') {
+      showSettingsPage();
     } else {
       showHomePage();
     }
@@ -85,7 +87,7 @@
     document.getElementById('game-container').style.display = 'none';
     document.getElementById('ranking').style.display = 'none';
     document.getElementById('tutorial').style.display = 'none';
-    document.getElementById('faq').style.display = 'none';
+    document.getElementById('settings').style.display = 'none';
     
   }
 
@@ -95,7 +97,7 @@
     document.getElementById('game-container').style.display = 'none';
     document.getElementById('ranking').style.display = 'block';
     document.getElementById('tutorial').style.display = 'none';
-    document.getElementById('faq').style.display = 'none';
+    document.getElementById('settings').style.display = 'none';
 
     // Firebase에서 스코어 데이터를 불러와 표시
     fetchScoresFromFirebase(displayScores);
@@ -107,10 +109,19 @@
     document.getElementById('game-container').style.display = 'none';
     document.getElementById('ranking').style.display = 'none';
     document.getElementById('tutorial').style.display = 'block';
-    document.getElementById('faq').style.display = 'block';
+    document.getElementById('settings').style.display = 'none';
     
   }
 
+  // 설정 페이지 표시
+  function showSettingsPage() {
+    document.getElementById('title-screen').style.display = 'none';
+    document.getElementById('game-container').style.display = 'none';
+    document.getElementById('ranking').style.display = 'none';
+    document.getElementById('tutorial').style.display = 'none';
+    document.getElementById('settings').style.display = 'block';
+    
+  }
   // 라우터 변경 시 탭 상태 업데이트
   function updateTabState(route) {
     const tabs = document.querySelectorAll('.tab-link');

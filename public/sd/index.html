@@ -10,6 +10,8 @@
   <meta property="og:image" content="https://dadanddot.com/images/how-to-play.gif">
   <meta name="google-site-verification" content="your_verification_code">
 
+  
+
   <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
   <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
   <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
@@ -51,6 +53,7 @@
   
   <!-- 스타일 -->
   <link rel="stylesheet" href="/sd/style.css">
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
 
   <!-- 게임 스크립트 -->
   <script src="/sd/router.js"></script>
@@ -122,53 +125,48 @@
  <!-- [1] 헤더 -->
  <header class="main-header">
   <div class="header-left">
-<<<<<<< HEAD
+
     <!-- 헤더 왼쪽에 있던 프로필 관련 버튼 제거/주석 -->
     <!-- <a id="user-profile-info" selected>Hi!</a> -->
     <!-- ...기존 다른 로고/메뉴가 있다면 유지... -->
-=======
     <!-- <a href="/" class="logo-link">
       <img src="/images/dnd_logo_tr_small.png" alt="Dad&Dot Games 로고" class="logo">
     </a>
     <div class="logo-divider">|</div> -->
     <a href="/sd/" class="logo-link">
-      <img src="/images/sd_s_128.png" alt="숫자결합 게임 로고" class="logo">
-    </a>
->>>>>>> parent of 95db965 (v0.8 인증 최초 추가(구글), 합결 버그수정, 힌트 카운트제한, 글래스모피즘 디자인 적용, 프로필페이지 추가)
+      <img src="/images/sd_s_128.png" alt="숫자결합 게임 로고" class="logo"></a>
   </div>
 
 
   <div class="header-center">
-    <nav class="gnb">
-      <div class="tab-container">
-        <button class="tab-link active" data-link="/sd/">Main</button>
-        <button class="tab-link" data-link="/sd/ranking">Rank</button>
-        <!-- <button class="tab-link" data-link="/sd/tutorial">Tutorial</button> -->
-      </div>
-    </nav>
+
   </div>
+  
   <div class="header-right">
-    <select class="language-selector" id="language-select">
-      <option value="ko" selected>KR</option>
-      <option value="en">EN</option>
-      <option value="ja">JP</option>
-      <option value="zh">ZH</option>
-    </select> 
-      <!-- 로그인 상태일 때 표시할 사용자 정보 (기본 숨김) -->
+    <nav class="icon-menu">
+      <!-- Home 아이콘 -->
+      <a href="/sd/" data-link><i class="fi fi-rr-house-blank"></i></a>
+
+      <!-- Rank 아이콘 -->
+      <a href="/sd/ranking" data-link><i class="fi fi-rr-crown"></i></a>
+
+      <!-- Tutorial 아이콘 -->
+      <a href="/sd/tutorial" data-link><i class="fi fi-rr-interrogation"></i></a>
+
+      <!-- Settings 아이콘 -->
+      <a href="/sd/settings" data-link>  <i class="fi fi-rr-menu-dots-vertical"></i></a>
+  
+  </nav>
+    
   </div>  
   
 </header>
 
   <!-- [2] 타이틀 화면 -->
 <div id="title-screen" data-route="home">
-   
   <div class="title-container">
-    
-    <h2 id="titleLabel" data-i18n="mainTitle">숫자 결합 게임</h2>
+    <h2 id="titleLabel" ><span id="nickname">닉네임</span><span data-i18n="welcome"> 님 👋</span></h2>
     <!-- <img src="../images/how-to-play.gif" alt="how-to-play" class="how-to-play-image"> -->
-    <p> 
-      <span class="subtitle" data-i18n="playCountSubtitle1">총 </span><span id='game-count-value'>0</span><span class="subtitle" data-i18n="playCountSubtitle2">번 플레이를 기록한 숫자 퍼즐게임</span>
-    </p>
     
     
     <!-- 게임 옵션 (목표합 & 난이도) -->
@@ -195,127 +193,16 @@
       <option value="10">Hard: 10x10</option>
       </select>
       --> 
-
-
       <button id="start-game-btn" data-i18n="startGame" onclick="onStartGame()">지금 시작하기 ></button>  
-      
+      <!-- [동의 문구 추가 부분] -->
+
+    
     </div>
-          <!-- [동의 문구 추가 부분] -->
-
-          <span class="tos-consent">
-          <span data-i18n="tos_consent1">위의 [지금 시작하기 >] 버튼을 선택함으로써</span>
-          <a href="/terms-of-service.html" data-link data-i18n="tos">이용약관</a><span data-i18n="tos_consent2">에 동의해요.</span>
-          </span>
-          <!-- [동의 문구 추가 끝] -->
-      <select id="round-select" class="selector">
-        <!-- 라운드(목표합) -->
-        <option value="10" data-i18n="level1_label">Level 1 (10점)</option>
-        <option value="11" data-i18n="level2_label">Level 2 (11점)</option>
-        <option value="12" data-i18n="level3_label">Level 3 (12점)</option>
-        <option value="13" data-i18n="level4_label">Level 4 (13점)</option>
-        <option value="14" data-i18n="level5_label">Level 5 (14점)</option>
-        <option value="15" data-i18n="level6_label">Level 6 (15점)</option>
-        <option value="16" data-i18n="level7_label">Level 7 (16점)</option>
-        <option value="17" data-i18n="level8_label">Level 8 (17점)</option>
-        <option value="18" data-i18n="level9_label">Level 9 (18점)</option>
-        <option value="19" data-i18n="level10_label">Level 10 (19점)</option>
-        <option value="20" data-i18n="levelFinal_label">최종 Level (20점)</option>
-      </select>
-      <!-- 릴리즈시 난이도 선택기능은 일단 스펙아웃
-      <select id="difficulty-select" class="selector">
-      /* 난이도 */
-      <option value="6">Easy: 6x6</option>
-      <option value="8">Normal: 8x8</option>
-      <option value="10">Hard: 10x10</option>
-      </select>
-      --> 
-
-
-      <button id="start-game-btn" data-i18n="startGame" onclick="onStartGame()">지금 시작하기 ></button>  
-      
-    </div>
-          <!-- [동의 문구 추가 부분] -->
-
-          <span class="tos-consent">
-          <span data-i18n="tos_consent1">위의 [지금 시작하기 >] 버튼을 선택함으로써</span>
-          <a href="/terms-of-service.html" data-link data-i18n="tos">이용약관</a><span data-i18n="tos_consent2">에 동의해요.</span>
-          </span>
-          <!-- [동의 문구 추가 끝] -->
+          
   </div>
-  <div class="how-to-play-container">
-<<<<<<< HEAD
-    <h2 data-i18n="howToPlay">How to Play</h2>
-    <section id="tutorial-section" class="glass-container-info">
-      <!-- 튜토리얼 테이블 -->
-      <table class="tutorial-table">
-        <tr>
-          <td>
-            <span data-i18n="howToPlayDetail1"><strong>1. 드래그로 일렬/대각선 숫자들을 선택해요.</strong></span>
-          </td>
-          <td>
-            <img id="tut1" src="../images/tut1.gif" alt="Drag to select numbers in a line" >
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <span data-i18n="howToPlayDetail2"><strong>2. 목표합을 만들수 없으면 "결!"을 눌러요.</strong></span>
-          </td>
-          <td>
-            <img src="../images/tut2.png" alt="hit Done! when you can't make the TargetSum">
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <span data-i18n="howToPlayDetail3"><strong>3. 숫자칸이 길수록 보너스점수를 얻어요.</strong></span>
-          </td>
-          <td>
-            <img src="../images/tut3.png" alt="get bonus scores on lengthy lines">
-          </td>
-        </tr>
-      </table>
-    </section>
-    <footer id="footer-game">
-      <p data-i18n="footerText">&copy; 2025 Dadanddot.com</p>
-      <p id="version">v.0.8.0</p>
-      <a href="/sd" data-link data-i18n="home">홈으로</a>
-      <a href="/sd/ranking" data-link data-i18n="scoreboards">스코어보드</a>
-      <a href="/pp.html" data-link data-i18n="privacyPolicy">개인정보 처리방침</a>
-    </footer>
-    
-=======
-  <h3 data-i18n="howToPlay">How to Play</h3>
-  <section id="tutorial-section" class="info-section">
-    
-    <p data-i18n="howToPlayDetail1"><strong>1. 드래그로 일렬/대각선 숫자들을 선택해요.</strong></p>
-    <img id="tut1" src="../images/tut1.gif" alt="Drag to select numbers in a line">
-  </section>
-  <section id="tutorial-section" class="info-section">
-    <p data-i18n="howToPlayDetail2"><strong>2. 목표합을 만들수 없으면 "결!"을 눌러요.</strong></p>
-    <img src="../images/tut2.png" alt="hit Done! when you can't make the TargetSum">
-  </section>
-    <section id="tutorial-section" class="info-section">
-    <p data-i18n="howToPlayDetail3"><strong>3. 숫자칸이 길수록 보너스점수를 얻어요.</strong></p>
-    <img src="../images/tut3.png" alt="get bonus scores on lengthy lines">
-  </section>
 </div>
-  <footer id="footer-game">
-    <p data-i18n="footerText">&copy; 2025 Dadanddot.com</p>
-    
-    <p id="version">v.0.7.17</p>
-    <a href="/sd" data-link data-i18n="home">홈으로</a>
-    <a href="/sd/ranking" data-link data-i18n="scoreboards">스코어보드</a>
-    <a href="/pp.html" data-link data-i18n="privacyPolicy">개인정보 처리방침</a>
-  
-  </footer>
->>>>>>> parent of 95db965 (v0.8 인증 최초 추가(구글), 합결 버그수정, 힌트 카운트제한, 글래스모피즘 디자인 적용, 프로필페이지 추가)
-  </div>
-  
-</div>
-  <!-- [3] 랭킹 화면 -->
-<div id="ranking" class="info-section-scoreboards" style="display: none;">
-  <div class="score-table-title-container">
-  
-</div>
+
+
   <!-- [3] 랭킹 화면 -->
 <div id="ranking" class="info-section-scoreboards" style="display: none;">
   <div class="score-table-title-container">
@@ -373,7 +260,7 @@
   <!-- [4] 게임방법 화면 -->  
 <div id="tutorial" class="info-section" style="display: none;">
   <!-- How to Play -->
-  <section id="tutorial-section" class="info-section">
+  <section id="tutorial-section" >
     <h3 data-i18n="howToPlay">How to Play</h3>
     
     <p data-i18n="howToPlayDetail1"><strong>1. 드래그해서 일렬로 숫자들을 선택하세요</strong></p>
@@ -403,6 +290,38 @@
     </p>
   </section>
 </div>  
+<!-- 설정 화면 -->
+<div id="settings" class="info-section" style="display: none;">
+  <h3 data-i18n="settings">Settings</h3>
+
+  <h2 data-i18n="about">About</h2>
+  <p data-i18n="aboutDetail">Dad&Dot Games is a game development company that specializes in creating fun and challenging games for all ages.</p>
+  <p> 
+    <span class="subtitle" data-i18n="playCountSubtitle1">총 </span><span id='game-count-value'>0</span><span class="subtitle" data-i18n="playCountSubtitle2">번 플레이를 기록한 숫자 퍼즐게임</span>
+  </p>
+  <h3>Language</h3>
+  <select class="language-selector" id="language-select">
+    <option value="ko" selected>KR</option>
+    <option value="en">EN</option>
+    <option value="ja">JP</option>
+    <option value="zh">ZH</option>
+  </select> 
+
+  <h2>이용약관</h2>
+  <a href="/terms-of-service.html" data-link data-i18n="tos">이용약관</a>
+
+  <h2>개인정보 처리방침</h2>
+  <a href="/pp.html" data-link data-i18n="privacyPolicy">개인정보 처리방침</a>
+
+  <h2>라이센스 정보</h2>
+  Uicons by <a href="https://www.flaticon.com/uicons">Flaticon</a>
+  
+  
+<h3>버전정보</h3>
+  
+  
+
+</div>
   
 <!-- [5] 카운트다운 오버레이 -->
 <div id="countdown-overlay">
@@ -443,8 +362,8 @@
   
   <!-- 하단 버튼 -->
   <div class="buttons-container">
-    <button id="home-button" class="tertiary-button"><a href="/sd">Home</a></button>
-    <button id="hint-btn" class="secondary-button" data-i18n="hint">Hint</button>
+    <button id="home-button" class="tertiary-button"><a href="/sd/" data-link><i class="fi fi-rr-house-blank"></i></a></button>
+    <button id="hint-btn" class="secondary-button" data-i18n="hint">Hint (3)</button>
     <button id="no-more" class="primary-button" data-i18n="done">Done!</button>
   </div>
   <!--
