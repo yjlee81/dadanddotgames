@@ -1562,6 +1562,7 @@ function loadLanguagePreference() {
   }
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 /***************************************************
@@ -2085,5 +2086,7 @@ function onHintClick(isInitialHint = false) {
   showIOSToastMessage(translations[currentLanguage].hintMessage + '(남은 힌트: ' + hintsLeft + '회)');
 
 }
+=======
+>>>>>>> parent of 95db965 (v0.8 인증 최초 추가(구글), 합결 버그수정, 힌트 카운트제한, 글래스모피즘 디자인 적용, 프로필페이지 추가)
 =======
 >>>>>>> parent of 95db965 (v0.8 인증 최초 추가(구글), 합결 버그수정, 힌트 카운트제한, 글래스모피즘 디자인 적용, 프로필페이지 추가)

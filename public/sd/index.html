@@ -136,15 +136,8 @@
     </a>
 >>>>>>> parent of 95db965 (v0.8 인증 최초 추가(구글), 합결 버그수정, 힌트 카운트제한, 글래스모피즘 디자인 적용, 프로필페이지 추가)
   </div>
-  <nav class="gnb">
-    <div class="tab-container">
-      <button class="tab-link active" data-link="/sd/">Main</button>
-      <button class="tab-link" data-link="/sd/ranking">Rank</button>
-      <!-- <button class="tab-link" data-link="/sd/tutorial">Tutorial</button> -->
-    </div>
-  </nav>
 
-<<<<<<< HEAD
+
   <div class="header-center">
     <nav class="gnb">
       <div class="tab-container">
@@ -154,10 +147,6 @@
       </div>
     </nav>
   </div>
-
-=======
-  
->>>>>>> parent of 95db965 (v0.8 인증 최초 추가(구글), 합결 버그수정, 힌트 카운트제한, 글래스모피즘 디자인 적용, 프로필페이지 추가)
   <div class="header-right">
     <select class="language-selector" id="language-select">
       <option value="ko" selected>KR</option>
@@ -165,37 +154,9 @@
       <option value="ja">JP</option>
       <option value="zh">ZH</option>
     </select> 
-<<<<<<< HEAD
-
-    <!-- 새로 추가된 인증 컨테이너 -->
-    <div id="auth-container" style="display: flex; gap: 8px;">
-      <!-- 1) 로그인되지 않았을 때 표시할 버튼 -->
-      <button id="login-btn" class="tertiary-button-small" style="display:none;">로그인</button>
-      <!-- 2) 로그인되었을 때 사용자 닉네임 표시할 버튼 -->
-      <button id="profile-btn" class="tertiary-button-small" style="display:none;">닉네임 ></button>
-    </div>
-  </div>
-</header>
-
-
-
-<!-- 프로필 페이지 (모달 형식, body 하단에 추가) -->
-<div id="profile-page" 
-     style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); z-index:20000; align-items:center; justify-content:center;">
-  <div style="background:#fff; padding:20px; border-radius:8px; max-width:400px; width:90%; text-align:center; box-shadow: 0 4px 16px rgba(0,0,0,0.2);">
-    <h2 style="font-weight: 600; font-size: 1.4rem; margin-bottom: 12px;">내 프로필</h2>
-    <img id="profile-avatar" src="" alt="Avatar" style="width:80px; height:80px; border-radius:50%; margin-bottom: 10px; object-fit: cover;">
-
-    <p style="margin-bottom: 8px;">
-      <strong>이메일:</strong> <span id="profile-email"></span> 
-      <button id="logout-btn" class="tertiary-button-small" style="margin-left:6px;">Logout</button>
-    </p>
-
-    <p style="margin-bottom: 12px;">
-      <strong>닉네임:</strong> <span id="profile-nickname"></span>
-      <button id="edit-nickname-btn" class="tertiary-button-small" style="margin-left:6px;">닉네임 수정</button>
-=======
-  </div> 
+      <!-- 로그인 상태일 때 표시할 사용자 정보 (기본 숨김) -->
+  </div>  
+  
 </header>
 
   <!-- [2] 타이틀 화면 -->
@@ -207,11 +168,45 @@
     <!-- <img src="../images/how-to-play.gif" alt="how-to-play" class="how-to-play-image"> -->
     <p> 
       <span class="subtitle" data-i18n="playCountSubtitle1">총 </span><span id='game-count-value'>0</span><span class="subtitle" data-i18n="playCountSubtitle2">번 플레이를 기록한 숫자 퍼즐게임</span>
->>>>>>> parent of 95db965 (v0.8 인증 최초 추가(구글), 합결 버그수정, 힌트 카운트제한, 글래스모피즘 디자인 적용, 프로필페이지 추가)
     </p>
+    
     
     <!-- 게임 옵션 (목표합 & 난이도) -->
     <div class="options-container">
+      <select id="round-select" class="selector">
+        <!-- 라운드(목표합) -->
+        <option value="10" data-i18n="level1_label">Level 1 (10점)</option>
+        <option value="11" data-i18n="level2_label">Level 2 (11점)</option>
+        <option value="12" data-i18n="level3_label">Level 3 (12점)</option>
+        <option value="13" data-i18n="level4_label">Level 4 (13점)</option>
+        <option value="14" data-i18n="level5_label">Level 5 (14점)</option>
+        <option value="15" data-i18n="level6_label">Level 6 (15점)</option>
+        <option value="16" data-i18n="level7_label">Level 7 (16점)</option>
+        <option value="17" data-i18n="level8_label">Level 8 (17점)</option>
+        <option value="18" data-i18n="level9_label">Level 9 (18점)</option>
+        <option value="19" data-i18n="level10_label">Level 10 (19점)</option>
+        <option value="20" data-i18n="levelFinal_label">최종 Level (20점)</option>
+      </select>
+      <!-- 릴리즈시 난이도 선택기능은 일단 스펙아웃
+      <select id="difficulty-select" class="selector">
+      /* 난이도 */
+      <option value="6">Easy: 6x6</option>
+      <option value="8">Normal: 8x8</option>
+      <option value="10">Hard: 10x10</option>
+      </select>
+      --> 
+
+
+      <button id="start-game-btn" data-i18n="startGame" onclick="onStartGame()">지금 시작하기 ></button>  
+      
+    </div>
+          <!-- [동의 문구 추가 부분] -->
+
+          <span class="tos-consent">
+          <span data-i18n="tos_consent1">위의 [지금 시작하기 >] 버튼을 선택함으로써</span>
+          <a href="/terms-of-service.html" data-link data-i18n="tos">이용약관</a><span data-i18n="tos_consent2">에 동의해요.</span>
+          </span>
+          <!-- [동의 문구 추가 끝] -->
       <select id="round-select" class="selector">
         <!-- 라운드(목표합) -->
         <option value="10" data-i18n="level1_label">Level 1 (10점)</option>
@@ -314,6 +309,11 @@
   </footer>
 >>>>>>> parent of 95db965 (v0.8 인증 최초 추가(구글), 합결 버그수정, 힌트 카운트제한, 글래스모피즘 디자인 적용, 프로필페이지 추가)
   </div>
+  
+</div>
+  <!-- [3] 랭킹 화면 -->
+<div id="ranking" class="info-section-scoreboards" style="display: none;">
+  <div class="score-table-title-container">
   
 </div>
   <!-- [3] 랭킹 화면 -->
