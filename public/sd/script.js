@@ -62,10 +62,6 @@ const translations = {
     howToPlayDetail3: "3. Longer lines earn more bonus points!",
     hintMessage: "Drag to select numbers",
     noCombinationToast: "No more. Press Done!",
-    // 새로 추가된 tos 관련 항목
-    tos_consent1: "By selecting the 'Start Now >' above, you agree to the ",
-    tos: "Terms of Service",
-    tos_consent2: "."
   },
   ko: {
     mainTitle: "숫자 결합 게임",
@@ -106,7 +102,7 @@ const translations = {
     howToPlayDetail3: "3. 숫자칸이 길수록 보너스점수를 얻어요.",
     hintMessage: "드래그하여 숫자를 선택하세요.",
     noCombinationToast: "더이상 없어요. 결!을 선택하세요",
-    tos_consent1: "위의 '지금 시작하기 >'를 선택함으로써",
+    tos_consent1: "위의 [지금 시작하기 >] 버튼을 선택함으로써",
     tos: "이용약관",
     tos_consent2: "에 동의해요."
   },
@@ -150,10 +146,6 @@ const translations = {
     howToPlayDetail3: "3. 長いラインほどボーナス点を獲得",
     hintMessage: "ドラッグして数字を選択",
     noCombinationToast: "もうないよ。Done!を押す",
-    // 새로 추가된 tos 관련 항목
-    tos_consent1: "上記の「今すぐ始める >」ボタンを選択することで、",
-    tos: "利用規約",
-    tos_consent2: "に同意します。"
   },
   zh: {
     mainTitle: "数字合并游戏",
@@ -193,11 +185,7 @@ const translations = {
     howToPlayDetail2: "2. 如果无法再组成目标值，请按Done!",
     howToPlayDetail3: "3. 数字越长，获得的奖励分数越高",
     hintMessage: "拖动数字成一条线连接",
-    noCombinationToast: "没有更多了。请按Done!",
-    // 새로 추가된 tos 관련 항목
-    tos_consent1: "通过选择上面的'立即开始>'按钮，您同意",
-    tos: "使用条款",
-    tos_consent2: "。"
+    noCombinationToast: "没有更多了。请按Done!"
   },
   
 };
@@ -542,12 +530,8 @@ function onStartGame() {
   // 헤더 숨기기
   document.querySelector('.main-header').style.display = 'none';
   
-
-  const roundSlider = document.getElementById("round-slider");
-  const selectedRound = parseInt(roundSlider.value, 10) || 10;
-  currentRound = selectedRound;
-  
-  targetSum = selectedRound;
+  const selectedGoal = parseInt(document.getElementById("round-select").value, 10) || 10;
+  targetSum = selectedGoal;
   
   // URL 업데이트(옵션)
   window.history.pushState(null, '', `/sd/play/${targetSum}`);
@@ -586,9 +570,7 @@ function onStartGame() {
     initRound();   // ← 여기서 처음 renderBoard()가 실행됨
     startTimer();
 
-  }, 3000);
-
-  loadingBarEl.style.width = "30%";
+  }, 2000);
 }
 
 /**
@@ -625,9 +607,6 @@ function initRound() {
   remainingSeconds = 150;
   isTimerPaused = false;
   updateTimerDisplay();
-
-  hintsLeft = 3;
-  updateHintButtonLabel(); // (2) 라운드 시작 시 힌트 버튼 표시 업데이트
 
   // 보드 렌더
   renderBoard();
@@ -844,22 +823,14 @@ function checkLine(start, end) {
     const previousScore = parseInt(scoreEl.textContent, 10) || 0;
     const newScore = previousScore + addScore;
     
+    // 애니메이션 적용
     animateNumber(scoreEl, previousScore, newScore, 500, () => {
       totalScore = newScore;
     });
 
-    // ------------------------------------------------------------
-    // [중요] 보드 데이터에서 즉시 타일 제거 (논리적 제거)
-    for (const [r, c] of linePositions) {
-      boardData[r][c] = null;
-    }
-    // ------------------------------------------------------------
-
     markLine(linePositions, "success-line");
-    showFloatingScore(sumVal, lengthBonus, gapBonus,
-                     document.getElementById("game-board").rows[end[0]].cells[end[1]]);
+    showFloatingScore(sumVal, lengthBonus, gapBonus, document.getElementById("game-board").rows[end[0]].cells[end[1]]);
 
-    // 시각적 효과(애니메이션)는 조금 뒤에 제거
     setTimeout(() => {
       removeLineTiles(linePositions);
     }, 600);
@@ -868,6 +839,10 @@ function checkLine(start, end) {
     const failMessage = translations[currentLanguage]?.failSum 
                       || `목표합이 ${targetSum}이어야 합니다!`;
     showIOSToastMessage(failMessage.replace("{target}", targetSum), 1500);
+    // 실패시 감점 제거
+    /* totalScore = Math.max(0, totalScore  - targetSum );
+    document.getElementById("score").textContent = totalScore;
+    showFloatingScore("-" + targetSum, end[0], end[1], true); */
 
     setTimeout(() => {
       markLine(linePositions, null, "fail-line");
@@ -885,16 +860,17 @@ function markLine(positions, addClass=null, removeClass=null) {
 }
 
 function removeLineTiles(linePositions) {
-  // (애니메이션을 위해 css 클래스를 부여)
   const trList = document.querySelectorAll("#game-board tr");
-  for (const [r, c] of linePositions) {
-    const td = trList[r].children[c];
+  // 애니메이션
+  for (const [r,c] of linePositions) {
+    let td = trList[r].children[c];
     td.classList.remove("success-line");
-    td.classList.add("removing"); // 사라지는 스타일
+    td.classList.add("removing");
   }
-
-  // 600ms 뒤 실제로 renderBoard() 실행
   setTimeout(() => {
+    for (const [r,c] of linePositions) {
+      boardData[r][c] = null;
+    }
     renderBoard();
   }, 600);
 }
@@ -993,33 +969,18 @@ function closeOverlay(){
  * 힌트 (광고 모달)
  ***************************************************/
 function onHintClick() {
-  // 남은 힌트 횟수가 0 이하라면 사용 불가
-  if (hintsLeft <= 0) {
-    showIOSToastMessage(`더 이상 힌트를 사용할 수 없어요.`);
-    return;
-  }
-
-  hintsLeft--; // 힌트 1회 차감
-
-  // 기존 힌트 로직
+  pauseTimer();
+  document.getElementById("ad-modal").style.display = "flex";
+}
+function useHint() {
   let lines = findAllPossibleLines();
   if (!lines.length) {
     showIOSToastMessage(translations[currentLanguage].noCombinationToast);
     return;
   }
-  // 기존 힌트가 있으면 제거
-  if (hintLinePositions) {
-    markLine(hintLinePositions, null, "hint-line");
-    hintLinePositions = null;
-  }
-  // 첫 번째 라인 선택
-  let picked = lines[0];
-  hintLinePositions = picked;
-  // 표시
-  markLine(picked, "hint-line");
-  
-  
-  showIOSToastMessage(translations[currentLanguage].hintMessage + `(남은 힌트: ${hintsLeft}회)`);
+  hintLinePositions = lines[0];
+  markLine(hintLinePositions, "hint-line");
+  showIOSToastMessage(translations[currentLanguage].hintMessage);
 }
 
 /***************************************************
@@ -1359,8 +1320,6 @@ function showFinalSuccessOverlay(timeBonus, isFinalRound = false) {
 function restartGame() {
   // 게임 초기화 로직
   currentRound = 1;
-  hintsLeft = 3;
-  updateHintButtonLabel(); // (3) 재시작 시 힌트 버튼 표시 업데이트
   totalScore = 0;
   document.getElementById("score").textContent = totalScore;
   closeFinalOverlay();
@@ -1602,6 +1561,7 @@ function loadLanguagePreference() {
     applyTranslations();
   }
 }
+<<<<<<< HEAD
 
 
 /***************************************************
@@ -2125,3 +2085,5 @@ function onHintClick(isInitialHint = false) {
   showIOSToastMessage(translations[currentLanguage].hintMessage + '(남은 힌트: ' + hintsLeft + '회)');
 
 }
+=======
+>>>>>>> parent of 95db965 (v0.8 인증 최초 추가(구글), 합결 버그수정, 힌트 카운트제한, 글래스모피즘 디자인 적용, 프로필페이지 추가)

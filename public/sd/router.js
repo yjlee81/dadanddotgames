@@ -81,7 +81,7 @@
 
   // 홈 페이지 표시
   function showHomePage() {
-    document.getElementById('title-screen').style.display = 'block';
+    document.getElementById('title-screen').style.display = 'flex';
     document.getElementById('game-container').style.display = 'none';
     document.getElementById('ranking').style.display = 'none';
     document.getElementById('tutorial').style.display = 'none';
