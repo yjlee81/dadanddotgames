@@ -144,10 +144,10 @@
         </a>
         <div class="logo-divider">|</div>
         <a href="/sd/" class="logo-link">
-          <img src="/images/sd_s_128.png" alt="숫자결합 게임 로고" class="logo"> <li><a href="/sd" data-i18n="nav.sumd">숫자결합</a></li>
+          <img src="/images/256.png" alt="숫자결합 게임 로고" class="logo" href="/sd">
         </a>
         <a href="/mm/" class="logo-link">
-          <img src="/images/mm_logo.png" alt="마스터몬스터 게임 로고" class="logo"> <li><a href="/mm" data-i18n="nav.mm">마스터몬스터</a></li>
+          <img src="/images/mm_logo.png" alt="마스터몬스터 게임 로고" class="logo" href="/mm"> 
         </a>
       </div>
       <nav class="gnb">
@@ -163,7 +163,6 @@
       <div class="intro-content">
         <h2 data-i18n="intro.header">모두가 즐길 수 있는 게임</h2>
         <p data-i18n="intro.paragraph1">연령과 지역 경계없이 쉽게 즐길 수 있는 게임을 만들어요</p>
-        <a href="#game-list" class="scroll-down" data-i18n="intro.scrollDown">아래로 스크롤</a>
       </div>
     </div>
 
@@ -185,7 +184,7 @@
         <li class="game-item" id="game-mm">
           <a href="/mm" class="game-link">
             <div class="game-image">
-              <img src="../images/mastermonster_screenshot.png" alt="마스터몬스터 게임 스크린샷">
+              <img src="./images/mastermonster_screenshot.png" alt="마스터몬스터 게임 스크린샷">
             </div>
             <div class="game-info">
               <h4 data-i18n="gameList.mmTitle">마스터몬스터</h4>
@@ -207,7 +206,7 @@
           </p>
         </div>
         <div class="about-illustration">
-          <img src="/images/dadanddot.png" alt="귀여운 캐릭터" class="cute-character">
+          <img src="./images/dadanddot.png" alt="귀여운 캐릭터" class="cute-character">
         </div>
       </div>
     </section>
@@ -230,15 +229,6 @@
   </div>
 
   <div id="toast-message"></div>
-
-  <!-- 아래로 스크롤 클릭 시 자연스럽게 스크롤 -->
-  <script>
-    document.querySelector('.scroll-down').addEventListener('click', function(e) {
-      e.preventDefault();
-      const targetID = this.getAttribute('href');
-      document.querySelector(targetID).scrollIntoView({ behavior: 'smooth' });
-    });
-  </script>
 
   <footer id="footer">
     <div class="footer-content">

@@ -41,8 +41,8 @@ html, body {
     */
 
     /* 2번 세트 */
-    --accent-color: #cb997e;
-    --accent-color-hover: #a17963;
+    --accent-color: #e09f3e;
+    --accent-color-hover: #ab792e;
     --yellow-color: #fcbf49;
     --bloodorange-color: #f07167;
     --success-color: #00afb9;
@@ -57,7 +57,7 @@ html, body {
     --header-text-color: #111111;
     --header-border-color: #dedede;
     --button-hover-color: #0081a7;
-    --primary-button-color: #e09f3e;
+    --primary-button-color: #00afb9;
     --primary-button-hover-color: #ad7b30;
     --secondary-button-color: #f07167;
     --secondary-button-hover-color: #c45a52;
@@ -69,7 +69,35 @@ html, body {
     --hint-color: #a6a6a6;
     --white-color: #fdfbf5;
     
-  }
+
+     /* 컬러 시스템 */
+  --color-background: #1c1c1c;       /* 전체 배경색 (다크테마) */
+  --color-header-bg: #242424;        /* 헤더 배경색 */
+  --color-overlay: rgba(0, 0, 0, 0.6);
+  --color-card-bg: #2a2a2a;          /* 카드 배경색 */
+  --color-text-primary: #f0f0f0;     /* 기본 텍스트 */
+  --color-text-secondary: #d0d0d0; 
+  --color-accent: #f4f4f4;           /* 악센트 컬러(흰계열) */
+  --color-accent-hover: #ffffff;     /* 호버 시 살짝 더 밝게 */
+  --color-border: #3a3a3a;
+
+  /* 폰트 시스템 */
+  --font-family-base: 'Nunito', sans-serif;
+
+  /* 공간, 크기 등 */
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 32px;
+  --spacing-xl: 60px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --transition-fast: 0.3s ease;
+  --transition-slow: 0.5s ease;
+
+  --ease-in-out: cubic-bezier(.23, 1, .32, 1);
+  --ease-out: cubic-bezier(.23, 1, .32, 1);
+}
+  
   
    /* ===== [상단 헤더] ===== */
    .main-header {
@@ -300,7 +328,7 @@ html, body {
   }
   #start-game-btn {
     padding: 10px 20px;
-    background-color: var(--primary-button-color);
+    background-color: var(--success-color);
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -599,6 +627,7 @@ margin-bottom: 65px;
     background-color: var(--hint-color) !important;
     color: var(--background-color) !important;
     box-shadow: 0px 0px 10px #DDD;
+    transform: scale(1.05);
   }
   
   
@@ -627,7 +656,7 @@ margin-bottom: 65px;
     max-width: 80vw;
     box-sizing: border-box;
     font-size: 1.1rem;
-    animation: modal-appear 0.3s ease forwards;
+    animation: modal-appear 0.3s var(--ease-in-out) forwards;
     width: 80vw;
   }
   @keyframes modal-appear {
@@ -689,8 +718,12 @@ margin-bottom: 65px;
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-  }
+    transition: opacity 0.2s var(--ease-in-out), visibility 0.1s var(--ease-in-out);
+    width: 240px;
+    /* align-content: center; */
+    align-self: center;
+    text-align: center;
+}
 
   /* 애플 아일랜드 박스 효과 */
   #toast-message.island-effect {
@@ -704,7 +737,7 @@ margin-bottom: 65px;
   #toast-message.show {
     opacity: 1;
     visibility: visible;
-    animation: slideIn 0.3s ease, slideOut 0.3s ease 1.7s;
+    animation: slideIn 0.3s var(--ease-in-out), slideOut 0.3s var(--ease-in-out) 1.7s;
   }
 
   @keyframes slideIn {
@@ -759,7 +792,7 @@ margin-bottom: 65px;
     transform: scale(0);
     /* pop 애니메이션과 fadeOut 애니메이션을 순차적으로 적용
        (pop: 0.3s, fadeOut: 0.5s 시작은 0.8s 후) */
-    animation: pop 0.3s forwards, fadeOut 0.5s forwards 0.8s;
+    animation: pop 0.3s var(--ease-in-out), fadeOut 0.5s var(--ease-in-out) 0.8s;
   }
 
   /* 보너스 박스는 기본보다 약간 작은 폰트와 금색 글씨로 표현 */

@@ -68,7 +68,8 @@ const translations = {
     tos_consent2: "agree to the",
     no_more_hints: "You cannot get any more hints.",
     lengthBonusLabel: "Length",
-    emptyBonusLabel: "Empty"
+    emptyBonusLabel: "Empty",
+    nickname: "Name"
   },
   ko: {
     mainTitle: "숫자 결합",
@@ -115,7 +116,8 @@ const translations = {
     tos_consent2: "에 동의해요.",
     no_more_hints: "더이상 힌트를 얻을 수 없어요.",
     lengthBonusLabel: "길이",
-    emptyBonusLabel: "빈칸"
+    emptyBonusLabel: "빈칸",
+    nickname: "이름"
   },
   ja: {
     mainTitle: "数字結合ゲーム",
@@ -163,7 +165,8 @@ const translations = {
     tos_consent2: "に同意します。",
     no_more_hints: "ヒントを取得できません。",
     lengthBonusLabel: "長さ",
-    emptyBonusLabel: "空き"
+    emptyBonusLabel: "空き",
+    nickname: "名前"
   },
   zh: {
     mainTitle: "数字合并游戏",
@@ -210,7 +213,8 @@ const translations = {
     tos_consent2: "に同意します。",
     no_more_hints: "ヒントを取得できません。",
     lengthBonusLabel: "長さ",
-    emptyBonusLabel: "空き"
+    emptyBonusLabel: "空き",
+    nickname: "名前"
   },
   
 };
@@ -313,31 +317,33 @@ function fetchScoresFromFirebase(callback) {
   
 }
 
+// 헬퍼 함수: 타임스탬프를 MM/DD HH:mm 형식으로 반환
+function formatTimestamp(timestamp) {
+  const date = new Date(timestamp);
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  return `${month}/${day} ${hours}:${minutes}`;
+}
+
+// 기존 점수 데이터 전체 출력 함수 (예시)
 function displayScores(scoreList) {
   const tbody = document.querySelector("#score-table tbody");
   tbody.innerHTML = ""; // 기존 점수 목록 초기화
 
   scoreList
     .sort((a, b) => b.score - a.score) // 점수 내림차순 정렬
-    .slice(0, 100) // 상위 10개 선택
+    .slice(0, 100) // 상위 100개 선택
     .forEach((score, index) => {
       const row = document.createElement("tr");
       
-      // Firebase 데이터의 target 값을 데이터 속성으로 설정
-      row.setAttribute("data-target", score.target);
-      
-      // 만약 기간 필터도 사용하려면 timestamp로부터 기간을 계산하여 data-period를 설정하세요.
-      // 예) row.setAttribute("data-period", computePeriod(score.timestamp));
-      
-      const date = new Date(score.timestamp);
-      const formattedTime = `${(date.getMonth()+1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')} ` +
-                            `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-
       row.innerHTML = `
         <td>${index + 1}</td>
+        <td>${score.nickname ? score.nickname : "Guest"}</td>
         <td>${score.score}</td>
         <td>${score.target}</td>
-        <td>${formattedTime}</td>
+        <td>${formatTimestamp(score.timestamp)}</td>
       `;
       tbody.appendChild(row);
     });
@@ -410,6 +416,7 @@ function filterScoresByGoal(goal) {
 // 점수 저장
 function saveScoreToFirebase(score, diff, target) {
   const newRecord = {
+    nickname: currentNickname ? currentNickname : "Guest", // 닉네임 저장 (없으면 "Guest")
     score: score,
     diff: diff,
     target: target,
@@ -425,14 +432,14 @@ function saveScoreToFirebase(score, diff, target) {
     
   // 누적점수 업데이트
   updateCumulativeScore(currentNickname, finalScore)
-  .then(newScore => {
-    console.log("새로운 누적점수:", newScore);
-    // 누적점수를 화면에 표시하려면 아래처럼 DOM에 표시 가능
-    // document.getElementById('cumulative-score').textContent = newScore;
-  })
-  .catch(err => {
-    console.error("누적점수 업데이트 오류:", err);
-  });
+    .then(newScore => {
+      console.log("새로운 누적점수:", newScore);
+      // 누적점수를 화면에 표시하려면 아래처럼 DOM에 표시 가능
+      // document.getElementById('cumulative-score').textContent = newScore;
+    })
+    .catch(err => {
+      console.error("누적점수 업데이트 오류:", err);
+    });
 }
 
 // 스코어보드 렌더링
@@ -440,7 +447,7 @@ function renderScoreTable(scoreRecords) {
   if (!scoreTableBody) return;
   scoreTableBody.innerHTML = "";
   
-  // 점수 내림차순
+  // 점수 내림차순 정렬 후 상위 5개 선택
   const sorted = scoreRecords.sort((a, b) => b.score - a.score).slice(0, 5);
   
   sorted.forEach((rec, idx) => {
@@ -1532,6 +1539,7 @@ function applyFilters() {
   renderRanking(filteredData);
 }
 
+// 필터(기간/목표합) 적용 후 테이블 렌더링 함수
 function renderRanking(filteredData) {
   const tbody = document.querySelector("#score-table tbody");
   if (!tbody) {
@@ -1541,10 +1549,8 @@ function renderRanking(filteredData) {
   // 기존 행 초기화
   tbody.innerHTML = "";
 
-  // 점수 높은 순으로 정렬
+  // 점수 높은 순으로 정렬 후 상위 100개 선택
   const sortedData = filteredData.sort((a, b) => b.score - a.score);
-
-  // 상위 n개만 표시 (예: 100개 또는 필요 개수)
   const limitedData = sortedData.slice(0, 100);
 
   limitedData.forEach((item, index) => {
@@ -1554,6 +1560,11 @@ function renderRanking(filteredData) {
     const tdRank = document.createElement("td");
     tdRank.textContent = index + 1;
     tr.appendChild(tdRank);
+
+    // 이름 (nickname)
+    const tdName = document.createElement("td");
+    tdName.textContent = item.nickname ? item.nickname : "Guest";
+    tr.appendChild(tdName);
 
     // 점수
     const tdScore = document.createElement("td");
@@ -1565,10 +1576,9 @@ function renderRanking(filteredData) {
     tdTarget.textContent = item.target;
     tr.appendChild(tdTarget);
 
-    // 등록 시간 (item.timestamp)
+    // 시간 (간결하게 MM/DD HH:mm 형식)
     const tdTime = document.createElement("td");
-    const time = new Date(item.timestamp);
-    tdTime.textContent = time.toLocaleString(); 
+    tdTime.textContent = formatTimestamp(item.timestamp);
     tr.appendChild(tdTime);
 
     tbody.appendChild(tr);

@@ -12,19 +12,19 @@
 
   
 
-  <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
-  <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
-  <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
-  <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
-  <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
-  <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="57x57" href="/images/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/images/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/images/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/images/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/images/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/images/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/images/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/images/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
   <link rel="manifest" href="/manifest.json">
   <meta name="msapplication-TileColor" content="#ffffff">
   <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
@@ -129,9 +129,9 @@
     <!-- 헤더 왼쪽에 있던 프로필 관련 버튼 제거/주석 -->
     <!-- <a id="user-profile-info" selected>Hi!</a> -->
     <!-- ...기존 다른 로고/메뉴가 있다면 유지... -->
-    
-      <img src="/images/256.png" alt="Sumordone logo" class="title-logo">
-    
+    <a href="/sd/">
+      <img src="/images/256.png" alt="Sumordone logo" class="title-logo" href="/sd/">
+    </a>
     
     
   </div>
@@ -143,10 +143,6 @@
   
   <div class="header-right">
     <nav class="icon-menu">
-      <!-- 1) Home 아이콘 -->
-      <a href="/sd/" data-link="/sd/">
-        <i class="fi fi-rr-house-blank"></i>
-      </a>
 
       <!-- 2) Rank 아이콘 -->
       <a href="/sd/ranking" data-link="/sd/ranking">
@@ -267,14 +263,12 @@
 
     <table id="score-table" class="score-table">
       <thead>
-
         <tr>
-          <th data-i18n="rank">순위</th>
-          <th>Nickname</th>
-          <th data-i18n="score">점수</th>
-          <th data-i18n="goal">목표합</th>
-          <th data-i18n="time">시간</th>
-          
+          <th data-field="rank" data-i18n="rank">순위</th>
+          <th data-field="nickname" data-i18n="nickname">이름</th>
+          <th data-field="score" data-i18n="score">점수</th>
+          <th data-field="goal" data-i18n="goal">목표합</th>
+          <th data-field="time" data-i18n="time">일시</th>
         </tr>
       </thead>
       <tbody>
@@ -422,20 +416,33 @@
 
 <!-- [6] 게임화면 -->
 <div id="game-container" data-route="game" style="display:none;">
-  <div id="info-bar">
-    <div class="info-box">
-      <span class="label" id="target-label" data-i18n="goal">Goal</span>
-      <span class="data" id="target-number">10</span>
+  <header id="sub-header" class="gnb-lnb">
+    <div id="info-bar">
+      <!-- 왼쪽 그룹에 뒤로가기 아이콘 버튼 추가 -->
+      <div class="left-group">
+        <button id="back-button" onclick="backToTitleScreen()">
+          <i class="fi fi-sr-angle-left" style="font-size: 24px;"></i>
+        </button>
+        <!-- 기존 홈 아이콘 버튼이 필요하다면 함께 두기 -->
+        <button id="back-button" onclick="backToTitleScreen()">
+          <i class="fi fi-rr-house-blank"></i>
+        </button>
+      </div>
+      <div class="info-box">
+        <span class="label" id="target-label" data-i18n="goal">Goal</span>
+        <span class="data" id="target-number">10</span>
+      </div>
+      <div class="info-box">
+        <span class="label" id="score-label" data-i18n="score">Score</span>
+        <span class="data" id="score">0</span>
+      </div>
+      <div class="info-box">
+        <span class="label" id="timer-label" data-i18n="time">Time</span>
+        <span class="data" id="timer">02:00</span>
+      </div>
     </div>
-    <div class="info-box">
-      <span class="label" id="score-label" data-i18n="score">Score</span>
-      <span class="data" id="score">0</span>
-    </div>
-    <div class="info-box">
-      <span class="label" id="timer-label" data-i18n="time">Time</span>
-      <span class="data" id="timer">02:00</span>
-    </div>
-  </div>
+  </header>
+  
   <!-- 보드컨테이너 -->
   <div class="board-container">
     <table id="game-board"></table>
@@ -444,8 +451,6 @@
   
   <!-- 하단 버튼 -->
   <div class="buttons-container">
-    <button id="home-button" class="tertiary-button" onclick="backToTitleScreen()">
-      <i class="fi fi-rr-house-blank"></i></button>
     <button id="hint-btn" class="secondary-button" data-i18n="hint">Hint (3)</button>
     <button id="no-more" class="primary-button" data-i18n="done">Done!</button>
   </div>

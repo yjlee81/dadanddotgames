@@ -63,13 +63,20 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-md) var(--spacing-xl);
-  background: var(--color-header-bg);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  background: rgba(36, 36, 36, 0.8); /* 반투명 어두운 배경 */
+  backdrop-filter: blur(10px);        /* 블러 효과 */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* 강화된 그림자 */
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 1000;
   transition: background var(--transition-fast);
+  animation: fadeIn 1s ease-out forwards; /* 페이지 로드시 애니메이션 적용 */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .main-header h1 {
@@ -104,7 +111,7 @@ body {
 .header-left {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 10px;  /* 간격 증가 */
 }
 
 
@@ -203,6 +210,7 @@ body {
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   animation: fadeInUp var(--transition-fast) forwards;
   opacity: 0;
+  flex-direction: column;
 }
 
 .about-content {
@@ -249,8 +257,6 @@ body {
   padding: var(--spacing-lg) var(--spacing-md);
   max-width: 1200px;
   margin: var(--spacing-lg) auto;
-  animation: fadeInUp var(--transition-fast) forwards;
-  opacity: 0;
 }
 
 .info-section h3 {
@@ -267,15 +273,15 @@ body {
 }
 
 .game-item {
-  background: var(--color-card-bg);
-  border-radius: var(--radius-md);
+  background: transparent;
+  border-radius: 0;
   overflow: hidden;
-  transition: transform var(--transition-fast);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  transition: background 0.3s ease;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .game-item:hover {
-  transform: scale(1.02);
+  background: var(--color-overlay);
 }
 
 .game-link {
@@ -286,7 +292,7 @@ body {
 
 .game-image {
   width: 100%;
-  height: 300px; /* 스크린샷 높이를 넉넉하게 조정 */
+  height: 200px;
   overflow: hidden;
 }
 
@@ -294,15 +300,10 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--transition-slow);
-}
-
-.game-item:hover .game-image img {
-  transform: scale(1.1);
 }
 
 .game-info {
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
   text-align: left;
 }
 
