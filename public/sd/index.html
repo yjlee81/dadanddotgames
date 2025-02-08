@@ -130,10 +130,8 @@
     <!-- <a id="user-profile-info" selected>Hi!</a> -->
     <!-- ...기존 다른 로고/메뉴가 있다면 유지... -->
     <a href="/sd/">
-      <img src="/images/256.png" alt="Sumordone logo" class="title-logo" href="/sd/">
+      <img src="/images/256.png" alt="Sumordone logo" class="title-logo" href="/sd/"> <span class="title-logo-text">숫자 결합</span>
     </a>
-    
-    
   </div>
 
 
@@ -179,11 +177,11 @@
   -->
     
     <!-- 게임 옵션 (목표합 & 난이도) -->
-    <div class="info-section" id="classic-mode-options">
-      <h2>클래식 모드</h2>
-      <p>라운드마다 목표합이 커집니다.</p>
+    <div id="classic-mode-options">
+      <!-- <h2>클래식 모드</h2> -->
+      <p>숫자들을 드래그해 목표합을 찾고, 더이상 없으면 결!을 눌러요.</p>
       
-      <label>시작 라운드</label>
+      <!-- <label>시작 라운드</label> -->
       <select id="round-select" class="selector">
         <!-- 라운드(목표합) -->
         <option value="10" data-i18n="level1_label">Level 1 (10점)</option>
@@ -417,29 +415,26 @@
 <!-- [6] 게임화면 -->
 <div id="game-container" data-route="game" style="display:none;">
   <header id="sub-header" class="gnb-lnb">
-    <div id="info-bar">
       <!-- 왼쪽 그룹에 뒤로가기 아이콘 버튼 추가 -->
       <div class="left-group">
         <button id="back-button" onclick="backToTitleScreen()">
-          <i class="fi fi-sr-angle-left" style="font-size: 24px;"></i>
+          <i class="fi fi-rr-angle-left"></i>
         </button>
-        <!-- 기존 홈 아이콘 버튼이 필요하다면 함께 두기 -->
-        <button id="back-button" onclick="backToTitleScreen()">
-          <i class="fi fi-rr-house-blank"></i>
-        </button>
+        <p>
+          <span class="label" id="target-label" data-i18n="goal">TargetSum</span>
+          <span class="data" id="target-number">10</span>
+        </p>
       </div>
-      <div class="info-box">
-        <span class="label" id="target-label" data-i18n="goal">Goal</span>
-        <span class="data" id="target-number">10</span>
-      </div>
-      <div class="info-box">
-        <span class="label" id="score-label" data-i18n="score">Score</span>
-        <span class="data" id="score">0</span>
-      </div>
-      <div class="info-box">
+      <div class="right-group">
+       
+        <span class="info-box">
+          <span class="label" id="score-label" data-i18n="score">Score</span><span class="data" id="score">0</span>
+        </span>
+        <div class="info-box">
         <span class="label" id="timer-label" data-i18n="time">Time</span>
         <span class="data" id="timer">02:00</span>
       </div>
+      
     </div>
   </header>
   

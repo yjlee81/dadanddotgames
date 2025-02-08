@@ -114,7 +114,7 @@ const translations = {
     tos_consent1: "위의 [지금 시작하기 >] 버튼을 선택함으로써",
     tos: "이용약관",
     tos_consent2: "에 동의해요.",
-    no_more_hints: "더이상 힌트를 얻을 수 없어요.",
+    no_more_hints: "힌트가 모두 소진되었어요.",
     lengthBonusLabel: "길이",
     emptyBonusLabel: "빈칸",
     nickname: "이름"
@@ -596,9 +596,20 @@ function onStartGame() {
 
   showGoalOnCountdownOverlay(targetSum);
 
+}
+
+/**
+ * 카운트다운 오버레이에서 목표점수를 표시하는 헬퍼 함수
+ */
+function showGoalOnCountdownOverlay(value) {
+  const goalNumEl = document.getElementById("goal-value");
+  if (goalNumEl) {
+    goalNumEl.textContent = value; 
+  }
+
   // (2) 로딩바 초기화 → 0%에서 시작
   const loadingBarEl = document.getElementById("loading-bar");
-  loadingBarEl.style.width = "30%";
+  loadingBarEl.style.width = "0%";
 
   // (3) 아주 살짝 지연 후 3초 동안 0% → 100%
   setTimeout(() => {
@@ -618,16 +629,6 @@ function onStartGame() {
     startTimer();
 
   }, 2000);
-}
-
-/**
- * 카운트다운 오버레이에서 목표점수를 표시하는 헬퍼 함수
- */
-function showGoalOnCountdownOverlay(value) {
-  const goalNumEl = document.getElementById("goal-value");
-  if (goalNumEl) {
-    goalNumEl.textContent = value; 
-  }
 }
 
 /***************************************************
@@ -1655,7 +1656,7 @@ function onHintClick(isInitialHint = false) {
   // 기존 힌트 로직
   let lines = findAllPossibleLines();
   if (lines.length === 0) {
-    showIOSToastMessage(translations[currentLanguage].no_more_hints);
+    showIOSToastMessage(translations[currentLanguage].noCombinationToast);
     return;
   }
 
