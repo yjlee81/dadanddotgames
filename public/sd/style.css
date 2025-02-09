@@ -147,9 +147,7 @@ html, body {
   .profile-container {
     display: flex;
     align-items: flex-start;
-    /* margin: 16px;
     flex-direction: column;
-    /* padding: 0px 20px; */
 }
 
   .profile-container h1 {
@@ -562,7 +560,7 @@ font-weight: bold;
     padding: 12px 0px calc(8px + env(safe-area-inset-bottom));
     display: flex;
     justify-content: center;
-    gap: 1px;
+    gap: var(--spacing-sm);
     z-index: 1000;
     background: var(--background-color);
     backdrop-filter: blur(10px);
@@ -574,7 +572,7 @@ font-weight: bold;
   width: 50%;
   font-size: 1rem;
   border: none;
-  border-radius: 22px 0 0 22px;
+  border-radius: 22px;
   background-color: var(--secondary-button-color);
   color: #fff;
   cursor: pointer;
@@ -588,7 +586,7 @@ font-weight: bold;
   width: 50%;
   font-size: 1rem;
   border: none;
-  border-radius: 0 22px 22px 0;
+  border-radius: 22px;
   background-color: var(--primary-button-color);
   color: #fff;
   cursor: pointer;
@@ -1756,7 +1754,7 @@ input:checked + .slider:before {
 
 .game-timer {
   position: relative;
-  width: 40%; /* 타이머바 전체 길이 */
+  width: 60%; /* 타이머바 전체 길이 */
   height: 20px;
   background-color: #e0e0e0;
   border-radius: var(--radius-md);
