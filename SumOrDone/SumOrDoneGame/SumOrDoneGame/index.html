@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <base href="./">
+  <base href="/sd/">
   <meta charset="UTF-8">
   <title data-i18n="mainTitle">숫자 결합 게임</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="description" content="숫자 조합 퍼즐 게임 - 드래그로 숫자를 결합해 목표 점수를 달성하세요!">
   <meta property="og:title" content="숫자 결합 게임">
-  <meta property="og:image" content="images/how-to-play.gif">
+  <meta property="og:image" content="https://dadanddot.com/images/how-to-play.gif">
   <meta name="google-site-verification" content="your_verification_code">
 
   
 
-  <link rel="apple-touch-icon" sizes="57x57" href="apple-icon-57x57.png">
-  <link rel="apple-touch-icon" sizes="60x60" href="apple-icon-60x60.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="apple-icon-72x72.png">
-  <link rel="apple-touch-icon" sizes="76x76" href="apple-icon-76x76.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="apple-icon-114x114.png">
-  <link rel="apple-touch-icon" sizes="120x120" href="apple-icon-120x120.png">
-  <link rel="apple-touch-icon" sizes="144x144" href="apple-icon-144x144.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="apple-icon-152x152.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-icon-180x180.png">
-  <link rel="icon" type="image/png" sizes="192x192"  href="android-icon-192x192.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" sizes="57x57" href="/images/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/images/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/images/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/images/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/images/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/images/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/images/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/images/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
   <meta name="msapplication-TileColor" content="#ffffff">
-  <meta name="msapplication-TileImage" content="ms-icon-144x144.png">
+  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
   <meta name="theme-color" content="#ffffff">
   
   <!-- AMP 광고 삽입 -->
@@ -52,12 +52,12 @@
   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth-compat.js"></script>
   
   <!-- 스타일 -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/sd/style.css">
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
 
   <!-- 게임 스크립트 -->
-  <script src="router.js"></script>
-  <script src="script.js" defer></script>
+  <script src="/sd/router.js"></script>
+  <script src="/sd/script.js" defer></script>
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-4F9B3DMB67"></script>
@@ -122,58 +122,35 @@
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WZLQ6BLJ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
- <!-- [1] 헤더 -->
+ <!-- [1] 메인 헤더 (title-screen 용) -->
  <header class="main-header">
   <div class="header-left">
-    
-    <!-- 헤더 왼쪽에 있던 프로필 관련 버튼 제거/주석 -->
-    <!-- <a id="user-profile-info" selected>Hi!</a> -->
-    <!-- ...기존 다른 로고/메뉴가 있다면 유지... -->
-    
-      <img src="images/256.png" alt="Sumordone logo" class="title-logo">
-    
-    
-    
+    <a href="/sd/">
+      <img src="/images/256.png" alt="Sumordone logo" class="title-logo">
+      <span class="title-logo-text">숫자 결합</span>
+    </a>
   </div>
-
-
-  <div class="header-center">
-
-  </div>
-  
   <div class="header-right">
     <nav class="icon-menu">
-      <!-- 1) Home 아이콘 -->
-      <a href="./" data-link="./">
-        <i class="fi fi-rr-house-blank"></i>
-      </a>
-
-      <!-- 2) Rank 아이콘 -->
-      <a href="ranking" data-link="ranking">
+      <!-- 모달 열기 버튼들 (data-modal 속성으로 어떤 모달인지 구분) -->
+      <button class="open-modal-btn" data-modal="rankingModal">
         <i class="fi fi-rr-crown"></i>
-      </a>
-
-      <!-- 3) Tutorial 아이콘 -->
-      <a href="tutorial" data-link="tutorial">
+      </button>
+      <button class="open-modal-btn" data-modal="tutorialModal">
         <i class="fi fi-rr-interrogation"></i>
-      </a>
-
-      <!-- 4) Settings 아이콘 -->
-      <a href="settings" data-link="settings">
-        <i class="fi fi-rr-menu-dots-vertical"></i>
-      </a>
-  
-  </nav>
-    
-  </div>  
-  
+      </button>
+      <button class="open-modal-btn" data-modal="settingsModal">
+        <i class="fi fi-rr-settings"></i>
+      </button>
+    </nav>
+  </div>
 </header>
 
   <!-- [2] 타이틀 화면 -->
 <div id="title-screen" data-route="home">
     <div class="profile-container">
       <h1 id="titleLabel" ><span id="nickname">닉네임</span><i id="nickname-change-btn" class="fi fi-rr-pencil" style="font-size: 16px;"></i></h1> 
-      <!-- <h2 id="cumulative-score">000점</h2> -->
+      <span> <span id="cumulative-score">000</span><span class="pts">pts</span></span>
     </div>
   <!-- <div class="title-container">
     <div class="tab-container">
@@ -183,11 +160,11 @@
   -->
     
     <!-- 게임 옵션 (목표합 & 난이도) -->
-    <div class="info-section" id="classic-mode-options">
-      <h2>클래식 모드</h2>
-      <p>라운드마다 목표합이 커집니다.</p>
+    <div id="classic-mode-options">
+      <!-- <h2>클래식 모드</h2> -->
+      <p>숫자들을 드래그해 목표합을 찾고, 더이상 없으면 결!을 눌러요.</p>
       
-      <label>시작 라운드</label>
+      <!-- <label>시작 라운드</label> -->
       <select id="round-select" class="selector">
         <!-- 라운드(목표합) -->
         <option value="10" data-i18n="level1_label">Level 1 (10점)</option>
@@ -267,14 +244,12 @@
 
     <table id="score-table" class="score-table">
       <thead>
-
         <tr>
-          <th data-i18n="rank">순위</th>
-          <th>Nickname</th>
-          <th data-i18n="score">점수</th>
-          <th data-i18n="goal">목표합</th>
-          <th data-i18n="time">시간</th>
-          
+          <th data-field="rank" data-i18n="rank">순위</th>
+          <th data-field="nickname" data-i18n="nickname">이름</th>
+          <th data-field="score" data-i18n="score">점수</th>
+          <th data-field="goal" data-i18n="goal">목표합</th>
+          <th data-field="time" data-i18n="time">일시</th>
         </tr>
       </thead>
       <tbody>
@@ -292,16 +267,16 @@
     
     <div class="info-section">
     <p data-i18n="howToPlayDetail1"><strong>1. 드래그해서 일렬로 숫자들을 선택하세요</strong></p>
-    <img src="images/tut1.png" alt="Drag to select numbers in a line" style="width: 200px; filter: grayscale(100%);">
+    <img src="../images/tut1.png" alt="Drag to select numbers in a line" style="width: 200px; filter: grayscale(100%);">
     </div>
   <div class="info-section">
     <p data-i18n="howToPlayDetail2"><strong>2. 더이상 목표합을 만들수 없으면 결!을 누르세요.</strong></p>
     
-    <img src="images/tut2.png" alt="hit Done! when you can't make the TargetSum" style="width: 200px; filter: grayscale(100%);">
+    <img src="../images/tut2.png" alt="hit Done! when you can't make the TargetSum" style="width: 200px; filter: grayscale(100%);">
   </div>
   <div class="info-section">
     <p data-i18n="howToPlayDetail3"><strong>3. 숫자칸이 길수록 보너스점수를 얻을 수 있어요.</strong></p>
-    <img src="images/tut3.png" alt="get bonus scores on lengthy lines" style="width: 200px; filter: grayscale(100%);">
+    <img src="../images/tut3.png" alt="get bonus scores on lengthy lines" style="width: 200px; filter: grayscale(100%);">
   </div>
   </section>
 
@@ -365,7 +340,7 @@
       <h4>이용약관</h4>
     </div>
     <div class="setting-value">
-      <a href="terms-of-service.html" data-link data-i18n="tos">이용약관</a>
+      <a href="/terms-of-service.html" data-link data-i18n="tos">이용약관</a>
     </div>
   </div>
 
@@ -374,7 +349,7 @@
       <h4>개인정보 처리방침</h4>
     </div>
     <div class="setting-value">
-      <a href="pp.html" data-link data-i18n="privacyPolicy">개인정보 처리방침</a>
+      <a href="/pp.html" data-link data-i18n="privacyPolicy">개인정보 처리방침</a>
     </div>
   </div>
 
@@ -422,41 +397,58 @@
 
 <!-- [6] 게임화면 -->
 <div id="game-container" data-route="game" style="display:none;">
-  <div id="info-bar">
-    <div class="info-box">
-      <span class="label" id="target-label" data-i18n="goal">Goal</span>
-      <span class="data" id="target-number">10</span>
+  <header id="sub-header" class="gnb-lnb">
+    <div class="left-group">
+      <!-- 뒤로가기 버튼 -->
+      <button id="back-button" onclick="backToTitleScreen()">
+        <i class="fi fi-rr-angle-left"></i>
+      </button>
+      <p>
+        <span class="label" id="target-label">목표합</span>
+        <span class="data" id="target-number">10</span>
+      </p>
     </div>
-    <div class="info-box">
-      <span class="label" id="score-label" data-i18n="score">Score</span>
-      <span class="data" id="score">0</span>
+    <div class="right-group">
+      <!-- 동일하게 모달 열기 버튼들 -->
+      <button class="open-modal-btn" data-modal="rankingModal">
+        <i class="fi fi-rr-crown"></i>
+      </button>
+      <button class="open-modal-btn" data-modal="tutorialModal">
+        <i class="fi fi-rr-interrogation"></i>
+      </button>
+      <button class="open-modal-btn" data-modal="settingsModal">
+        <i class="fi fi-rr-menu-dots-vertical"></i>
+      </button>
     </div>
-    <div class="info-box">
-      <span class="label" id="timer-label" data-i18n="time">Time</span>
-      <span class="data" id="timer">02:00</span>
-    </div>
-  </div>
+  </header>
+  
+  <!-- 상단 인포영역: 점수, 타임바 추가 -->
+  
+
   <!-- 보드컨테이너 -->
   <div class="board-container">
+    <div class="game-info-container">
+      <div class="game-score" id="score-box">
+        점수 <span id="score">0</span>
+      </div>
+      <div class="game-timer" id="timer-box">
+        <!-- 남은 시간 텍스트(항상 한 줄로 표시됨, 바와 별도 표시) -->
+        <span id="timer" class="timer-text"></span>
+        <!-- 타이머 바(배경 위에 채워지는 부분) -->
+        <div class="timer-bar" id="timer-bar"></div>
+      </div>
+    </div>
+    
     <table id="game-board"></table>
+    <div class="buttons-container">
+      <button id="hint-btn" class="split-button-left" data-i18n="hint">Hint (3)</button>
+      <button id="no-more" class="split-button-right" data-i18n="done">Done!</button>
+    </div>
+    
+    
   </div>
 
   
-  <!-- 하단 버튼 -->
-  <div class="buttons-container">
-    <button id="home-button" class="tertiary-button" onclick="backToTitleScreen()">
-      <i class="fi fi-rr-house-blank"></i></button>
-    <button id="hint-btn" class="secondary-button" data-i18n="hint">Hint (3)</button>
-    <button id="no-more" class="primary-button" data-i18n="done">Done!</button>
-  </div>
-  <!--
-  <footer id="footer-game">
-    <p data-i18n="footerText">&copy; 2025 Dadanddot.com</p>  
-    <a href="/sd" data-link data-i18n="home">홈으로</a>
-    <a href="/sd/ranking" data-link data-i18n="scoreboards">스코어보드</a>
-    <a href="/pp.html" data-link data-i18n="privacyPolicy">개인정보 처리방침</a>
-  </footer>
-  --> 
 </div>
 
 
@@ -510,6 +502,31 @@
   }
 }
 </script>
+
+<!-- [4] 모달 (Ranking / Tutorial / Settings) -->
+<div id="rankingModal" class="modal-scrim" style="display:none;">
+  <div class="modal-container">
+    <h2>랭킹</h2>
+    <!-- 여기 랭킹 내용 -->
+    <button class="close-modal-btn">&times;</button>
+  </div>
+</div>
+
+<div id="tutorialModal" class="modal-scrim" style="display:none;">
+  <div class="modal-container">
+    <h2>튜토리얼</h2>
+    <!-- 게임 방법 등 튜토리얼 내용 -->
+    <button class="close-modal-btn">&times;</button>
+  </div>
+</div>
+
+<div id="settingsModal" class="modal-scrim" style="display:none;">
+  <div class="modal-container">
+    <h2>세팅</h2>
+    <!-- 세팅 내용 -->
+    <button class="close-modal-btn">&times;</button>
+  </div>
+</div>
 
 </body>
 </html>
