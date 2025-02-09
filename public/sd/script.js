@@ -69,7 +69,8 @@ const translations = {
     no_more_hints: "You cannot get any more hints.",
     lengthBonusLabel: "Length",
     emptyBonusLabel: "Empty",
-    nickname: "Name"
+    nickname: "Name",
+    cumulativeScore: "누적점수"
   },
   ko: {
     mainTitle: "숫자 결합",
@@ -117,7 +118,8 @@ const translations = {
     no_more_hints: "힌트가 모두 소진되었어요.",
     lengthBonusLabel: "길이",
     emptyBonusLabel: "빈칸",
-    nickname: "이름"
+    nickname: "이름",
+    cumulativeScore: "누적점수"
   },
   ja: {
     mainTitle: "数字結合ゲーム",
@@ -166,7 +168,8 @@ const translations = {
     no_more_hints: "ヒントを取得できません。",
     lengthBonusLabel: "長さ",
     emptyBonusLabel: "空き",
-    nickname: "名前"
+    nickname: "名前",
+    cumulativeScore: "累積スコア"
   },
   zh: {
     mainTitle: "数字合并游戏",
@@ -214,7 +217,8 @@ const translations = {
     no_more_hints: "ヒントを取得できません。",
     lengthBonusLabel: "長さ",
     emptyBonusLabel: "空き",
-    nickname: "名前"
+    nickname: "名前",
+    cumulativeScore: "累计分数"
   },
   
 };
@@ -260,7 +264,7 @@ let currentGoalFilter = "all";    // 기본 목표합 필터 (전체)
  * true면 첫 렌더에서만 샤라락 효과 적용 후 false로 바뀜
  */
 let isFirstRender = true;
-let hintsLeft = 3; //  힌트남은 횟수 3
+let hintsLeft = 15; //  힌트남은 횟수 3
 
 /***************************************************
  * 게임 카운트 관련 (Firebase)
@@ -415,30 +419,29 @@ function filterScoresByGoal(goal) {
 
 // 점수 저장
 function saveScoreToFirebase(score, diff, target) {
+  // 게임 기록 데이터 구성
   const newRecord = {
-    nickname: currentNickname ? currentNickname : "Guest", // 닉네임 저장 (없으면 "Guest")
+    nickname: currentNickname ? currentNickname : "Guest",
     score: score,
     diff: diff,
     target: target,
     timestamp: Date.now()
   };
+  
+  // 1. 일반 점수 저장
   db.ref("scores").push(newRecord)
     .then(() => {
       console.log("점수 저장 성공:", newRecord);
+      
+      // 2. 누적 점수 업데이트 (이번 게임 점수만)
+      return updateCumulativeScore(currentNickname, score);
+    })
+    .then(newScore => {
+      console.log("새로운 누적점수:", newScore);
+      showCumulativeScore(newScore);
     })
     .catch((error) => {
       console.error("점수 저장 실패:", error);
-    });
-    
-  // 누적점수 업데이트
-  updateCumulativeScore(currentNickname, finalScore)
-    .then(newScore => {
-      console.log("새로운 누적점수:", newScore);
-      // 누적점수를 화면에 표시하려면 아래처럼 DOM에 표시 가능
-      // document.getElementById('cumulative-score').textContent = newScore;
-    })
-    .catch(err => {
-      console.error("누적점수 업데이트 오류:", err);
     });
 }
 
@@ -598,43 +601,39 @@ function onStartGame() {
 
 }
 
-/**
+/***************************************************
  * 카운트다운 오버레이에서 목표점수를 표시하는 헬퍼 함수
- */
-function showGoalOnCountdownOverlay(value) {
+ ***************************************************/
+function showGoalOnCountdownOverlay(value, delay = 200) {
   const goalNumEl = document.getElementById("goal-value");
   if (goalNumEl) {
     goalNumEl.textContent = value; 
   }
 
-  // (2) 로딩바 초기화 → 0%에서 시작
+  // 로딩바 초기화 → 0%에서 시작
   const loadingBarEl = document.getElementById("loading-bar");
   loadingBarEl.style.width = "0%";
 
-  // (3) 아주 살짝 지연 후 3초 동안 0% → 100%
+  // 아주 살짝 지연 후 로딩바 애니메이션 시작
   setTimeout(() => {
     loadingBarEl.style.width = "100%";
   }, 50);
 
-  /** 
-   * (4) 3초 뒤에 오버레이를 닫고, 
-   *     그 시점에 initRound()를 호출해야 '최초 렌더링' 시점과 화면 표출 시점 맞춤
-   */
+  // 지정된 delay 후 오버레이를 닫고, 보드 구성 (initRound호출)
   setTimeout(() => {
     countdownOverlayEl.style.display = "none";
     gameContainerEl.style.display = "flex";
-
-    // 이 시점에 보드를 실제로 구성 (최초 렌더) → 샤라락
-    initRound();   // ← 여기서 처음 renderBoard()가 실행됨
-    startTimer();
-
-  }, 2000);
+    initRound();  // initRound() 내부에서 startTimer()를 호출하므로 중복 호출 방지됨
+  }, delay);
 }
 
 /***************************************************
  * 라운드 초기화
  ***************************************************/
 function initRound() {
+  // 기존 타이머 정리 추가
+  stopTimer(); // ★ 추가 필요
+  
   const loadingBar = document.getElementById('loading-bar');
 
   // 기존 transition 제거 후 width를 0%로 리셋
@@ -667,8 +666,9 @@ function initRound() {
 
   // 타이머 리셋
   remainingSeconds = 150;
-  hintsLeft = 3
+  hintsLeft = 30;
   isTimerPaused = false;
+  startTimer();
   updateTimerDisplay();
   updateHintButtonLabel()
 
@@ -1054,47 +1054,101 @@ function useHint() {
  * 타이머
  ***************************************************/
 function startTimer() {
-  stopTimer();
-  remainingSeconds = 150;
-  isTimerPaused = false;
-  timerEl.classList.remove("time-warning");
-
+  stopTimer(); // ★ 기존 타이머 정리 후 새로 시작
   timerInterval = setInterval(() => {
-    if (!isTimerPaused) {
-      remainingSeconds--;
-      updateTimerDisplay();
-
-      // 30초 남았을 때 경고
-      if (remainingSeconds === 30) {
-        timerEl.classList.add("time-warning");
+    // ----------------------------------------------
+    // 1. 힌트가 표시되는 동안 광고 정지 로직 (광고 요소 ad-container가 존재한다고 가정)
+    if (window.isHintVisible) {
+      const adContainer = document.getElementById("ad-container");
+      if (adContainer) {
+        adContainer.style.display = "none";
       }
-
-      if (remainingSeconds <= 0) {
-        stopTimer();
-        remainingSeconds = 0;
-        updateTimerDisplay();
-        timerEl.classList.remove("time-warning");
-        showGameOver();
+    } else {
+      const adContainer = document.getElementById("ad-container");
+      if (adContainer) {
+        adContainer.style.display = "block";
       }
+    }
+    // ----------------------------------------------
+    
+    // 2. 남은 시간 감소
+    remainingSeconds--;
+    
+    // 3. 타이머 텍스트 업데이트 (초 단위, 항상 한 줄로 표시)
+    const timerEl = document.getElementById("timer");
+    if (timerEl) {
+      timerEl.textContent = remainingSeconds + "s";
+    }
+    
+    // 4. 타이머 바 업데이트: 남은 시간에 따라 오른쪽부터 채워진 상태에서 왼쪽으로 줄어듦
+    const timerBar = document.getElementById("timer-bar");
+    if (timerBar) {
+      let percentage = (remainingSeconds / totalTime) * 100;
+      percentage = percentage < 0 ? 0 : percentage;
+      timerBar.style.width = percentage + "%";
+      
+      // 남은 시간이 30초 이하일 때 low-time 클래스로 빨간색 pulse 효과 적용
+      if (remainingSeconds <= 30) {
+        timerEl && timerEl.classList.add("low-time");
+        timerBar.classList.add("low-time");
+      } else {
+        timerEl && timerEl.classList.remove("low-time");
+        timerBar.classList.remove("low-time");
+      }
+    }
+    
+    // 5. 남은 시간이 0 이하가 되면 타이머 종료 및 게임 오버 처리
+    if (remainingSeconds <= 0) {
+      clearInterval(timerInterval);
+      // 게임 오버 관련 처리 함수 호출 (예: gameOver())
+      showGameOver();
+      stopTimer();
     }
   }, 1000);
 }
+
 function stopTimer() {
   if (timerInterval) clearInterval(timerInterval);
   timerInterval = null;
 }
+
 function pauseTimer() {
   isTimerPaused = true;
 }
+
 function resumeTimer() {
   isTimerPaused = false;
 }
+
+// 전체 시간을 지정합니다. (예: 150초)
+const totalTime = 150;
+
 function updateTimerDisplay() {
-  const m = Math.floor(remainingSeconds/60);
-  const s = remainingSeconds % 60;
-  const mm = (m<10 ? "0"+m : m);
-  const ss = (s<10 ? "0"+s : s);
-  timerEl.textContent = mm+":"+ss;
+  const timerEl = document.getElementById("timer");
+  if (!timerEl) {
+    console.warn("타이머 요소('#timer')가 존재하지 않습니다.");
+    return;
+  }
+  
+  // 남은 시간을 초단위 문자열로 설정 (예: "150초")
+  timerEl.textContent = remainingSeconds + "s";
+  
+  // 타이머 바 width 업데이트 (전체 시간 대비 남은 초 퍼센트)
+  const timerBar = document.getElementById("timer-bar");
+  if (timerBar) {
+    let percentage = (remainingSeconds / totalTime) * 100;
+    percentage = percentage < 0 ? 0 : percentage;
+    timerBar.style.width = percentage + "%";
+    
+    // 남은 시간이 30초 이하이면 low-time 클래스 추가하여 pulse 효과 적용
+    if (remainingSeconds <= 30) {
+      timerEl.classList.add("low-time");
+      timerBar.classList.add("low-time");
+    } else {
+      timerEl.classList.remove("low-time");
+      timerBar.classList.remove("low-time");
+    }
+  }
 }
 
 /***************************************************
@@ -1109,16 +1163,10 @@ function restartCurrentRound() {
   countdownOverlayEl.style.display = "flex";
   gameContainerEl.style.display = "none";
 
-  // **목표점수 동적 표시** (카운트다운 오버레이 내부)
-  showGoalOnCountdownOverlay(targetSum);
-
-  // 4) 3초 카운트다운
-  setTimeout(() => {
-    countdownOverlayEl.style.display = "none";
-    gameContainerEl.style.display = "flex";
-    initRound();
-    startTimer();
-  }, 3000); // 3초 후 게임 시작
+  // 3초 카운트다운을 위해 showGoalOnCountdownOverlay에 delay 인자로 3000ms 전달
+  showGoalOnCountdownOverlay(targetSum, 3000);
+  
+  // (삭제됨) 별도의 setTimeout 블록 내에서 initRound()와 startTimer() 호출 제거
 }
 
 function showGameOver() {
@@ -1274,6 +1322,8 @@ function showFloatingScore(baseScore, lengthBonus, emptyBonus, tileElement) {
   }
 }
 
+
+// 확인필요
 function showFinalScore(score) {
   const finalScoreElement = document.getElementById('final-score-value');
   finalScoreElement.textContent = score;
@@ -1363,7 +1413,7 @@ function showFinalSuccessOverlay(timeBonus, isFinalRound = false) {
           <tr class="final-row"><th>최종 점수</th><td><span id="finalScoreValue">${totalScore}</span></td></tr>
         </tbody>
       </table>
-      <button class="modal-button" onclick="closeFinalOverlay()">다음 라운드</button>
+      <button class="primary-button" onclick="closeFinalOverlay()">다음 라운드</button>
     `;
   }
 
@@ -1707,17 +1757,16 @@ async function isNicknameDuplicated(nickname) {
 
 /**
  * 닉네임을 Firebase에 저장 (중복 없을 시)
+ * 닉네임과 함께 초기 누적 점수도 저장
  */
 async function saveNicknameToFirebase(nickname) {
-  // 중복인지 확인
-  const duplicated = await isNicknameDuplicated(nickname);
-  if (duplicated) {
-    return false; // 저장 불가
-  }
-  // 중복이 아니라면, push나 set으로 저장
   const newRef = firebase.database().ref('nicknames').push();
-  await newRef.set(nickname);
-  return true;
+  await newRef.set({
+    nickname: nickname,
+    cumulativeScore: 0,
+    createdAt: Date.now()
+  });
+  return true; // 항상 성공 반환
 }
 
 /**
@@ -1727,32 +1776,35 @@ async function saveNicknameToFirebase(nickname) {
  */
 async function initializeNickname() {
   const storedNickname = localStorage.getItem("myNickname");
-  if (storedNickname) {
-    // 이미 저장된 닉네임이 있으면 그대로 사용
+  const storedUserKey = localStorage.getItem("userKey"); // 추가: Firebase 키 저장
+
+  if (storedNickname && storedUserKey) {
     currentNickname = storedNickname;
     document.getElementById("nickname").textContent = currentNickname;
+    
+    // 기존 누적점수 조회
+    const userRef = firebase.database().ref(`nicknames/${storedUserKey}`);
+    const snapshot = await userRef.once('value');
+    const userData = snapshot.val();
+    showCumulativeScore(userData.cumulativeScore || 0);
+    
     return;
   }
 
-  // 저장된 닉네임이 없으면 새로 생성
   let tempNickname = generateRandomNickname();
-  let success = false;
-  let loopCount = 0;
+  const newRef = firebase.database().ref('nicknames').push();
+  const userKey = newRef.key; // 추가: Firebase 고유 키 획득
 
-  // 중복이면 재생성하여 시도
-  while (!success && loopCount < 10) {
-    success = await saveNicknameToFirebase(tempNickname);
-    if (!success) {
-      tempNickname = generateRandomNickname();
-    }
-    loopCount++;
-  }
+  await newRef.set({
+    nickname: tempNickname,
+    cumulativeScore: 0,
+    createdAt: Date.now()
+  });
 
   currentNickname = tempNickname;
-  // 화면에 표시
   document.getElementById("nickname").textContent = currentNickname;
-  // 로컬 스토리지에 저장
   localStorage.setItem("myNickname", currentNickname);
+  localStorage.setItem("userKey", userKey); // 추가: Firebase 키 저장
 }
 
 /**
@@ -1763,32 +1815,31 @@ async function initializeNickname() {
  */
 function setupNicknameChangeEvent() {
   const changeBtn = document.getElementById('nickname-change-btn');
-  changeBtn.addEventListener('click', async () => {
-    // 사용자 입력
-    const newName = prompt("새 닉네임을 입력하세요:", currentNickname);
-    if (!newName || newName.trim() === "") {
-      return; // 취소 시 아무 것도 안 함
-    }
+  
+  // 기존 이벤트 리스너 제거 후 새로 등록
+  changeBtn.removeEventListener('click', handleNicknameChange);
+  changeBtn.addEventListener('click', handleNicknameChange);
+}
 
-    // 중복 검사
-    const duplicated = await isNicknameDuplicated(newName);
-    if (duplicated) {
-      alert("이미 존재하는 닉네임입니다. 다른 닉네임을 사용해주세요.");
-      return;
-    }
+// 별도의 핸들러 함수로 분리
+async function handleNicknameChange() {
+  const newName = prompt("새 닉네임을 입력하세요:", currentNickname);
+  if (!newName || newName.trim() === "") return;
 
-    // 중복이 아니면 새 닉네임 DB 및 localStorage에 갱신
-    await firebase.database().ref('nicknames').push(newName);
+  const userKey = localStorage.getItem("userKey");
+  if (!userKey) {
+    alert("사용자 정보를 찾을 수 없습니다.");
+    return;
+  }
 
-    // 현재 닉네임을 새 이름으로 교체
-    currentNickname = newName;
-    document.getElementById('nickname').textContent = currentNickname;
+  const userRef = firebase.database().ref(`nicknames/${userKey}`);
+  await userRef.update({ nickname: newName });
 
-    // 로컬 스토리지도 업데이트
-    localStorage.setItem("myNickname", currentNickname);
-
-    alert("닉네임이 변경되었습니다!");
-  });
+  currentNickname = newName;
+  document.getElementById('nickname').textContent = currentNickname;
+  localStorage.setItem("myNickname", currentNickname);
+  alert("닉네임이 변경되었습니다!");
+  await displayCurrentUserScore(); // 누적 점수 새로고침
 }
 
 // DOMContentLoaded 이후에 닉네임 초기화, 버튼 이벤트 연결
@@ -1803,37 +1854,114 @@ document.addEventListener("DOMContentLoaded", () => {
  * @param {number} additionalScore - 이번 게임에서 획득한 점수
  * @returns {Promise<number>} 업데이트 후의 새로운 누적점수
  */
-async function updateCumulativeScore(nickname, additionalScore) {
-  // Firebase 주소 (cumulativeScores/"닉네임")
-  const ref = firebase.database().ref(`cumulativeScores/${nickname}`);
+async function updateCumulativeScore(additionalScore) {
+  const userKey = localStorage.getItem("userKey");
+  if (!userKey) return 0;
 
-  // 현재 누적점수 불러오기
-  const snapshot = await ref.once('value');
-  const currentScore = snapshot.val() || 0;
-
-  // 새 점수 = 기존 + 이번 게임 점수
-  const newScore = currentScore + additionalScore;
-
-  // Firebase에 저장
-  await ref.set(newScore);
-
-  return newScore;
+  const userRef = firebase.database().ref(`nicknames/${userKey}`);
+  
+  return new Promise((resolve, reject) => {
+    userRef.child('cumulativeScore').transaction((currentScore) => {
+      // 현재 값 숫자 변환 보장
+      const current = Number(currentScore) || 0;
+      const additional = Number(additionalScore) || 0;
+      return current + additional;
+    }, (error, committed, snapshot) => {
+      if (error) {
+        console.error('누적 점수 업데이트 실패:', error);
+        reject(error);
+      } else if (committed) {
+        resolve(Number(snapshot.val()) || 0);
+      }
+    });
+  });
 }
 
-// 누적점수를 DOM에 표시하는 함수
+/**
+ * 누적 점수를 화면에 표시
+ */
 function showCumulativeScore(newScore) {
   const scoreEl = document.getElementById('cumulative-score');
+  
   if (scoreEl) {
-    scoreEl.textContent = newScore;
+    // 숫자 변환 및 천 단위 구분자 추가
+    const formattedScore = Number(newScore).toLocaleString();
+    animateNumber(scoreEl, 0, newScore, 200);
+    scoreEl.textContent = `${formattedScore}pts`;
+  }
+  
+}
+
+/**
+ * 페이지 로드시 현재 사용자의 누적 점수 표시
+ */
+async function displayCurrentUserScore() {
+  const userKey = localStorage.getItem("userKey");
+  if (!userKey) return;
+
+  const userRef = firebase.database().ref(`nicknames/${userKey}`);
+  const snapshot = await userRef.once('value');
+
+  if (snapshot.exists()) {
+    const userData = snapshot.val();
+    // 숫자 강제 변환 추가
+    const cumulativeScore = Number(userData.cumulativeScore) || 0;
+    showCumulativeScore(cumulativeScore);
   }
 }
 
+// DOMContentLoaded 이벤트 핸들러 수정
+document.addEventListener("DOMContentLoaded", async () => {
+  await initializeNickname();
+  setupNicknameChangeEvent();
+  displayCurrentUserScore(); // 누적 점수 표시 추가
+});
+
 // onGameOver 함수에서 사용 예시:
 function onGameOver(finalScore) {
-  updateCumulativeScore(currentNickname, finalScore)
+  updateCumulativeScore(finalScore)
     .then(newScore => {
       console.log("새로운 누적점수:", newScore);
       showCumulativeScore(newScore);
     });
 }
+
+// scrim영역 클릭 시 모달 닫기
+function onScrimClick(e) {
+  if (e.target.classList.contains('modal-scrim')) {
+    e.target.style.display = 'none';
+    
+    // 추가: 모달 내부 컨테이너 클릭 시 닫기 방지
+    const modalContainer = e.target.querySelector('.modal-container');
+    if (modalContainer && modalContainer.contains(e.target)) {
+      return;
+    }
+  }
+}
+
+// 특정 모달 닫기
+function closeModal(modalId) {
+  document.getElementById(modalId).style.display = 'none';
+}
+
+// 모달 열기 버튼 클릭 시
+document.querySelectorAll('.open-modal-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const modalId = btn.getAttribute('data-modal');
+    document.getElementById(modalId).style.display = 'block';
+  });
+});
+
+// 모달 닫기 버튼 이벤트 연결 추가
+document.querySelectorAll('.close-modal-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const modalId = e.target.closest('.modal-scrim').id;
+    closeModal(modalId);
+  });
+});
+
+// Scrim 클릭 이벤트 핸들러 연결
+document.querySelectorAll('.modal-scrim').forEach(scrim => {
+  scrim.addEventListener('click', onScrimClick);
+});
 

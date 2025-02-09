@@ -109,7 +109,7 @@ html, body {
     align-items: center;
     justify-content: space-between;
     height: 60px;
-    padding: 0 8px 0 16px;
+    padding: 0 var(--spacing-md);
     /* border-bottom: 1px solid var(--header-border-color); */
     /* box-shadow: 0 2px 8px rgba(0,0,0,0.05); */
     position: sticky;
@@ -510,13 +510,19 @@ font-weight: bold;
 
 /* ===== [보드컨테이너 & 보드] ===== */
 .board-container {
-flex: 1;
-display: flex;
-justify-content: center;
-align-items: center;
-overflow: hidden;
-position: relative;
-margin-bottom: 65px;
+  /* margin-top: 10px; */
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  margin-bottom: 65px;
+  overflow: hidden;
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  margin-top: 20px;
 }
 
 #game-board {
@@ -551,16 +557,45 @@ margin-bottom: 65px;
     position: fixed;
     bottom: 0;
     place-self: center;
-    width: 90%;
-    /* 기본 패딩 값(예: 8px)과 안전 영역 값을 합산 */
+    width: 50%;
+    height: 50px;
     padding: 12px 0px calc(8px + env(safe-area-inset-bottom));
     display: flex;
     justify-content: center;
-    gap: 12px;
-    z-index: 1000; /* 다른 요소 위에 표시되도록 */
+    gap: 1px;
+    z-index: 1000;
     background: var(--background-color);
-    backdrop-filter: blur(10px);  
-  }
+    backdrop-filter: blur(10px);
+}
+
+.split-button-left {
+  flex: 1;
+  height: 50px;
+  width: 50%;
+  font-size: 1rem;
+  border: none;
+  border-radius: 22px 0 0 22px;
+  background-color: var(--secondary-button-color);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  /* min-width: 80px; */
+}
+
+.split-button-right {
+  flex: 1;
+  height: 50px;
+  width: 50%;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0 22px 22px 0;
+  background-color: var(--primary-button-color);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  /* min-width: 80px; */
+}
+
   
   .primary-button {
     flex: 1;
@@ -573,6 +608,7 @@ margin-bottom: 65px;
     cursor: pointer;
     transition: background-color 0.2s ease;
     min-width: 80px;
+    width: 100%;
   }
   .primary-button:hover {
     background-color: var(--primary-button-hover-color);
@@ -588,6 +624,7 @@ margin-bottom: 65px;
     cursor: pointer;
     transition: background-color 0.2s ease;
     min-width: 80px;
+    width: 100%;
   }
   .secondary-button:hover {
     background-color: var(--secondary-button-hover-color);
@@ -635,11 +672,12 @@ margin-bottom: 65px;
     opacity: 0.8;
   }
   .removing {
-    animation: success-remove 0.4s forwards ease;
+    animation: success-remove 0.2s var(--ease-in-out) forwards var(--ease-in-out);
   }
+
   @keyframes success-remove {
-    0% { transform: scale(1.1); opacity:1; }
-    100% { transform: scale(0.8); opacity:0; }
+    0% { transform: scale(1.1); background-color: var(--success-color); opacity:1; }
+    100% { transform: scale(1); background-color: var(--tile-color); opacity:1; }
   }
   .hint-line {
     background-color: var(--hint-color) !important;
@@ -1583,18 +1621,24 @@ input:checked + .slider:before {
 
 /* 서브 페이지 상단 네비게이션 스타일 */
 #sub-header {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 12px 20px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e0e0e0;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  /* background: var(--header-background-color); */
+  /* color: var(--header-text-color); */
+  height: 60px;
+  padding: 0 var(--spacing-md);
+  /* border-bottom: 1px solid #e0e0e0; */
+  /* box-shadow: 0 2px 6px rgba(0,0,0,0.05); */
   position: sticky;
   top: 0;
   z-index: 1000;
   font-family: 'Nunito', sans-serif;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
+
+
 
 .left-group {
   display: flex;
@@ -1605,7 +1649,7 @@ input:checked + .slider:before {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 24px;
+  font-size: 1.2rem;
   color: #333;
   margin-right: 10px;
 }
@@ -1642,4 +1686,148 @@ input:checked + .slider:before {
   font-size: 16px;
   font-weight: bold;
   color: #333;
+}
+
+/* ========== 모달(scrim) 스타일 ========== */
+.modal-scrim {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.modal-container {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  width: 90%;
+  max-width: 480px;
+  margin: 100px auto; /* 화면 중간 근처 배치 */
+  padding: 20px;
+  position: relative;
+  pointer-events: auto;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #666;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+/* scrim 영역 클릭 시 모달 닫기 */
+.open-modal-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+/* ======== 게임화면 상단 점수 / 타이머 ======== */
+.game-info-container {
+  position: fixed;
+  width: 100%;
+  /* height: 50px; */
+  /* background-color: #fafafa; */
+  /* border-bottom: 1px solid #ddd; */
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  top: 60px;
+  margin: var(--spacing-md);
+}
+
+.game-score {
+  position: relative;
+  
+  width: 40%;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.game-timer {
+  position: relative;
+  width: 40%; /* 타이머바 전체 길이 */
+  height: 20px;
+  background-color: #e0e0e0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+/* 타이머 바: 채워진 부분, 오른쪽 끝을 고정시켜두기 위해 transform-origin: right 사용 */
+.timer-bar {
+  background-color: var(--yellow-color);
+  height: 100%;
+  width: 100%;
+  transition: width 0.3s linear;
+  transform-origin: right;
+  border-radius: var(--radius-md);
+}
+
+/* 타이머 텍스트: 바 위에 겹쳐서 남은 초를 표시, 텍스트는 항상 한 줄로 표시됨 */
+.timer-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  line-height: 20px; /* 컨테이너 높이와 동일하게 맞춤 */
+  text-align: center;
+  white-space: nowrap;
+  z-index: 2;
+  pointer-events: none;
+  color: #333;
+}
+
+/* 남은 시간이 30초 이하일 때 적용할 low time 효과 */
+.timer-bar.low-time {
+  animation: pulse 1s infinite;
+}
+
+.timer-text.low-time {
+  color: red;
+  animation: pulse 1s infinite;
+}
+
+/* pulse 애니메이션: 약간의 스케일 효과 */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* 모달 버튼 공통 스타일(필요 시) */
+button.open-modal-btn i {
+  pointer-events: none;
+}
+
+/* 나머지 게임/타이틀 화면 요소들, 공통 버튼, etc.
+   아래 기존 코드 유지 가능 */
+
+.user-info {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+#cumulative-score {
+  font-size: 1.2em;
+  color: var(--accent-color);
+  font-weight: bold;
+}
+
+.pts {
+  font-size: 1.2em;
+  color: var(--accent-color);
+  font-weight: bold;
 }

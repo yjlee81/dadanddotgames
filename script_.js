@@ -24,8 +24,7 @@ const db = firebase.database();
  ***************************************************/
 const translations = {
   en: {
-    mainTitle: "Number Merge Game",
-    version: "v.0.7.10",
+    mainTitle: "Sum Or Done Game",
     gameCount: "Total Played",
     startGame: "Start Now >",
     goal: "Goal",
@@ -52,7 +51,7 @@ const translations = {
     hard: "Hard"
   },
   ko: {
-    mainTitle: "숫자 결!합! 게임",
+    mainTitle: "숫자 결/합 게임",
     version: "v.0.7.10",
     gameCount: "총 플레이 횟수",
     startGame: "지금 시작하기 >",

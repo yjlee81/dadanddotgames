@@ -122,52 +122,35 @@
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WZLQ6BLJ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
- <!-- [1] 헤더 -->
+ <!-- [1] 메인 헤더 (title-screen 용) -->
  <header class="main-header">
   <div class="header-left">
-    
-    <!-- 헤더 왼쪽에 있던 프로필 관련 버튼 제거/주석 -->
-    <!-- <a id="user-profile-info" selected>Hi!</a> -->
-    <!-- ...기존 다른 로고/메뉴가 있다면 유지... -->
     <a href="/sd/">
-      <img src="/images/256.png" alt="Sumordone logo" class="title-logo" href="/sd/"> <span class="title-logo-text">숫자 결합</span>
+      <img src="/images/256.png" alt="Sumordone logo" class="title-logo">
+      <span class="title-logo-text">숫자 결합</span>
     </a>
   </div>
-
-
-  <div class="header-center">
-
-  </div>
-  
   <div class="header-right">
     <nav class="icon-menu">
-
-      <!-- 2) Rank 아이콘 -->
-      <a href="/sd/ranking" data-link="/sd/ranking">
+      <!-- 모달 열기 버튼들 (data-modal 속성으로 어떤 모달인지 구분) -->
+      <button class="open-modal-btn" data-modal="rankingModal">
         <i class="fi fi-rr-crown"></i>
-      </a>
-
-      <!-- 3) Tutorial 아이콘 -->
-      <a href="/sd/tutorial" data-link="/sd/tutorial">
+      </button>
+      <button class="open-modal-btn" data-modal="tutorialModal">
         <i class="fi fi-rr-interrogation"></i>
-      </a>
-
-      <!-- 4) Settings 아이콘 -->
-      <a href="/sd/settings" data-link="/sd/settings">
-        <i class="fi fi-rr-menu-dots-vertical"></i>
-      </a>
-  
-  </nav>
-    
-  </div>  
-  
+      </button>
+      <button class="open-modal-btn" data-modal="settingsModal">
+        <i class="fi fi-rr-settings"></i>
+      </button>
+    </nav>
+  </div>
 </header>
 
   <!-- [2] 타이틀 화면 -->
 <div id="title-screen" data-route="home">
     <div class="profile-container">
       <h1 id="titleLabel" ><span id="nickname">닉네임</span><i id="nickname-change-btn" class="fi fi-rr-pencil" style="font-size: 16px;"></i></h1> 
-      <!-- <h2 id="cumulative-score">000점</h2> -->
+      <span> <span id="cumulative-score">000</span><span class="pts">pts</span></span>
     </div>
   <!-- <div class="title-container">
     <div class="tab-container">
@@ -415,48 +398,57 @@
 <!-- [6] 게임화면 -->
 <div id="game-container" data-route="game" style="display:none;">
   <header id="sub-header" class="gnb-lnb">
-      <!-- 왼쪽 그룹에 뒤로가기 아이콘 버튼 추가 -->
-      <div class="left-group">
-        <button id="back-button" onclick="backToTitleScreen()">
-          <i class="fi fi-rr-angle-left"></i>
-        </button>
-        <p>
-          <span class="label" id="target-label" data-i18n="goal">TargetSum</span>
-          <span class="data" id="target-number">10</span>
-        </p>
-      </div>
-      <div class="right-group">
-       
-        <span class="info-box">
-          <span class="label" id="score-label" data-i18n="score">Score</span><span class="data" id="score">0</span>
-        </span>
-        <div class="info-box">
-        <span class="label" id="timer-label" data-i18n="time">Time</span>
-        <span class="data" id="timer">02:00</span>
-      </div>
-      
+    <div class="left-group">
+      <!-- 뒤로가기 버튼 -->
+      <button id="back-button" onclick="backToTitleScreen()">
+        <i class="fi fi-rr-angle-left"></i>
+      </button>
+      <p>
+        <span class="label" id="target-label">목표합</span>
+        <span class="data" id="target-number">10</span>
+      </p>
+    </div>
+    <div class="right-group">
+      <!-- 동일하게 모달 열기 버튼들 -->
+      <button class="open-modal-btn" data-modal="rankingModal">
+        <i class="fi fi-rr-crown"></i>
+      </button>
+      <button class="open-modal-btn" data-modal="tutorialModal">
+        <i class="fi fi-rr-interrogation"></i>
+      </button>
+      <button class="open-modal-btn" data-modal="settingsModal">
+        <i class="fi fi-rr-menu-dots-vertical"></i>
+      </button>
     </div>
   </header>
   
+  <!-- 상단 인포영역: 점수, 타임바 추가 -->
+  
+
   <!-- 보드컨테이너 -->
   <div class="board-container">
+    <div class="game-info-container">
+      <div class="game-score" id="score-box">
+        점수 <span id="score">0</span>
+      </div>
+      <div class="game-timer" id="timer-box">
+        <!-- 남은 시간 텍스트(항상 한 줄로 표시됨, 바와 별도 표시) -->
+        <span id="timer" class="timer-text"></span>
+        <!-- 타이머 바(배경 위에 채워지는 부분) -->
+        <div class="timer-bar" id="timer-bar"></div>
+      </div>
+    </div>
+    
     <table id="game-board"></table>
+    <div class="buttons-container">
+      <button id="hint-btn" class="split-button-left" data-i18n="hint">Hint (3)</button>
+      <button id="no-more" class="split-button-right" data-i18n="done">Done!</button>
+    </div>
+    
+    
   </div>
 
   
-  <!-- 하단 버튼 -->
-  <div class="buttons-container">
-    <button id="hint-btn" class="secondary-button" data-i18n="hint">Hint (3)</button>
-    <button id="no-more" class="primary-button" data-i18n="done">Done!</button>
-  </div>
-  <!--
-  <footer id="footer-game">
-    <p data-i18n="footerText">&copy; 2025 Dadanddot.com</p>  
-    <a href="/sd" data-link data-i18n="home">홈으로</a>
-    <a href="/sd/ranking" data-link data-i18n="scoreboards">스코어보드</a>
-    <a href="/pp.html" data-link data-i18n="privacyPolicy">개인정보 처리방침</a>
-  </footer>
-  --> 
 </div>
 
 
@@ -510,6 +502,31 @@
   }
 }
 </script>
+
+<!-- [4] 모달 (Ranking / Tutorial / Settings) -->
+<div id="rankingModal" class="modal-scrim" style="display:none;">
+  <div class="modal-container">
+    <h2>랭킹</h2>
+    <!-- 여기 랭킹 내용 -->
+    <button class="close-modal-btn">&times;</button>
+  </div>
+</div>
+
+<div id="tutorialModal" class="modal-scrim" style="display:none;">
+  <div class="modal-container">
+    <h2>튜토리얼</h2>
+    <!-- 게임 방법 등 튜토리얼 내용 -->
+    <button class="close-modal-btn">&times;</button>
+  </div>
+</div>
+
+<div id="settingsModal" class="modal-scrim" style="display:none;">
+  <div class="modal-container">
+    <h2>세팅</h2>
+    <!-- 세팅 내용 -->
+    <button class="close-modal-btn">&times;</button>
+  </div>
+</div>
 
 </body>
 </html>
