@@ -118,7 +118,7 @@
  <!-- [1] 메인 헤더 (title-screen 용) -->
  <header class="main-header">
   <div class="header-left">
-    <a href="/">
+    <a>
       <img src="https://dadanddot.com/images/256.png" alt="Sumordone logo" class="title-logo">
       <span class="title-logo-text">숫자 결합</span>
     </a>
@@ -144,15 +144,23 @@
     <div class="profile-container">
       <h1 id="titleLabel" ><span id="nickname">닉네임</span></h1>
       <span><span id="cumulative-score">000</span><span class="pts">pts</span>
-      <i id="nickname-change-btn" class="fi fi-rr-pencil" style="font-size: 16px;"></i>
+
+      <button class="open-modal-btn" data-modal="changeNicknameModal">
+        <i class="fi fi-rr-pencil"></i>
+      </button>
+
+      
       </span>
     </div>
     
+
+
+
     
     <!-- 게임 옵션 (목표합 & 난이도) -->
     <div id="classic-mode-options">
       <!-- <h2>클래식 모드</h2> -->
-      <p>숫자들을 드래그해 목표합을 찾고, 더이상 없으면 결!을 눌러요. v0.9.1</p>
+      <p>숫자들을 드래그해 목표합을 찾고, 더이상 없으면 결!을 눌러요.</p>
       
       <!-- <label>시작 라운드</label> -->
       <select id="round-select" class="selector">
@@ -207,17 +215,17 @@
     
     <div class="info-section">
     <p data-i18n="howToPlayDetail1"><strong>1. 드래그해서 일렬로 숫자들을 선택하세요.</strong></p>
-    <img src="./images/tut1.png" alt="Drag to select numbers in a line" style="width: 200px; filter: grayscale(100%);">
+    <img src="https://dadanddot.com/images/tut1.png" alt="Drag to select numbers in a line" style="width: 200px; filter: grayscale(100%);">
 
     </div>
   <div class="info-section">
     <p data-i18n="howToPlayDetail2"><strong>2. 더이상 목표합을 만들수 없으면 결!을 누르세요.</strong></p>
     
-    <img src="./images/tut2.png" alt="hit Done! when you can't make the TargetSum" style="width: 200px; filter: grayscale(100%);">
+    <img src="https://dadanddot.com/images/tut2.png" alt="hit Done! when you can't make the TargetSum" style="width: 200px; filter: grayscale(100%);">
   </div>
   <div class="info-section">
     <p data-i18n="howToPlayDetail3"><strong>3. 숫자칸이 길수록 보너스점수를 얻을 수 있어요.</strong></p>
-    <img src="./images/tut3.png" alt="get bonus scores on lengthy lines" style="width: 200px; filter: grayscale(100%);">
+    <img src="https://dadanddot.com/images/tut3.png" alt="get bonus scores on lengthy lines" style="width: 200px; filter: grayscale(100%);">
   </div>
   </section>
 
@@ -429,14 +437,14 @@
       
       
       <p data-i18n="howToPlayDetail1"><strong>1. 드래그해서 일렬로 숫자들을 선택하세요</strong></p>
-      <img src="./images/tut1.png" alt="Drag to select numbers in a line" style="width: 200px; filter: grayscale(100%);">
+      <img src="https://dadanddot.com/images/tut1.png" alt="Drag to select numbers in a line" style="width: 200px; filter: grayscale(100%);">
   
       <p data-i18n="howToPlayDetail2"><strong>2. 더이상 목표합을 만들수 없으면 결!을 누르세요.</strong></p>
       
-      <img src="./images/tut2.png" alt="hit Done! when you can't make the TargetSum" style="width: 200px; filter: grayscale(100%);">
+      <img src="https://dadanddot.com/images/tut2.png" alt="hit Done! when you can't make the TargetSum" style="width: 200px; filter: grayscale(100%);">
     
       <p data-i18n="howToPlayDetail3"><strong>3. 숫자칸이 길수록 보너스점수를 얻을 수 있어요.</strong></p>
-      <img src="./images/tut3.png" alt="get bonus scores on lengthy lines" style="width: 200px; filter: grayscale(100%);">
+      <img src="https://dadanddot.com/images/tut3.png" alt="get bonus scores on lengthy lines" style="width: 200px; filter: grayscale(100%);">
         
     
     <button class="close-modal-btn">&times;</button>
@@ -453,7 +461,7 @@
                 <span class="subtitle" data-i18n="playCountSubtitle1">총 </span>
                 <span id='game-count-value'>0</span>
                 <span class="subtitle" data-i18n="playCountSubtitle2">번 플레이를 기록한 숫자 퍼즐게임</span>
-                <p>Version.0.9.0</p>
+                <p>v0.9.1</p>
               </p>
             </div>
         </div>
@@ -475,23 +483,23 @@
         <div class="info-section">
           <div class="setting-row">
             <div class="setting-label">
-              <h4>이용약관</h4>
+              <h4 data-i18n="tos">이용약관</h4>
             </div>
             <div class="setting-value">
-              <a href="/terms-of-service.html" data-link data-i18n="tos">이용약관</a>
+              <a href="https://dadanddot.com/terms-of-service.html" data-i18n="tos" target="_blank">이용약관</a>
             </div>
           </div>
           <div class="setting-row">
             <div class="setting-label">
-              <h4>개인정보 처리방침</h4>
+              <h4 data-i18n="privacyPolicy">개인정보 처리방침</h4>
             </div>
             <div class="setting-value">
-              <a href="/pp.html" data-link data-i18n="privacyPolicy">개인정보 처리방침</a>
+              <a href="https://dadanddot.com/pp.html" data-i18n="privacyPolicy" target="_blank">개인정보 처리방침</a>
             </div>
           </div>
           <div class="setting-row">
             <div class="setting-label">
-              <h4>라이센스 정보</h4>
+              <h4 data-i18n="licenseInfo">라이센스 정보</h4>
             </div>
             <div class="setting-value">
               <p>
@@ -499,6 +507,7 @@
               </p>
             </div>
           </div>
+          <!-- 다크모드 설정 
           <div class="setting-row">
             <div class="setting-label">
               <h4>Dark Mode</h4>
@@ -510,8 +519,28 @@
               </label>
             </div>
           </div>
+          -->
         </div>
     <button class="close-modal-btn">&times;</button>
+  </div>
+</div>
+
+
+<div id="changeNicknameModal" class="modal-scrim" style="display:none;">
+  <div class="modal-container">
+    <h2 style="text-align: center;">닉네임 변경1</h2>
+    <div class="info-section">
+      <input
+        type="text"
+        id="newNicknameInput"
+        placeholder="새 닉네임"
+        class="modal-input"
+      />
+    </div>
+    <div class="modal-button-group">
+      <button id="saveNicknameBtn" class="modal-button confirm">확인</button>
+      <button class="modal-button close-modal-btn">취소</button>
+    </div>
   </div>
 </div>
 

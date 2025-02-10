@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  SD macOS
 //
-//  Created by Young Jae Lee on 2/9/25.
+//  Created by Young Jae Lee on 2/10/25.
 //
 
 import Cocoa

@@ -21,6 +21,9 @@ struct WebView: UIViewRepresentable {
         webViewConfig.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
         webViewConfig.preferences.setValue(true, forKey: "developerExtrasEnabled")
 
+        // ⬇️ 'contentController'를 WKWebViewConfiguration에 연결
+        webViewConfig.userContentController = contentController
+
         let webView = WKWebView(
             frame: .zero, 
             configuration: webViewConfig

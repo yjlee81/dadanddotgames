@@ -44,4 +44,19 @@ class GameCenterManager: NSObject, ObservableObject, GKGameCenterControllerDeleg
     func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController) {
         gameCenterViewController.dismiss(animated: true, completion: nil)
     }
+    
+    func fetchLocalPlayerProfile(completion: @escaping (String?, UIImage?) -> Void) {
+        let player = GKLocalPlayer.local
+        let alias = player.alias // 게임센터별명
+        
+        // 사진(프로필 이미지) 가져오기
+        player.loadPhoto(for: .small) { image, error in
+            if let error = error {
+                print("프로필 이미지 불러오기 실패: \(error)")
+                completion(alias, nil)
+                return
+            }
+            completion(alias, image)
+        }
+    }
 } 

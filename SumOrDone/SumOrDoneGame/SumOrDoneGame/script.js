@@ -1,5 +1,3 @@
-
-
 // 대신 router.js를 일반 스크립트로 로드
 
 
@@ -556,6 +554,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 누적점수를 화면에 표시하려면 아래처럼 DOM에 표시 가능
   document.getElementById('cumulative-score').textContent = newScore;
+
+  const nicknameChangeBtn = document.getElementById("nickname-change-btn");
+  if (nicknameChangeBtn) {
+    nicknameChangeBtn.addEventListener("click", () => {
+      // 모달 열기
+      document.getElementById("changeNicknameModal").style.display = "block";
+    });
+  }
+
+  // "확인" 버튼 로직
+  const saveNicknameBtn = document.getElementById("saveNicknameBtn");
+  if (saveNicknameBtn) {
+    saveNicknameBtn.addEventListener("click", () => {
+      const newNicknameInput = document.getElementById("newNicknameInput");
+      const newNickname = newNicknameInput.value.trim();
+
+      if (newNickname) {
+        // 새 닉네임 저장 로직 (예: Firebase / localStorage / 화면 반영)
+        console.log("새 닉네임:", newNickname);
+
+        // 여기서 localStorage에 저장하거나, firebase DB에 업데이트 가능
+        // 예시)
+        localStorage.setItem("customNickname", newNickname);
+
+        // 화면에 즉시 반영 (index.html에서 nickname 요소가 있다면)
+        const nicknameEl = document.getElementById("nickname");
+        if (nicknameEl) {
+          nicknameEl.textContent = newNickname;
+        }
+
+        // 모달 닫기
+        closeModal("changeNicknameModal");
+      } else {
+        alert("닉네임을 입력해주세요.");
+      }
+    });
+  }
+
+  // 기존 displayCurrentUserScore(), onGameOver() 등...
 });
 
 

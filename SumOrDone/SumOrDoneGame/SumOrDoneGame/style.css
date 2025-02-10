@@ -539,7 +539,7 @@ font-weight: bold;
 .board-container {
   display: flex;
   justify-content: center;
-  align-content: center;
+  align-content: start;
   align-items: center;
   flex-wrap: wrap;
   flex-direction: row;
@@ -576,7 +576,7 @@ font-weight: bold;
   #game-board td.drag-select-highlight {
     background-color: var(--tile-selected-color) !important;
     font-size: 1.2rem;
-    transform: scale(0.9) font-size 0.2s var(--ease-in-out);
+    transform: scale(0.8) font-size 0.2s var(--ease-in-out);
   }
 
 
@@ -833,7 +833,7 @@ font-weight: bold;
     padding: 12px 24px;
     border-radius: var(--radius-lg);
     font-size: 14px;
-    z-index: 1000;
+    z-index: 5000;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s var(--ease-in-out), visibility 0.1s var(--ease-in-out);
@@ -885,7 +885,7 @@ font-weight: bold;
     pointer-events: none;
     position: absolute;
     left: 20%;
-    top: 78px;
+    top: 108px;
     transform: translate(-50%, -50%);
     z-index: 9999;
     flex-wrap: nowrap;
@@ -971,7 +971,7 @@ font-weight: bold;
   border-radius: var(--radius-lg);
   padding: 4px 16px;
   /* margin: 20px auto; */
-  max-width: 380px;
+  
   /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
   /* margin: 16px; */
   align-self: center;
@@ -1614,7 +1614,7 @@ nav a[data-link] {
 /* [Settings 페이지 행 배치] */
 .setting-row {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   margin: 1rem 0;
 }
 
@@ -1764,7 +1764,7 @@ input:checked + .slider:before {
 }
 
 .modal-container {
-  background: #fff;
+  background: var(--white-color);
   border-radius: var(--radius-lg);
   width: 90%;
   max-width: 480px;
@@ -1794,34 +1794,6 @@ input:checked + .slider:before {
   /* margin-left: 10px; */
 }
 
-.slide-in {
-  animation: modalSlideIn var(--east-in-and-out) forwards;
-}
-.slide-out {
-  animation: modalSlideOut var(--east-in-and-out) forwards;
-}
-
-@keyframes modalSlideIn {
-  0% {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes modalSlideOut {
-  0% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-}
 
 /* ======== 게임화면 상단 점수 / 타이머 ======== */
 .game-info-container {
