@@ -31,9 +31,9 @@
   };
 
   const handleRoute = async () => {
-    // 경로 정규화: /sd와 /sd/를 동일하게 처리
-    let path = window.location.pathname.replace('/sd', '');
-    path = path.endsWith('/') ? path.slice(0, -1) : path; // 마지막 슬래시 제거
+    // 경로 정규화: /sd를 제거하지 않고 그대로 사용
+    let path = window.location.pathname;
+    path = path.endsWith('/SumOrDoneGame/') ? path.slice(0, -1) : path; // 마지막 슬래시 제거
     path = path || '/'; // 빈 경로는 홈으로 처리
 
     // 프리렌더링을 위한 서버측 렌더링 대응
@@ -42,16 +42,16 @@
     }
 
     // 클라이언트 측 라우팅
-    if (path.startsWith('/play/')) {
+    if (path.startsWith('/SumOrDoneGame/play/')) {
       const targetSum = parseInt(path.split('/').pop(), 10);
       if (targetSum >= 10 && targetSum <= 20) {
         startGameDirectly(targetSum);
       } else {
-        window.location.href = '/sd';
+        window.location.href = '/SumOrDoneGame/';
       }
-    } else if (path === '/ranking') {
+    } else if (path === '/SumOrDoneGame/ranking') {
       showRankingPage();
-    } else if (path === '/tutorial') {
+    } else if (path === '/SumOrDoneGame/tutorial') {
       showTutorialPage();
     } else {
       showHomePage();

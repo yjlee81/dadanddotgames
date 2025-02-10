@@ -11,7 +11,34 @@ html, body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  overflow: hidden;
 }
+
+/* Safe Area 처리 */
+@supports (padding: max(0px)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  padding: 10px;
+  /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: env(safe-area-inset-top);
+}
+
   button, select {
     cursor: pointer;
   }
@@ -41,8 +68,8 @@ html, body {
     */
 
     /* 2번 세트 */
-    --accent-color: #cb997e;
-    --accent-color-hover: #a17963;
+    --accent-color: #e09f3e;
+    --accent-color-hover: #ab792e;
     --yellow-color: #fcbf49;
     --bloodorange-color: #f07167;
     --success-color: #00afb9;
@@ -57,8 +84,8 @@ html, body {
     --header-text-color: #111111;
     --header-border-color: #dedede;
     --button-hover-color: #0081a7;
-    --primary-button-color: #e09f3e;
-    --primary-button-hover-color: #ad7b30;
+    --primary-button-color: #00afb9;
+    --primary-button-hover-color: #008b92;
     --secondary-button-color: #f07167;
     --secondary-button-hover-color: #c45a52;
     --tertiary-button-color: #cecece;
@@ -66,10 +93,40 @@ html, body {
     --overlay-background: #3d405b;
     --modal-background: #3d405b;
     --toast-background: #3d405b;
-    --hint-color: #a6a6a6;
+    --hint-color: #cecece;
     --white-color: #fdfbf5;
     
-  }
+
+     /* 컬러 시스템 */
+  --color-background: #1c1c1c;       /* 전체 배경색 (다크테마) */
+  --color-header-bg: #242424;        /* 헤더 배경색 */
+  --color-overlay: rgba(0, 0, 0, 0.6);
+  --color-card-bg: #2a2a2a;          /* 카드 배경색 */
+  --color-text-primary: #f0f0f0;     /* 기본 텍스트 */
+  --color-text-secondary: #d0d0d0; 
+  --color-accent: #f4f4f4;           /* 악센트 컬러(흰계열) */
+  --color-accent-hover: #ffffff;     /* 호버 시 살짝 더 밝게 */
+  --color-border: #3a3a3a;
+
+  /* 폰트 시스템 */
+  --font-family-base: 'Nunito', sans-serif;
+
+  /* 공간, 크기 등 */
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 32px;
+  --spacing-xl: 60px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-max: 40%;
+  --transition-fast: 0.3s ease;
+  --transition-slow: 0.5s ease;
+
+  --ease-in-out: cubic-bezier(.23, 1, .32, 1);
+  --ease-out: cubic-bezier(.23, 1, .32, 1);
+}
+  
   
    /* ===== [상단 헤더] ===== */
    .main-header {
@@ -79,7 +136,7 @@ html, body {
     align-items: center;
     justify-content: space-between;
     height: 60px;
-    padding: 0 8px 0 16px;
+    padding: 0 var(--spacing-md);
     /* border-bottom: 1px solid var(--header-border-color); */
     /* box-shadow: 0 2px 8px rgba(0,0,0,0.05); */
     position: sticky;
@@ -89,24 +146,36 @@ html, body {
     backdrop-filter: blur(10px);
 }
   
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+.header-left a {
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+  .header-left a {
+    text-decoration: none;
   }
 
   .title-logo {
+    display: block;
     width: 32px;
-    height: 32px;
-    object-fit: contain;
-    border-radius: 6px;
+    height: auto;
+    border-radius: 40%;
   }
+
+  .title-logo-text {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #333;
+    vertical-align: middle;
+  }
+
   .profile-container {
     display: flex;
     align-items: flex-start;
-    margin: 16px;
     flex-direction: column;
-    /* padding: 0px 20px; */
 }
 
   .profile-container h1 {
@@ -135,7 +204,7 @@ html, body {
     height: 32px;
     object-fit: contain;
     transition: transform 0.2s ease;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
 }
   
   .logo:hover {
@@ -159,7 +228,7 @@ html, body {
     font-size: 15px;
     font-weight: 500;
     padding: 8px 12px;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     transition: all 0.2s ease;
   }
   
@@ -188,11 +257,12 @@ html, body {
     width: 100%;
     border: 1px solid var(--accent-color);
     background: var(--header-background-color);
+    border-radius: var(--radius-lg);
 }
 
   .language-selector {
     padding: 6px 12px;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     border: 1px solid #ddd;
     background-color: #fff;
     font-size: 14px;
@@ -241,7 +311,7 @@ html, body {
   .lang-dropdown select.language-selector {
     padding: 4px 8px;
     font-size: 14px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: 1px solid #ccc;
     background-color: #fff;
   }
@@ -252,11 +322,14 @@ html, body {
   #title-screen {
     display: flex;
     flex-direction: column;
-    align-items: center;
     flex: 1;
-  
     overflow-x: hidden;
-  }
+    padding: var(--spacing-md);
+    align-content: center;
+    margin: var(--spacing-lg);
+    margin-bottom: 100px
+}
+
   #title-screen h2 {
     font-size: 1.8rem;
     color: #333;
@@ -300,10 +373,10 @@ html, body {
   }
   #start-game-btn {
     padding: 10px 20px;
-    background-color: var(--primary-button-color);
+    background-color: var(--success-color);
     color: #fff;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-lg);
     font-size: 1.1rem;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
@@ -464,13 +537,18 @@ font-weight: bold;
 
 /* ===== [보드컨테이너 & 보드] ===== */
 .board-container {
-flex: 1;
-display: flex;
-justify-content: center;
-align-items: center;
-overflow: hidden;
-position: relative;
-margin-bottom: 65px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  margin-bottom: 65px;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  /* margin-top: 20px; */
 }
 
 #game-board {
@@ -484,12 +562,12 @@ margin-bottom: 65px;
     backdrop-filter: blur(10px);           /* 글래스 효과의 핵심: 흐림(blur) */
     -webkit-backdrop-filter: blur(10px);   /* Safari 등 WebKit 호환성 */
     /* box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); /* 살짝 그림자 */
-    border-radius: 30px;                   /* 모서리 둥글게 */
+    border-radius: var(--radius-max);                   /* 모서리 둥글게 */
     text-align: center;
     vertical-align: middle;
     font-size: 1.2rem;
     font-weight: 600;
-    color: #333;
+    color: var(--text-color);
     cursor: pointer;
     user-select: none;
     transition: font-size 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
@@ -497,71 +575,11 @@ margin-bottom: 65px;
 
   #game-board td.drag-select-highlight {
     background-color: var(--tile-selected-color) !important;
-    font-size: 1.4rem;
-    transform: scale(0.9);
-  }
-  /* ===== [하단버튼] ===== */
-  .buttons-container {
-    position: fixed;
-    bottom: 0;
-    place-self: center;
-    width: 90%;
-    /* 기본 패딩 값(예: 8px)과 안전 영역 값을 합산 */
-    padding: 12px 0px calc(8px + env(safe-area-inset-bottom));
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    z-index: 1000; /* 다른 요소 위에 표시되도록 */
-    background: var(--background-color);
-    backdrop-filter: blur(10px);  
-  }
-  
-  .primary-button {
-    flex: 1;
-    height: 45px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 8px;
-    background-color: var(--primary-button-color);
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    min-width: 80px;
-  }
-  .primary-button:hover {
-    background-color: var(--primary-button-hover-color);
-  }
-  .secondary-button {
-    flex: 1;
-    height: 45px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 8px;
-    background-color: var(--secondary-button-color);
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    min-width: 80px;
-  }
-  .secondary-button:hover {
-    background-color: var(--secondary-button-hover-color);
+    font-size: 1.2rem;
+    transform: scale(0.9) font-size 0.2s var(--ease-in-out);
   }
 
-  .tertiary-button {
-    text-decoration: none;
-    background-color: var(--tertiary-button-color);
-    border: 1px solid var(--tertiary-button-color);
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    max-width: 90px;
-    width: 120px;
-    height: 45px;
-    background: #fff;
-}
-  
+
   /* 성공/실패/제거 에니메이션 */
   .fail-line {
     background-color: var(--fail-color)!important;
@@ -574,12 +592,33 @@ margin-bottom: 65px;
     75% { transform: translateX(-4px); }
     100% { transform: translateX(0); }
   }
+
   .success-line {
     background-color: var(--success-color) !important; /* 기존보다 좀 더 강렬한 색상 */
     color: #fff !important;
     position: relative;
     overflow: hidden;
+    animation: shake-success 0.4s var(--ease-in-out);
   }
+ /*
+  @keyframes shake-success {
+    0% { transform: translateY(0); }
+    25% { transform: translateY(-4px); }
+    50% { transform: translateY(4px); }
+    75% { transform: translateY(-4px); }
+    100% { transform: translateY(0); }
+  } 
+  */
+
+
+  @keyframes shake-success {
+    0% { transform: scale(1); }
+    
+    50% { transform: scale(1.1); }
+    
+    100% { transform: scale(1); }
+  }
+
   .success-line::after {
     content: "";
     position: absolute;
@@ -588,18 +627,126 @@ margin-bottom: 65px;
     font-size: 1.2rem;
     opacity: 0.8;
   }
+
+  /* 부드러운 타일 사라짐 애니메이션 */
   .removing {
-    animation: success-remove 0.4s forwards ease;
+    animation: success-remove 0.4s ease-out forwards;
   }
+
   @keyframes success-remove {
-    0% { transform: scale(1.1); opacity:1; }
-    100% { transform: scale(0.8); opacity:0; }
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(0.85);
+      opacity: 0;
+    } 
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
   }
+
   .hint-line {
     background-color: var(--hint-color) !important;
     color: var(--background-color) !important;
     box-shadow: 0px 0px 10px #DDD;
   }
+
+
+  /* ===== [하단버튼] ===== */
+  .buttons-container {
+    position: fixed;
+    bottom: 0;
+    place-self: center;
+    width: 95%;
+    padding: 8px 0px calc(8px + env(safe-area-inset-bottom));
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    z-index: 1000;
+    background: var(--background-color);
+    backdrop-filter: blur(10px);
+}
+
+.split-button-left {
+  flex: 1;
+  height: 50px;
+  width: 50%;
+  font-size: 1rem;
+  border: none;
+  border-radius: 22px;
+  background-color: var(--secondary-button-color);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  /* min-width: 80px; */
+}
+
+.split-button-right {
+  flex: 1;
+  height: 50px;
+  width: 50%;
+  font-size: 1rem;
+  border: none;
+  border-radius: 22px;
+  background-color: var(--primary-button-color);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  /* min-width: 80px; */
+}
+
+  
+  .primary-button {
+    flex: 1;
+    height: 45px;
+    font-size: 1rem;
+    border: none;
+    border-radius: var(--radius-lg);
+    background-color: var(--primary-button-color);
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    min-width: 80px;
+    width: 100%;
+  }
+  .primary-button:hover {
+    background-color: var(--primary-button-hover-color);
+  }
+  .secondary-button {
+    flex: 1;
+    height: 45px;
+    font-size: 1rem;
+    border: none;
+    border-radius: var(--radius-lg);;
+    background-color: var(--secondary-button-color);
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    min-width: 80px;
+    width: 100%;
+  }
+  .secondary-button:hover {
+    background-color: var(--secondary-button-hover-color);
+  }
+
+  .tertiary-button {
+    text-decoration: none;
+    background-color: var(--tertiary-button-color);
+    border: 1px solid var(--tertiary-button-color);
+    border-radius: var(--radius-lg);;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    max-width: 90px;
+    width: 120px;
+    height: 45px;
+    background: #fff;
+}
+  
   
   
   
@@ -621,13 +768,13 @@ margin-bottom: 65px;
   #ad-modal .ad-content {
     background-color: #fff;
     padding: 20px;
-    border-radius: 16px;
+    border-radius: var(--radius-md);
     text-align: center;
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     max-width: 80vw;
     box-sizing: border-box;
     font-size: 1.1rem;
-    animation: modal-appear 0.3s ease forwards;
+    animation: modal-appear 0.3s var(--ease-in-out) forwards;
     width: 80vw;
   }
   @keyframes modal-appear {
@@ -639,7 +786,7 @@ margin-bottom: 65px;
     padding: 10px 20px;
     font-size: 1rem;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-lg);;
     background-color: var(--accent-color);
     color: #fff;
     cursor: pointer;
@@ -656,7 +803,7 @@ margin-bottom: 65px;
     padding: 10px 20px;
     font-size: 1rem;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     background-color: var(--accent-color);
     color: #fff;
     cursor: pointer;
@@ -684,17 +831,21 @@ margin-bottom: 65px;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
     padding: 12px 24px;
-    border-radius: 20px;
+    border-radius: var(--radius-lg);
     font-size: 14px;
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-  }
+    transition: opacity 0.2s var(--ease-in-out), visibility 0.1s var(--ease-in-out);
+    width: 240px;
+    /* align-content: center; */
+    align-self: center;
+    text-align: center;
+}
 
   /* 애플 아일랜드 박스 효과 */
   #toast-message.island-effect {
-    border-radius: 20px;
+    border-radius: var(--radius-lg);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -704,7 +855,7 @@ margin-bottom: 65px;
   #toast-message.show {
     opacity: 1;
     visibility: visible;
-    animation: slideIn 0.3s ease, slideOut 0.3s ease 1.7s;
+    animation: slideIn 0.3s var(--ease-in-out), slideOut 0.3s var(--ease-in-out) 1.7s;
   }
 
   @keyframes slideIn {
@@ -748,18 +899,17 @@ margin-bottom: 65px;
   /* 각 floating score 박스: 둥근 모서리의 배경 박스 형태로 표시 */
   .floating-score-box {
     display: inline-block;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: #fff;
+    background-color: var(--accent-color);
+    color: var(--text-color);
     padding: 5px 10px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     margin: 3px 0;
-    font-family: 'Arial', sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     opacity: 0;
     transform: scale(0);
     /* pop 애니메이션과 fadeOut 애니메이션을 순차적으로 적용
        (pop: 0.3s, fadeOut: 0.5s 시작은 0.8s 후) */
-    animation: pop 0.3s forwards, fadeOut 0.5s forwards 0.8s;
+    animation: pop 0.3s var(--ease-in-out), fadeOut 0.5s var(--ease-in-out) 0.8s;
   }
 
   /* 보너스 박스는 기본보다 약간 작은 폰트와 금색 글씨로 표현 */
@@ -818,12 +968,12 @@ margin-bottom: 65px;
 .info-section {
   background: var(--white-color);
   border: 0px solid #ddd;
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: var(--radius-lg);
+  padding: 4px 16px;
   /* margin: 20px auto; */
   max-width: 380px;
   /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
-  margin: 16px;
+  /* margin: 16px; */
   align-self: center;
 }
 /* 섹션 제목 스타일 */
@@ -851,14 +1001,14 @@ margin-bottom: 65px;
   max-width: 320px;
   height: auto;
   margin: 0 auto 25px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .info-section-scoreboards {
   background: #fefefe;
   border: 0px solid #ddd;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   padding: 20px;
   /* margin: 20px auto; */
   /* max-width: 420px; */
@@ -1049,7 +1199,7 @@ margin-bottom: 65px;
   display: inline-block;
   padding: 8px 16px;
   margin: 2px;
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   background-color: var(--text-color);  
   color: var(--tile-color);
   border: none;
@@ -1186,7 +1336,7 @@ nav a {
   color: var(--accent-color);
   font-weight: 500;
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   transition: background-color 0.2s;
 }
 
@@ -1206,7 +1356,7 @@ nav a[data-link] {
   display: flex;
   gap: 4px;
   background: var(--white-color);
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   padding: 4px;
 }
 
@@ -1215,7 +1365,7 @@ nav a[data-link] {
   flex: 1;
   padding: 8px 16px;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   background: transparent;
   color: #666;
   cursor: pointer;
@@ -1258,7 +1408,7 @@ nav a[data-link] {
 
 #dateFilter {
   padding: 6px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   border: 1px solid #ddd;
   background-color: #fff;
   font-size: 14px;
@@ -1272,7 +1422,7 @@ nav a[data-link] {
 
 #goalFilter {
   padding: 6px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   border: 1px solid #ddd;
   background-color: #fff;
   font-size: 14px;
@@ -1314,7 +1464,7 @@ nav a[data-link] {
   height: 20px;
   background-color: #888; /* 연한 회색 바탕 */
   margin: 20px auto;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
 }
 
@@ -1348,7 +1498,7 @@ nav a[data-link] {
   font-weight: bold;
   background-color: rgba(0, 0, 0, 0.9);
   padding: 4px 10px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   animation-name: slideRight;
   animation-duration: 0.8s;
   animation-fill-mode: forwards;
@@ -1394,7 +1544,7 @@ nav a[data-link] {
 .score-floating-container span {
   background-color: #fff;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 4px 8px;
   font-weight: bold;
   transition: opacity 0.5s ease;
@@ -1456,7 +1606,7 @@ nav a[data-link] {
 .language-selector {
   margin-top: 0.5rem;
   padding: 0.4rem 0.6rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   border: 1px solid #ccc;
   font-size: 0.9rem;
 }
@@ -1491,7 +1641,7 @@ nav a[data-link] {
   margin-top: 0.2rem;
   padding: 0.4rem 0.6rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .toggle-switch {
@@ -1512,7 +1662,7 @@ nav a[data-link] {
   top: 0; left: 0; right: 0; bottom: 0;
   background-color: #ccc;
   transition: 0.4s;
-  border-radius: 22px;
+  border-radius: var(--radius-lg);
 }
 .slider:before {
   position: absolute;
@@ -1530,4 +1680,246 @@ input:checked + .slider {
 }
 input:checked + .slider:before {
   transform: translateX(18px);
+}
+
+/* 서브 페이지 상단 네비게이션 스타일 */
+#sub-header {
+  align-items: center;
+  padding: 12px 20px;
+  /* background: var(--header-background-color); */
+  /* color: var(--header-text-color); */
+  height: 60px;
+  padding: 0 var(--spacing-md);
+  /* border-bottom: 1px solid #e0e0e0; */
+  /* box-shadow: 0 2px 6px rgba(0,0,0,0.05); */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  font-family: 'Nunito', sans-serif;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+
+
+.left-group {
+  display: flex;
+  align-items: center;
+}
+
+#back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #333;
+  margin-right: 10px;
+}
+
+.left-group p {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.left-group .label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.right-group {
+  display: flex;
+  align-items: center;
+}
+
+.right-group .info-box {
+  text-align: right;
+  margin-left: 20px;
+}
+
+.right-group .info-box .label {
+  display: flex;
+  font-size: 12px;
+  color: #888;
+  gap: var(--spacing-sm);
+}
+
+.right-group .info-box .data {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* ========== 모달(scrim) 스타일 ========== */
+.modal-scrim {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.modal-container {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  width: 90%;
+  max-width: 480px;
+  margin: 100px auto; /* 화면 중간 근처 배치 */
+  padding: 20px;
+  position: relative;
+  pointer-events: auto;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #666;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+/* scrim 영역 클릭 시 모달 닫기 */
+.open-modal-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  /* margin-left: 10px; */
+}
+
+.slide-in {
+  animation: modalSlideIn var(--east-in-and-out) forwards;
+}
+.slide-out {
+  animation: modalSlideOut var(--east-in-and-out) forwards;
+}
+
+@keyframes modalSlideIn {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideOut {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+}
+
+/* ======== 게임화면 상단 점수 / 타이머 ======== */
+.game-info-container {
+  position: relative;
+  width: 95%;
+  /* height: 50px; */
+  /* background-color: #fafafa; */
+  /* border-bottom: 1px solid #ddd; */
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  margin: var(--spacing-md);
+  position: sticky;
+  top:10px;
+  z-index: 1001;
+}
+
+.game-score {
+  position: relative;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.game-timer {
+  position: relative;
+  width: 60%; /* 타이머바 전체 길이 */
+  height: 20px;
+  background-color: #e0e0e0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+/* 타이머 바: 채워진 부분, 오른쪽 끝을 고정시켜두기 위해 transform-origin: right 사용 */
+.timer-bar {
+  background-color: var(--yellow-color);
+  height: 100%;
+  width: 100%;
+  transition: width 0.3s linear;
+  transform-origin: right;
+  border-radius: var(--radius-md);
+}
+
+/* 타이머 텍스트: 바 위에 겹쳐서 남은 초를 표시, 텍스트는 항상 한 줄로 표시됨 */
+.timer-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  line-height: 20px; /* 컨테이너 높이와 동일하게 맞춤 */
+  text-align: center;
+  white-space: nowrap;
+  z-index: 2;
+  pointer-events: none;
+  color: #333;
+}
+
+/* 남은 시간이 30초 이하일 때 적용할 low time 효과 */
+.timer-bar.low-time {
+  animation: pulse 1s infinite;
+}
+
+.timer-text.low-time {
+  color: red;
+  animation: pulse 1s infinite;
+}
+
+/* pulse 애니메이션: 약간의 스케일 효과 */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* 모달 버튼 공통 스타일(필요 시) */
+button.open-modal-btn i {
+  pointer-events: none;
+}
+
+/* 나머지 게임/타이틀 화면 요소들, 공통 버튼, etc.
+   아래 기존 코드 유지 가능 */
+
+.user-info {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+#cumulative-score {
+  font-size: 1.2em;
+  color: var(--accent-color);
+  font-weight: bold;
+}
+
+.pts {
+  font-size: 1.2em;
+  color: var(--accent-color);
+  font-weight: bold;
 }

@@ -16,10 +16,27 @@ struct WebView: UIViewRepresentable {
         contentController.add(context.coordinator, name: "hapticFeedback")
         contentController.add(context.coordinator, name: "submitScore")
 
-        let config = WKWebViewConfiguration()
-        config.userContentController = contentController
+        let webViewConfig = WKWebViewConfiguration()
+        webViewConfig.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
+        webViewConfig.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
+        webViewConfig.preferences.setValue(true, forKey: "developerExtrasEnabled")
 
-        let webView = WKWebView(frame: .zero, configuration: config)
+        let webView = WKWebView(
+            frame: .zero, 
+            configuration: webViewConfig
+        )
+
+        // 파일 로드 시 반드시 디렉토리 접근 권한 부여
+        if let htmlPath = Bundle.main.path(
+            forResource: "index", 
+            ofType: "html", 
+            inDirectory: "SumOrDoneGame"
+        ) {
+            let url = URL(fileURLWithPath: htmlPath)
+            let directoryURL = url.deletingLastPathComponent()
+            webView.loadFileURL(url, allowingReadAccessTo: directoryURL)
+        }
+
         return webView
     }
 
