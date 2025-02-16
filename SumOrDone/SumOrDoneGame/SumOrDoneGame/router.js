@@ -81,21 +81,34 @@
 
   // 홈 페이지 표시
   function showHomePage() {
-    document.getElementById('title-screen').style.display = 'flex';
-    document.getElementById('game-container').style.display = 'none';
-    document.getElementById('ranking').style.display = 'none';
-    document.getElementById('tutorial').style.display = 'none';
-    document.getElementById('faq').style.display = 'none';
-    
+    const homePage = document.getElementById('title-screen');
+    const gamePage = document.getElementById('game-container');
+    const rankingPage = document.getElementById('ranking');
+    const tutorialPage = document.getElementById('tutorial');
+    const settingsPage = document.getElementById('settings');
+
+    // 모든 페이지 숨기기
+    if (homePage) homePage.style.display = 'block';
+    if (gamePage) gamePage.style.display = 'none';
+    if (rankingPage) rankingPage.style.display = 'none';
+    if (tutorialPage) tutorialPage.style.display = 'none';
+    if (settingsPage) settingsPage.style.display = 'none';
   }
 
   // 랭킹 페이지 표시
   function showRankingPage() {
-    document.getElementById('title-screen').style.display = 'none';
-    document.getElementById('game-container').style.display = 'none';
-    document.getElementById('ranking').style.display = 'block';
-    document.getElementById('tutorial').style.display = 'none';
-    document.getElementById('faq').style.display = 'none';
+    const homePage = document.getElementById('title-screen');
+    const gamePage = document.getElementById('game-container');
+    const rankingPage = document.getElementById('ranking');
+    const tutorialPage = document.getElementById('tutorial');
+    const settingsPage = document.getElementById('settings');
+
+    // 모든 페이지 숨기기
+    if (homePage) homePage.style.display = 'none';
+    if (gamePage) gamePage.style.display = 'none';
+    if (rankingPage) rankingPage.style.display = 'block';
+    if (tutorialPage) tutorialPage.style.display = 'none';
+    if (settingsPage) settingsPage.style.display = 'none';
 
     // Firebase에서 스코어 데이터를 불러와 표시
     fetchScoresFromFirebase(displayScores);
@@ -103,12 +116,18 @@
 
   // How-to-play 페이지 표시
   function showTutorialPage() {
-    document.getElementById('title-screen').style.display = 'none';
-    document.getElementById('game-container').style.display = 'none';
-    document.getElementById('ranking').style.display = 'none';
-    document.getElementById('tutorial').style.display = 'block';
-    document.getElementById('faq').style.display = 'block';
-    
+    const homePage = document.getElementById('title-screen');
+    const gamePage = document.getElementById('game-container');
+    const rankingPage = document.getElementById('ranking');
+    const tutorialPage = document.getElementById('tutorial');
+    const settingsPage = document.getElementById('settings');
+
+    // 모든 페이지 숨기기
+    if (homePage) homePage.style.display = 'none';
+    if (gamePage) gamePage.style.display = 'none';
+    if (rankingPage) rankingPage.style.display = 'none';
+    if (tutorialPage) tutorialPage.style.display = 'block';
+    if (settingsPage) settingsPage.style.display = 'none';
   }
 
   // 라우터 변경 시 탭 상태 업데이트

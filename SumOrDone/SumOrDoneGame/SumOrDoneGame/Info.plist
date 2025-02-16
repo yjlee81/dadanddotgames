@@ -2,6 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
+    
+	<key>UIPrerenderedIcon</key>
+	<false/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
@@ -19,5 +24,22 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>GKGameCenterBundleID</key>
+	<string>com.dadanddot.SumOrDoneGame</string>
+	<key>GKGameCenterAchievements</key>
+	<array>
+		<dict>
+			<key>GKAchievementID</key>
+			<string>com.dadanddot.SumOrDoneGame.achievement</string>
+			<key>GKAchievementReferenceID</key>
+			<string>10pts Earned</string>
+		</dict>
+		<dict>
+			<key>GKAchievementID</key>
+			<string>com.dadanddot.SumOrDoneGame.achievement.1000pts</string>
+			<key>GKAchievementReferenceID</key>
+			<string>1000pts Earned</string>
+		</dict>
+	</array>
 </dict>
 </plist>

@@ -30,3 +30,4 @@ struct SumOrDoneGameApp: App {
         .modelContainer(sharedModelContainer)
     }
 }
+
