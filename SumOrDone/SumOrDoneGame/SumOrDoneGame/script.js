@@ -126,6 +126,7 @@ const translations = {
     gameCenter: "Game Center",
     leaderboard: "Leaderboard",
     achievements: "Achievements",
+    gameCenterConnected: "Connected with Game Center",
   },
   ko: {
     mainTitle: "숫자 결합",
@@ -237,6 +238,7 @@ const translations = {
     gameCenter: "게임센터",
     leaderboard: "리더보드",
     achievements: "도전과제",
+    gameCenterConnected: "게임센터와 연동되었습니다",
   },
   ja: {
     mainTitle: "数字結合ゲーム",
@@ -347,6 +349,7 @@ const translations = {
     gameCenter: "ゲームセンター",
     leaderboard: "リーダーボード",
     achievements: "実績",
+    gameCenterConnected: "ゲームセンターと連携しました",
   },
   zh: {
     mainTitle: "数字合并游戏",
@@ -456,6 +459,7 @@ const translations = {
     gameCenter: "游戏中心",
     leaderboard: "排行榜",
     achievements: "成就",
+    gameCenterConnected: "游戏中心与平台连接",
   },
   
 };
@@ -2099,10 +2103,24 @@ async function initializeNickname() {
  */
 function setupNicknameChangeEvent() {
   const changeBtn = document.getElementById('nickname-change-btn');
+  if (!changeBtn) return;
   
-  // 기존 이벤트 리스너 제거 후 새로 등록
+  // 기존 이벤트 리스너 제거
   changeBtn.removeEventListener('click', handleNicknameChange);
-  changeBtn.addEventListener('click', handleNicknameChange);
+  
+  // 새로운 이벤트 리스너 추가
+  changeBtn.addEventListener('click', async () => {
+    // iOS 환경 체크
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    
+    if (isIOS && window.webkit && window.webkit.messageHandlers.getGameCenterNickname) {
+      // 게임센터 닉네임 확인
+      window.webkit.messageHandlers.getGameCenterNickname.postMessage("");
+    } else {
+      // 웹 환경에서는 기존 닉네임 변경 모달 표시
+      handleNicknameChange();
+    }
+  });
 }
 
 // 별도의 핸들러 함수로 분리
@@ -2796,47 +2814,54 @@ async function initNickname() {
   }
 }
 
-// 게임센터에서 닉네임을 받아서 처리하는 함수
+// 게임센터에서 닉네임을 받아서 처리하는 함수 수정
 window.updateNicknameFromGameCenter = async function(gameCenterNickname) {
   if (gameCenterNickname) {
     // 게임센터 닉네임이 있는 경우
     const userKey = localStorage.getItem("userKey");
-    if (userKey) {
-      const userRef = firebase.database().ref(`nicknames/${userKey}`);
-      await userRef.update({
-        nickname: gameCenterNickname
-      });
-      
-      // UI 업데이트
+    
+    try {
+      // 1. 닉네임 업데이트
       document.getElementById("nickname").textContent = gameCenterNickname;
       
-      // 누적 점수와 랭킹 정보 갱신
-      const snapshot = await userRef.once('value');
-      if (snapshot.exists()) {
-        const userData = snapshot.val();
-        // 누적 점수 표시 업데이트
-        const cumulativeScoreEl = document.getElementById('cumulative-score');
-        if (cumulativeScoreEl) {
-          cumulativeScoreEl.textContent = userData.cumulativeScore || 0;
-        }
+      // 2. Firebase에 게임센터 닉네임 업데이트
+      if (userKey) {
+        const userRef = firebase.database().ref(`nicknames/${userKey}`);
+        await userRef.update({
+          nickname: gameCenterNickname,
+          isGameCenter: true
+        });
         
-        // 랭킹 정보 업데이트
-        const rankingPosition = await getUserRankingPosition(userData.cumulativeScore || 0);
-        const rankingPositionEl = document.getElementById('ranking-position');
-        if (rankingPositionEl) {
-          rankingPositionEl.textContent = rankingPosition;
+        // 3. 유저 데이터 가져오기
+        const snapshot = await userRef.once('value');
+        if (snapshot.exists()) {
+          const userData = snapshot.val();
+          
+          // 4. 누적 점수 표시 업데이트
+          showCumulativeScore(userData.cumulativeScore || 0);
+          
+          // 5. 랭킹 정보 업데이트
+          const rankingPosition = await getUserRankingPosition(userData.cumulativeScore || 0);
+          showRankingPosition(rankingPosition);
         }
       }
-    }
-    
-    // 닉네임 변경 버튼 비활성화 (게임센터 사용자는 변경 불가)
-    const nicknameChangeBtn = document.getElementById("nickname-change-btn");
-    if (nicknameChangeBtn) {
-      nicknameChangeBtn.style.display = "none";
+      
+      // 6. 닉네임 변경 버튼 비활성화 (게임센터 사용자는 변경 불가)
+      const nicknameChangeBtn = document.getElementById("nickname-change-btn");
+      if (nicknameChangeBtn) {
+        nicknameChangeBtn.style.display = "none";
+      }
+      
+      // 7. 토스트 메시지 표시
+      showIOSToastMessage(translations[currentLanguage].gameCenterConnected || "게임센터와 연동되었습니다");
+      
+    } catch (error) {
+      console.error("게임센터 닉네임 업데이트 실패:", error);
+      handleNicknameChange(); // 실패시 일반 닉네임 변경 모달 표시
     }
   } else {
-    // 게임센터 닉네임이 없는 경우 닉네임 변경 모달 표시
-    window.webkit.messageHandlers.openModal.postMessage('changeNicknameModal');
+    // 게임센터 닉네임이 없는 경우 일반 닉네임 변경 모달 표시
+    handleNicknameChange();
   }
 }
 
@@ -2854,13 +2879,18 @@ async function loadNicknameFromFirebase(userKey) {
 
 // 닉네임 변경 모달 이벤트 수정
 document.getElementById('nickname-change-btn').addEventListener('click', function() {
-  // iOS 환경인지 확인
+  // iOS에서 게임센터 닉네임이 있는 경우 변경 불가
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  if (isIOS && window.webkit && window.webkit.messageHandlers.getGameCenterNickname) {
-    // 게임센터 닉네임 확인
-    window.webkit.messageHandlers.getGameCenterNickname.postMessage("");
+  if (isIOS) {
+    try {
+      // 게임센터 닉네임 확인은 하되, 모달은 열지 않음
+      window.webkit.messageHandlers.getGameCenterNickname.postMessage("");
+    } catch (error) {
+      // 게임센터 연동이 안 된 경우에만 모달 표시
+      window.webkit.messageHandlers.openModal.postMessage('changeNicknameModal');
+    }
   } else {
-    // 웹 환경에서는 기존대로 닉네임 변경 모달 표시
+    // 웹 환경에서는 기존대로 동작
     window.webkit.messageHandlers.openModal.postMessage('changeNicknameModal');
   }
 });
@@ -2963,149 +2993,3 @@ window.onGameCenterAuthFail = function(error) {
   // 인증 실패 시 웹 랭킹으로 폴백
   document.getElementById('rankingModal').style.display = 'block';
 };
-
-// 게임 시작 시
-function startGame() {
-    // ... 기존 코드 ...
-    
-    // 첫 게임 시작 체크
-    const isFirstStart = !localStorage.getItem('hasStartedGame');
-    if (isFirstStart) {
-        localStorage.setItem('hasStartedGame', 'true');
-        window.webkit.messageHandlers.gameCenterManager.postMessage({
-            action: 'checkAchievements',
-            score: 0,
-            isFirstSuccess: false,
-            isFirstStart: true
-        });
-    }
-}
-
-// 목표합 성공 시
-function handleSuccess() {
-    // ... 기존 코드 ...
-    
-    // 첫 성공 체크
-    const isFirstSuccess = !localStorage.getItem('hasFirstSuccess');
-    if (isFirstSuccess) {
-        localStorage.setItem('hasFirstSuccess', 'true');
-    }
-    
-    // 현재 누적 점수 체크
-    const currentScore = getCurrentScore(); // 현재 누적 점수를 가져오는 함수
-    
-    // GameCenter 업적 체크
-    window.webkit.messageHandlers.gameCenterManager.postMessage({
-        action: 'checkAchievements',
-        score: currentScore,
-        isFirstSuccess: isFirstSuccess,
-        isFirstStart: false
-    });
-}
-
-// 게임센터 인증 성공 콜백 함수 수정
-window.onGameCenterAuthSuccess = async function() {
-  console.log("Game Center 인증 성공");
-  
-  // 게임센터 닉네임 가져오기
-  if (window.webkit && window.webkit.messageHandlers.getGameCenterNickname) {
-    window.webkit.messageHandlers.getGameCenterNickname.postMessage("");
-  }
-};
-
-// 게임센터 닉네임 업데이트 콜백 함수 수정
-window.updateNicknameFromGameCenter = async function(gameCenterNickname) {
-  if (gameCenterNickname) {
-    const userKey = localStorage.getItem("userKey");
-    if (!userKey) return;
-
-    try {
-      // Firebase에 닉네임 업데이트
-      const userRef = firebase.database().ref(`nicknames/${userKey}`);
-      await userRef.update({
-        nickname: gameCenterNickname
-      });
-      
-      // UI 업데이트
-      const nicknameEl = document.getElementById("nickname");
-      if (nicknameEl) {
-        nicknameEl.textContent = gameCenterNickname;
-      }
-      
-      // 누적 점수와 랭킹 정보 가져오기
-      const snapshot = await userRef.once('value');
-      if (snapshot.exists()) {
-        const userData = snapshot.val();
-        
-        // 누적 점수 표시 업데이트
-        const cumulativeScoreEl = document.getElementById('cumulative-score');
-        if (cumulativeScoreEl) {
-          const score = userData.cumulativeScore || 0;
-          cumulativeScoreEl.textContent = score;
-        }
-        
-        // 랭킹 정보 업데이트
-        const rankingPosition = await getUserRankingPosition(userData.cumulativeScore || 0);
-        const rankingPositionEl = document.getElementById('ranking-position');
-        if (rankingPositionEl) {
-          rankingPositionEl.textContent = rankingPosition;
-        }
-      }
-      
-      // 닉네임 변경 버튼 숨기기 (게임센터 사용자는 변경 불가)
-      const nicknameChangeBtn = document.getElementById("nickname-change-btn");
-      if (nicknameChangeBtn) {
-        nicknameChangeBtn.style.display = "none";
-      }
-    } catch (error) {
-      console.error("게임센터 닉네임 업데이트 실패:", error);
-    }
-  }
-};
-
-// DOMContentLoaded 이벤트 핸들러 수정
-document.addEventListener("DOMContentLoaded", async function() {
-  // ... 기존 초기화 코드 ...
-
-  // iOS 환경에서 게임센터 인증 확인
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  if (isIOS && window.webkit && window.webkit.messageHandlers.getGameCenterNickname) {
-    window.webkit.messageHandlers.getGameCenterNickname.postMessage("");
-  } else {
-    // 웹 환경에서는 기존 방식으로 닉네임 초기화
-    await initNickname();
-  }
-  
-  // 누적 점수와 랭킹 표시 초기화
-  await displayCurrentUserScore();
-});
-
-// 사용자의 랭킹 위치를 가져오는 함수 수정
-async function getUserRankingPosition(userScore) {
-  if (!userScore) return '-';
-  
-  try {
-    const snapshot = await firebase.database()
-      .ref('nicknames')
-      .orderByChild('cumulativeScore')
-      .once('value');
-    
-    const scores = [];
-    snapshot.forEach((childSnapshot) => {
-      const userData = childSnapshot.val();
-      if (userData.cumulativeScore) {
-        scores.push(userData.cumulativeScore);
-      }
-    });
-    
-    // 점수 내림차순 정렬
-    scores.sort((a, b) => b - a);
-    
-    // 사용자 점수의 위치 찾기
-    const position = scores.findIndex(score => score <= userScore) + 1;
-    return position || scores.length + 1;
-  } catch (error) {
-    console.error('랭킹 위치 조회 실패:', error);
-    return '-';
-  }
-}

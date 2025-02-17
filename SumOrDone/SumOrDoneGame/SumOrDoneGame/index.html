@@ -95,9 +95,16 @@
   <!-- 프리렌더링 라이브러리 로드 방식 수정 -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/prerenderer-library@latest/dist/prerenderer.umd.min.js"></script> -->
 
-  <!-- 프리렌더링 라이브러리 로드 방식 수정 -->
-  <!-- <script src="https://cdn.jsdelivr.net/npm/prerenderer-library@latest/dist/prerenderer.umd.min.js"></script> -->
 
+
+  <!-- Firebase 스크립트 아래에 GA4 추가 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4F9B3DMB67"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4F9B3DMB67'); // 실제 측정ID 사용
+  </script>
 </head>
 <body>
   <!-- AMP 광고 삽입 -->
@@ -111,10 +118,10 @@
  <!-- [1] 메인 헤더 (title-screen 용) -->
  <header class="main-header">
   <div class="header-left">
-    <a href="./">
-      <img src="https://dadanddot.com/images/256.png" alt="Sumordone logo" class="title-logo">
-      <span class="title-logo-text" data-i18n="mainTitle">숫자 결합</span>
-    </a>
+    <i class="fi fi-rr-circle-user"></i>
+    <span id="nickname">닉네임</span> <i id="nickname-change-btn" class="fi fi-rr-rotate-right" 
+    style="font-size: 16px;" 
+    data-modal="changeNicknameModal"></i>
   </div>
   <div class="header-right">
     <nav class="icon-menu">
@@ -135,65 +142,36 @@
 
   <!-- [2] 타이틀 화면 -->
 <div id="title-screen" data-route="home">
-    <div class="profile-container">
-      <h1 id="titleLabel" ><span id="nickname">닉네임</span>  <i id="nickname-change-btn" class="fi fi-rr-rotate-right" 
-        style="font-size: 16px;" 
-        data-modal="changeNicknameModal"></i></h1>
-      <span>
-        <span id="cumulative-score">0</span>
-        <span class="pts"> pts</span>
-      
-      </span>
-      <!-- 랭킹 정보 추가 -->
-      <div class="ranking-info">
-        <span class="ranking-label" data-i18n="globalRanking">전체 랭킹</span>
-        <span id="ranking-position">-</span>
-        <span class="ranking-label" data-i18n="rankingSuffix">위</span>
-      </div>
+    <div class="score-display">
+      <span id="cumulative-score">0</span>
+      <span class="pts">pts</span>
     </div>
-    
-    
-    <!-- 게임 옵션 (목표합 & 난이도) -->
-    <div id="classic-mode-options">
-      <!-- <h2>클래식 모드</h2> -->
-      <span data-i18n="playCountSubtitle1">총 </span>  <span id="game-count-value">0</span><span class="about-label" data-i18n="playCountSubtitle2">번 플레이를 기록한 숫자 퍼즐게임.</span> 
-      <p data-i18n="gameInstruction">숫자들을 드래그해 목표합을 찾고, 더이상 없으면 결!을 눌러요.</p>
-      
-      <!-- <label>시작 라운드</label> -->
-      <select id="round-select" class="selector">
-        <!-- 라운드(목표합) -->
-        <option value="10" data-i18n="level1_label">Level 1 (10점)</option>
-        <option value="11" data-i18n="level2_label">Level 2 (11점)</option>
-        <option value="12" data-i18n="level3_label">Level 3 (12점)</option>
-        <option value="13" data-i18n="level4_label">Level 4 (13점)</option>
-        <option value="14" data-i18n="level5_label">Level 5 (14점)</option>
-        <option value="15" data-i18n="level6_label">Level 6 (15점)</option>
-        <option value="16" data-i18n="level7_label">Level 7 (16점)</option>
-        <option value="17" data-i18n="level8_label">Level 8 (17점)</option>
-        <option value="18" data-i18n="level9_label">Level 9 (18점)</option>
-        <option value="19" data-i18n="level10_label">Level 10 (19점)</option>
-        <option value="20" data-i18n="levelFinal_label">최종 Level (20점)</option>
-      </select>
-      <!-- 릴리즈시 난이도 선택기능은 일단 스펙아웃
-      <select id="difficulty-select" class="selector">
-      /* 난이도 */
-      <option value="6">Easy: 6x6</option>
-      <option value="8">Normal: 8x8</option>
-      <option value="10">Hard: 10x10</option>
-      </select>
-      --> 
-      <button id="start-game-btn" data-i18n="startGame" onclick="onStartGame()">지금 시작하기 ></button>  
-      <!-- [동의 문구 추가 부분] -->
+    <div class="title-container">
+<img src="https://dadanddot.com/images/sd_title_bg1.png" alt="Sumordone" class="title-logo">
+<div class="title-logo-text">
+  <h1>Sum? or Done!</h1>
+  <p>Find numbers & Hit Done to win</p>
+</div>
+</div>
 
-    
+    <div class="round-selector">
+      <select id="round-select">
+        <option value="10">Round 1: 10</option>
+        <option value="11">Round 2: 11</option>
+        <option value="12">Round 3: 12</option>
+        <option value="13">Round 4: 13</option>
+        <option value="14">Round 5: 14</option>
+        <option value="15">Round 6: 15</option>
+        <option value="16">Round 7: 16</option>
+        <option value="17">Round 8: 17</option>
+        <option value="18">Round 9: 18</option>
+        <option value="19">Round 10: 19</option>
+        <option value="20">Final Round: 20</option>
+      </select>
+      <i class="fi fi-rr-angles-up-down selector-icon"></i>
     </div>
-<!--
-      <button id="start-game-btn" data-i18n="startGame" onclick="onStartGame()">지금 시작하기 ></button>  
-      
 
-    
-    </div>
-  -->
+    <button id="start-game-btn">Get started!</button>  
   </div>
 </div>
 
@@ -262,10 +240,10 @@
       </p>
     </div>
     <div class="right-group">
-      <!-- 게임센터 버튼 추가 
+      <!-- 게임센터 버튼 추가 -->
       <button class="open-modal-btn" onclick="handleGameCenterClick()">
         <i class="fi fi-rr-trophy"></i>
-      </button> -->
+      </button>
       <!-- 기존 버튼들 -->
       <button class="open-modal-btn" data-modal="tutorialModal">
         <i class="fi fi-rr-interrogation"></i>
