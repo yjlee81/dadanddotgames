@@ -1965,3 +1965,10 @@ document.querySelectorAll('.modal-scrim').forEach(scrim => {
   scrim.addEventListener('click', onScrimClick);
 });
 
+// HTML 요소에서 onclick 속성 제거 필요
+document.getElementById('nickname-change-btn').removeAttribute('onclick');
+
+window.addEventListener('error', function(e) {
+  console.error('Global error:', e.message, 'at', e.filename, e.lineno);
+});
+

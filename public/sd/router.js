@@ -35,15 +35,15 @@
   const handleRoute = async () => {
     // 경로 정규화: /sd와 /sd/를 동일하게 처리
     let path = window.location.pathname.replace('/sd', '');
-    path = path.endsWith('/') ? path.slice(0, -1) : path; // 마지막 슬래시 제거
-    path = path || '/'; // 빈 경로는 홈으로 처리
+    path = path.endsWith('/') ? path.slice(0, -1) : path;
+    path = path || '/';
 
     // 프리렌더링을 위한 서버측 렌더링 대응
     if (isCrawler()) {
-      return; // 프리렌더 서비스가 처리
+      return;
     }
 
-    // 클라이언트 측 라우팅
+    // 클라이언트 측 라우팅 (모달은 라우팅에서 제외)
     if (path.startsWith('/play/')) {
       const targetSum = parseInt(path.split('/').pop(), 10);
       if (targetSum >= 10 && targetSum <= 20) {
@@ -51,17 +51,13 @@
       } else {
         window.location.href = '/sd';
       }
-    } else if (path === '/ranking') {
-      showRankingPage();
-    } else if (path === '/tutorial') {
-      showTutorialPage();
-    } else if (path === '/settings') {
-      showSettingsPage();
-    } else {
-      showHomePage();
+    } else { // 불필요한 else if 제거
+      // 기본 화면 표시
+      document.getElementById('title-screen').style.display = 'block';
+      document.getElementById('game-container').style.display = 'none';
     }
 
-    // 탭 상태 업데이트
+    // 탭 상태 업데이트 (모달 관련 탭은 상태 업데이트 제외)
     updateTabState(path);
   };
 
@@ -124,15 +120,12 @@
     document.getElementById('settings').style.display = 'block';
     
   }
-  // 라우터 변경 시 탭 상태 업데이트
+  // 라우터 변경 시 탭 상태 업데이트 (모달 관련 경로 처리 제거)
   function updateTabState(route) {
     const tabs = document.querySelectorAll('.tab-link');
     tabs.forEach(tab => {
-      if (tab.dataset.link === route) {
-        tab.classList.add('active');
-      } else {
-        tab.classList.remove('active');
-      }
+      const isActive = tab.dataset.link === route && route !== '/tutorial' && route !== '/settings';
+      tab.classList.toggle('active', isActive);
     });
   }
 
@@ -141,32 +134,24 @@
   updateTabState(currentPath);
 
   function navigate(route) {
-    // 모든 컨텐츠 숨김 처리
-    document.getElementById('title-screen').style.display = 'none';
-    document.getElementById('ranking').style.display = 'none';
-    document.getElementById('tutorial').style.display = 'none';
-    
-    switch (route) {
-      case 'ranking':
-        document.getElementById('ranking').style.display = 'block';
-        break;
-      case 'how':
-        document.getElementById('tutorial').style.display = 'block';
-        break;
-      default:
-        document.getElementById('title-screen').style.display = 'block';
-        break;
-    }
+    // 모달 화면은 라우팅에서 제외
+    document.getElementById('title-screen').style.display = 'block';
+    document.getElementById('game-container').style.display = 'none';
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    // 모달 관련 경로는 초기 로드에서 무시
     const path = window.location.pathname.split('/sd/')[1] || '';
-    navigate(path);
+    if(!['tutorial', 'settings', 'ranking'].includes(path)) {
+      navigate(path);
+    }
   });
 
-  // popstate 이벤트를 통해 브라우저 뒤로가기 등에 대응
+  // popstate 이벤트 핸들러 수정
   window.addEventListener('popstate', () => {
     const path = window.location.pathname.split('/sd/')[1] || '';
-    navigate(path);
+    if(!['tutorial', 'settings', 'ranking'].includes(path)) {
+      navigate(path);
+    }
   });
 })();

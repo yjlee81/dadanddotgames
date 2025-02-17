@@ -510,17 +510,17 @@ font-weight: bold;
 .board-container {
   /* margin-top: 10px; */
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-content: center;
   align-items: center;
   flex-wrap: wrap;
-  flex-direction: row;
+  flex-direction: column;
   margin-bottom: 65px;
   overflow: hidden;
   position: relative;
-  height: 100vh;
-  width: 100vw;
-  margin-top: 20px;
+  /* height: 100vh; */
+  /* width: 100vw; */
+  /* margin-top: 20px; */
 }
 
 #game-board {
@@ -1731,16 +1731,16 @@ input:checked + .slider:before {
 
 /* ======== 게임화면 상단 점수 / 타이머 ======== */
 .game-info-container {
-  position: fixed;
+  position: relative;
   width: 100%;
   /* height: 50px; */
   /* background-color: #fafafa; */
   /* border-bottom: 1px solid #ddd; */
   display: flex;
-  align-items: flex-start;
-  justify-content: space-around;
-  top: 60px;
+  /* top: 60px; */
   margin: var(--spacing-md);
+  padding: var(--spacing-md);
+  align-items: flex-start;
 }
 
 .game-score {

@@ -9,6 +9,9 @@
   <meta property="og:title" content="숫자 결합 게임">
   <meta property="og:image" content="https://dadanddot.com/images/how-to-play.gif">
   <meta name="google-site-verification" content="your_verification_code">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
 
   
 
@@ -52,12 +55,12 @@
   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth-compat.js"></script>
   
   <!-- 스타일 -->
-  <link rel="stylesheet" href="/sd/style.css">
+  <link rel="stylesheet" href="style.css">
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
 
   <!-- 게임 스크립트 -->
-  <script src="/sd/router.js"></script>
-  <script src="/sd/script.js" defer></script>
+  <script src="router.js"></script>
+  <script src="script.js" defer></script>
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-4F9B3DMB67"></script>
@@ -112,6 +115,7 @@
     gtag('js', new Date());
     gtag('config', 'G-4F9B3DMB67'); // 실제 측정ID 사용
   </script>
+
 </head>
 <body>
   <!-- AMP 광고 삽입 -->
@@ -125,7 +129,7 @@
  <!-- [1] 메인 헤더 (title-screen 용) -->
  <header class="main-header">
   <div class="header-left">
-    <a href="/sd/">
+    <a href="/">
       <img src="/images/256.png" alt="Sumordone logo" class="title-logo">
       <span class="title-logo-text">숫자 결합</span>
     </a>
@@ -152,12 +156,7 @@
       <h1 id="titleLabel" ><span id="nickname">닉네임</span><i id="nickname-change-btn" class="fi fi-rr-pencil" style="font-size: 16px;"></i></h1> 
       <span> <span id="cumulative-score">000</span><span class="pts">pts</span></span>
     </div>
-  <!-- <div class="title-container">
-    <div class="tab-container">
-      <option value="classic" data-link="/sd/" class="tab-link active">클래식 모드</option>
-      <option value="daily" data-link="/sd/daily" class="tab-link">일일 도전 모드(준비중)</option>
-    </div>
-  -->
+    
     
     <!-- 게임 옵션 (목표합 & 난이도) -->
     <div id="classic-mode-options">
@@ -204,181 +203,12 @@
 
 
   <!-- [3] 랭킹 화면 -->
-<div id="ranking"  style="display: none; text-align: center;">
-  <h3 data-i18n="scoreboards">스코어보드</h3>
 
-  <div class="info-section">
-    
-        
-    <!-- 개선된 필터 UI: 드롭다운 메뉴를 활용 -->
-    <div class="ranking-filters">
-      <!-- 기간 필터 그룹 (드롭다운) -->
-      <div class="filter-group">
-        <label for="dateFilter" class="filter-label">기간 </label>
-        <select id="dateFilter" onchange="applyFilters()">
-          <option value="today" data-i18n="today">오늘</option>
-          <option value="week" data-i18n="week">일주일</option>
-          <option value="all" data-i18n="all" selected>전체</option>
-        </select>
-      </div>
-      
-      <!-- 목표합 필터 그룹 (드롭다운) -->
-      <div class="filter-group">
-        <label for="goalFilter" class="filter-label">목표합 </label>
-        <select id="goalFilter" onchange="applyFilters()">
-          <option value="all" selected>All Levels</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          <option value="13">13</option>
-          <option value="14">14</option>
-          <option value="15">15</option>
-          <option value="16">16</option>
-          <option value="17">17</option>
-          <option value="18">18</option>
-          <option value="19">19</option>
-          <option value="20">20</option>
-        </select>
-      </div>
-    </div>
-
-    <table id="score-table" class="score-table">
-      <thead>
-        <tr>
-          <th data-field="rank" data-i18n="rank">순위</th>
-          <th data-field="nickname" data-i18n="nickname">이름</th>
-          <th data-field="score" data-i18n="score">점수</th>
-          <th data-field="goal" data-i18n="goal">목표합</th>
-          <th data-field="time" data-i18n="time">일시</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- 점수 목록 -->
-      </tbody>
-    </table>
-  </div>
-</div>
   
   <!-- [4] 게임방법 화면 -->  
-<div id="tutorial"  style="display: none;">
-  <!-- How to Play -->
-  <section id="tutorial-section">
-    <h3 data-i18n="howToPlay" style="text-align: center;">게임 방법</h3>
-    
-    <div class="info-section">
-    <p data-i18n="howToPlayDetail1"><strong>1. 드래그해서 일렬로 숫자들을 선택하세요</strong></p>
-    <img src="../images/tut1.png" alt="Drag to select numbers in a line" style="width: 200px; filter: grayscale(100%);">
-    </div>
-  <div class="info-section">
-    <p data-i18n="howToPlayDetail2"><strong>2. 더이상 목표합을 만들수 없으면 결!을 누르세요.</strong></p>
-    
-    <img src="../images/tut2.png" alt="hit Done! when you can't make the TargetSum" style="width: 200px; filter: grayscale(100%);">
-  </div>
-  <div class="info-section">
-    <p data-i18n="howToPlayDetail3"><strong>3. 숫자칸이 길수록 보너스점수를 얻을 수 있어요.</strong></p>
-    <img src="../images/tut3.png" alt="get bonus scores on lengthy lines" style="width: 200px; filter: grayscale(100%);">
-  </div>
-  </section>
 
-  <!-- FAQ -->
-  <section id="faq" class="info-section">
-    <h3 data-i18n="faq">FAQ</h3>
-    <p>
-      <strong>Q: 더 이상 조합이 없는 것 같아요. 어떻게 해야 하나요?</strong><br>
-      A: 화면 아래 <em data-i18n="done">Done!</em> 버튼을 눌러보세요. 조합이 정말 없다면 +100점을 얻지만, 조합이 남아있으면 -50점이 감점돼요.
-    </p>
-    <p>
-      <strong>Q: 힌트는 무제한으로 사용할 수 있나요?</strong><br>
-      A: 힌트를 누르면 짧은 광고 후 가능한 조합이 잠깐 보여요. 하지만 힌트 사용 횟수는 제한될 수 있으니 신중하게 사용해주세요.
-    </p>
-    <p>
-      <strong>Q: 점수가 저장이 안 돼요!</strong><br>
-      A: 새로고침 후 다시 시도해보거나, 네트워크 연결 상태를 확인해보세요. 문제가 계속되면 문의해주세요.
-    </p>
-  </section>
-</div>  
 <!-- 설정 화면 -->
-<div id="settings" style="display: none;">
 
-  <h3 data-i18n="settings" style="text-align: center;">설정</h3>
-  
-  <div class="info-section">
-    <div class="setting-row">
-      
-      <div class="setting-value">
-        <p>
-          <span class="subtitle" data-i18n="playCountSubtitle1">총 </span>
-          <span id='game-count-value'>0</span>
-          <span class="subtitle" data-i18n="playCountSubtitle2">번 플레이를 기록한 숫자 퍼즐게임</span>
-        </p>
-      </div>
-  </div>
-  <div class="setting-row">
-    <div class="setting-value">
-      <p>Version.0.9.0</p>
-    </div>
-  </div>
-</div>
-<div class="info-section">
-  <div class="setting-row">
-    <div class="setting-label">
-      <h4>Language</h4>
-    </div>
-    <div class="setting-value">
-      <select class="language-selector" id="language-select">
-        <option value="ko" selected>KR</option>
-        <option value="en">EN</option>
-        <option value="ja">JP</option>
-        <option value="zh">ZH</option>
-      </select>
-    </div>
-  </div>
-</div>
-<div class="info-section">
-  <div class="setting-row">
-    <div class="setting-label">
-      <h4>이용약관</h4>
-    </div>
-    <div class="setting-value">
-      <a href="/terms-of-service.html" data-link data-i18n="tos">이용약관</a>
-    </div>
-  </div>
-
-  <div class="setting-row">
-    <div class="setting-label">
-      <h4>개인정보 처리방침</h4>
-    </div>
-    <div class="setting-value">
-      <a href="/pp.html" data-link data-i18n="privacyPolicy">개인정보 처리방침</a>
-    </div>
-  </div>
-
-  <div class="setting-row">
-    <div class="setting-label">
-      <h4>라이센스 정보</h4>
-    </div>
-    <div class="setting-value">
-      <p>
-        Uicons by <a href="https://www.flaticon.com/uicons" target="_blank">Flaticon</a>
-      </p>
-    </div>
-  </div>
-
-
-
-  <div class="setting-row">
-    <div class="setting-label">
-      <h4>Dark Mode</h4>
-    </div>
-    <div class="setting-value">
-      <label class="toggle-switch">
-        <input type="checkbox" id="dark-mode-switch">
-        <span class="slider"></span>
-      </label>
-    </div>
-  </div>
-</div>
-</div>
   
 <!-- [5] 카운트다운 오버레이 -->
 <div id="countdown-overlay">
@@ -506,16 +336,104 @@
 <!-- [4] 모달 (Ranking / Tutorial / Settings) -->
 <div id="rankingModal" class="modal-scrim" style="display:none;">
   <div class="modal-container">
-    <h2>랭킹</h2>
-    <!-- 여기 랭킹 내용 -->
+    <div id="ranking"  style="display: none; text-align: center;">
+      <h3 data-i18n="scoreboards">스코어보드</h3>
+    
+      <div class="info-section">
+        
+            
+        <!-- 개선된 필터 UI: 드롭다운 메뉴를 활용 -->
+        <div class="ranking-filters">
+          <!-- 기간 필터 그룹 (드롭다운) -->
+          <div class="filter-group">
+            <label for="dateFilter" class="filter-label">기간 </label>
+            <select id="dateFilter" onchange="applyFilters()">
+              <option value="today" data-i18n="today">오늘</option>
+              <option value="week" data-i18n="week">일주일</option>
+              <option value="all" data-i18n="all" selected>전체</option>
+            </select>
+          </div>
+          
+          <!-- 목표합 필터 그룹 (드롭다운) -->
+          <div class="filter-group">
+            <label for="goalFilter" class="filter-label">목표합 </label>
+            <select id="goalFilter" onchange="applyFilters()">
+              <option value="all" selected>All Levels</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+              <option value="17">17</option>
+              <option value="18">18</option>
+              <option value="19">19</option>
+              <option value="20">20</option>
+            </select>
+          </div>
+        </div>
+    
+        <table id="score-table" class="score-table">
+          <thead>
+            <tr>
+              <th data-field="rank" data-i18n="rank">순위</th>
+              <th data-field="nickname" data-i18n="nickname">이름</th>
+              <th data-field="score" data-i18n="score">점수</th>
+              <th data-field="goal" data-i18n="goal">목표합</th>
+              <th data-field="time" data-i18n="time">일시</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 점수 목록 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <button class="close-modal-btn">&times;</button>
   </div>
 </div>
 
 <div id="tutorialModal" class="modal-scrim" style="display:none;">
   <div class="modal-container">
-    <h2>튜토리얼</h2>
-    <!-- 게임 방법 등 튜토리얼 내용 -->
+    <div id="tutorial"  style="display: none;">
+      <!-- How to Play -->
+      <section id="tutorial-section">
+        <h3 data-i18n="howToPlay" style="text-align: center;">게임 방법</h3>
+        
+        <div class="info-section">
+        <p data-i18n="howToPlayDetail1"><strong>1. 드래그해서 일렬로 숫자들을 선택하세요</strong></p>
+        <img src="../images/tut1.png" alt="Drag to select numbers in a line" style="width: 200px; filter: grayscale(100%);">
+        </div>
+      <div class="info-section">
+        <p data-i18n="howToPlayDetail2"><strong>2. 더이상 목표합을 만들수 없으면 결!을 누르세요.</strong></p>
+        
+        <img src="../images/tut2.png" alt="hit Done! when you can't make the TargetSum" style="width: 200px; filter: grayscale(100%);">
+      </div>
+      <div class="info-section">
+        <p data-i18n="howToPlayDetail3"><strong>3. 숫자칸이 길수록 보너스점수를 얻을 수 있어요.</strong></p>
+        <img src="../images/tut3.png" alt="get bonus scores on lengthy lines" style="width: 200px; filter: grayscale(100%);">
+      </div>
+      </section>
+    
+      <!-- FAQ -->
+      <section id="faq" class="info-section">
+        <h3 data-i18n="faq">FAQ</h3>
+        <p>
+          <strong>Q: 더 이상 조합이 없는 것 같아요. 어떻게 해야 하나요?</strong><br>
+          A: 화면 아래 <em data-i18n="done">Done!</em> 버튼을 눌러보세요. 조합이 정말 없다면 +100점을 얻지만, 조합이 남아있으면 -50점이 감점돼요.
+        </p>
+        <p>
+          <strong>Q: 힌트는 무제한으로 사용할 수 있나요?</strong><br>
+          A: 힌트를 누르면 짧은 광고 후 가능한 조합이 잠깐 보여요. 하지만 힌트 사용 횟수는 제한될 수 있으니 신중하게 사용해주세요.
+        </p>
+        <p>
+          <strong>Q: 점수가 저장이 안 돼요!</strong><br>
+          A: 새로고침 후 다시 시도해보거나, 네트워크 연결 상태를 확인해보세요. 문제가 계속되면 문의해주세요.
+        </p>
+      </section>
+    </div>  
     <button class="close-modal-btn">&times;</button>
   </div>
 </div>
@@ -523,7 +441,84 @@
 <div id="settingsModal" class="modal-scrim" style="display:none;">
   <div class="modal-container">
     <h2>세팅</h2>
-    <!-- 세팅 내용 -->
+    <div id="settings" style="display: none;">
+
+      <h3 data-i18n="settings" style="text-align: center;">설정</h3>
+      
+      <div class="info-section">
+        <div class="setting-row">
+          
+          <div class="setting-value">
+            <p>
+              <span class="subtitle" data-i18n="playCountSubtitle1">총 </span>
+              <span id='game-count-value'>0</span>
+              <span class="subtitle" data-i18n="playCountSubtitle2">번 플레이를 기록한 숫자 퍼즐게임</span>
+            </p>
+          </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-value">
+          <p>Version.0.9.0</p>
+        </div>
+      </div>
+    
+      <div class="info-section">
+        <div class="setting-row">
+          <div class="setting-label">
+            <h4>Language</h4>
+          </div>
+          <div class="setting-value">
+            <select class="language-selector" id="language-select">
+              <option value="ko" selected>KR</option>
+              <option value="en">EN</option>
+              <option value="ja">JP</option>
+              <option value="zh">ZH</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="info-section">
+        <div class="setting-row">
+          <div class="setting-label">
+            <h4>이용약관</h4>
+          </div>
+          <div class="setting-value">
+            <a href="/terms-of-service.html" data-link data-i18n="tos">이용약관</a>
+          </div>
+        </div>
+      </div>
+        <div class="setting-row">
+          <div class="setting-label">
+            <h4>개인정보 처리방침</h4>
+          </div>
+          <div class="setting-value">
+            <a href="/pp.html" data-link data-i18n="privacyPolicy">개인정보 처리방침</a>
+          </div>
+        </div>
+    
+        <div class="setting-row">
+          <div class="setting-label">
+            <h4>라이센스 정보</h4>
+          </div>
+          <div class="setting-value">
+            <p>
+              Uicons by <a href="https://www.flaticon.com/uicons" target="_blank">Flaticon</a>
+            </p>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label">
+            <h4>Dark Mode</h4>
+          </div>
+          <div class="setting-value">
+            <label class="toggle-switch">
+              <input type="checkbox" id="dark-mode-switch">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
     <button class="close-modal-btn">&times;</button>
   </div>
 </div>

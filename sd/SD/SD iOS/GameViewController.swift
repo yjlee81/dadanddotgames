@@ -14,9 +14,10 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let scene = GameScene.newGameScene()
-
-        // Present the scene
+        // 새로 만든 GameScene을 불러옵니다
+        let scene = GameScene(size: view.bounds.size)
+        
+        // SKView에 scene을 표시합니다
         let skView = self.view as! SKView
         skView.presentScene(scene)
         
