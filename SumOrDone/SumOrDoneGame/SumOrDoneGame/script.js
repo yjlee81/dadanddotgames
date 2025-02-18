@@ -76,7 +76,7 @@ const translations = {
     finalRoundMessage: "You succeeded in the final round!",
     roundSuccessTitle: "Success!",
     baseScoreLabel: "Base Score",
-    bonusScoreLabel: "Bonus Score",
+    bonusScoreLabel: "Done Bonus",
     timeBonusLabel: "Time Bonus",
     earnedScoreLabel: "Earned Score",
     finalScoreLabel: "Final Score",
@@ -186,8 +186,8 @@ const translations = {
     finalRoundMessage: "마지막 라운드에서 성공했어요!",
     roundSuccessTitle: "성공!",
     baseScoreLabel: "기본 점수",
-    bonusScoreLabel: "결 성공 보너스",
-    timeBonusLabel: "남은 시간 보너스",
+    bonusScoreLabel: "결 성공",
+    timeBonusLabel: "남은 시간",
     earnedScoreLabel: "최종 점수",
     finalScoreLabel: "최종 점수",
     homeButton: "홈으로",
@@ -233,7 +233,7 @@ const translations = {
     
     // 닉네임 변경
     changeNickname: "닉네임 변경",
-    newRecord: "신기록!",
+    newRecord: "Best",
     personalBest: "최고 기록",
     gameCenter: "게임센터",
     leaderboard: "리더보드",
@@ -372,7 +372,7 @@ const translations = {
     footerText: "© 2025 Dadanddot.com",
     // 추가분
     rank: "排名",
-    playCountSubtitle1: "一款总共可玩 ", 
+    playCountSubtitle1: "一款总共可玩 ",
     playCountSubtitle2: " 次游玩的数字益智游戏",
     level1_label: "Level 1 (10分)",
     level2_label: "Level 2 (11分)",
@@ -388,7 +388,7 @@ const translations = {
     howToPlayHeader1: "1. 拖动选择数字",
     howToPlayHeader2: "2. 获得奖励分数",
     howToPlayHeader3: "3. 点击 '完成！'",
-    howToPlayDetail1: "拖动数字成一条线连接", 
+    howToPlayDetail1: "拖动数字成一条线连接",
     howToPlayDetail2: "数字越长，获得的奖励分数越高",
     howToPlayDetail3: "如果无法再组成目标值，请点击 '完成！'",
     gameInstruction: "拖动数字成一条线连接",
@@ -500,8 +500,8 @@ let scores = []; // 전체 점수 데이터를 저장할 배열
 let currentPeriodFilter = "all";  // 기간 필터 기본값
 let currentGoalFilter = "all";    // 목표합 필터 기본값
 
-/** 
- * 최초 보드 렌더링 여부 확인 플래그 
+/**
+ * 최초 보드 렌더링 여부 확인 플래그
  * true면 첫 렌더에서만 샤라락 효과 적용 후 false로 바뀜
  */
 let isFirstRender = true;
@@ -720,8 +720,8 @@ function renderScoreTable(scoreRecords) {
  * 언어 설정(간단)
  ***************************************************/
 function setLanguage(lang) {
-  currentLanguage = Object.keys(translations).includes(lang) 
-                  ? lang 
+  currentLanguage = Object.keys(translations).includes(lang)
+                  ? lang
                   : 'en'; // 기본값 설정
   applyTranslations();
 }
@@ -875,10 +875,10 @@ window.onStartGame = function() {
 /***************************************************
  * 카운트다운 오버레이에서 목표점수를 표시하는 헬퍼 함수
  ***************************************************/
-function showGoalOnCountdownOverlay(value, delay = 2000) {
+function showGoalOnCountdownOverlay(value, delay = 3000) {
   const goalNumEl = document.getElementById("goal-value");
   if (goalNumEl) {
-    goalNumEl.textContent = value; 
+    goalNumEl.textContent = value;
   }
 
   // 로딩바 초기화 → 0%에서 시작
@@ -1183,7 +1183,7 @@ function checkLine(start, end) {
     }, 300);
   } else {
     markLine(linePositions, "fail-line");
-    const failMessage = translations[currentLanguage]?.failSum 
+    const failMessage = translations[currentLanguage]?.failSum
                       || `목표합이 ${targetSum}이어야 합니다!`;
     showIOSToastMessage(failMessage.replace("{target}", targetSum), 1500);
 
@@ -1577,7 +1577,7 @@ function showFloatingScore(baseScore, lengthBonus, emptyBonus, tileElement) {
 
   // 애니메이션 클래스 부여 (간격을 두고 순차로 등장)
   stack.querySelectorAll('.floating-score-box').forEach((box, index) => {
-    const delay = index * 0.15; 
+    const delay = index * 0.15;
     box.style.animationDelay = `${delay}s`;
     box.classList.add('score-slide-right'); // ← 오른쪽 이동용 CSS 애니메이션
   });
@@ -1615,9 +1615,9 @@ function showFinalScore(score) {
 // ----------------------------------------------
 /**
  * 특정 DOM Element의 숫자를 startValue -> endValue로 일정 시간 동안 서서히 증가시키는 함수
- * @param {HTMLElement} element 
- * @param {number} startValue 
- * @param {number} endValue 
+ * @param {HTMLElement} element
+ * @param {number} startValue
+ * @param {number} endValue
  * @param {number} duration ms 단위
  * @param {function} callback 완료 후 콜백(옵션)
  */
@@ -1672,7 +1672,7 @@ async function showFinalSuccessOverlay(timeBonus, isFinalRound = false) {
             <th data-i18n="earnedScoreLabel">최종 획득 점수</th>
             <td>
               <span id="finalScoreValue">${totalScore}</span>
-              ${isNewRecord ? `<span class="new-record-badge" data-i18n="newRecord">신기록!</span>` : ''}
+              ${isNewRecord ? `<span class="new-record-badge" data-i18n="newRecord">New Record!</span>` : ''}
             </td>
           </tr>
         </tbody>
@@ -1728,15 +1728,15 @@ function restartGame() {
   updateHintButtonLabel(); // (3) 재시작 시 힌트 버튼 표시 업데이트
   totalScore = 0;
   document.getElementById("score").textContent = totalScore;
-  closeFinalOverlay();
+  nextRound();
   initRound(currentRound);
 }
 
 /**
  * 다음 라운드로 넘어가는 로직
- * (closeFinalOverlay → 카운트다운 다시 시작)
+ * (nextRound → 카운트다운 다시 시작)
  */
-function closeFinalOverlay() {
+function nextRound() {
   document.getElementById("overlay").style.display = "none";
 
   // 목표점수 +1 증가
@@ -2063,36 +2063,22 @@ async function saveNicknameToFirebase(nickname) {
  *  2) 만약 없으면 새 닉네임 생성 후 Firebase & localStorage에 저장.
  */
 async function initializeNickname() {
-  const storedNickname = localStorage.getItem("myNickname");
-  const storedUserKey = localStorage.getItem("userKey"); // 추가: Firebase 키 저장
-
-  if (storedNickname && storedUserKey) {
-    currentNickname = storedNickname;
-    document.getElementById("nickname").textContent = currentNickname;
+    const userKey = localStorage.getItem("userKey");
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     
-    // 기존 누적점수 조회
-    const userRef = firebase.database().ref(`nicknames/${storedUserKey}`);
-    const snapshot = await userRef.once('value');
-    const userData = snapshot.val();
-    showCumulativeScore(userData.cumulativeScore || 0);
-    
-    return;
-  }
-
-  let tempNickname = generateRandomNickname();
-  const newRef = firebase.database().ref('nicknames').push();
-  const userKey = newRef.key; // 추가: Firebase 고유 키 획득
-
-  await newRef.set({
-    nickname: tempNickname,
-    cumulativeScore: 0,
-    createdAt: Date.now()
-  });
-
-  currentNickname = tempNickname;
-  document.getElementById("nickname").textContent = currentNickname;
-  localStorage.setItem("myNickname", currentNickname);
-  localStorage.setItem("userKey", userKey); // 추가: Firebase 키 저장
+    if (isIOS) {
+        try {
+            // iOS 게임센터 닉네임 요청
+            window.webkit.messageHandlers.getGameCenterNickname.postMessage({
+                callback: "updateNicknameFromGameCenter"
+            });
+        } catch (error) {
+            console.log("게임센터 연동 실패:", error);
+            await loadNicknameFromFirebase(userKey);
+        }
+    } else {
+        await loadNicknameFromFirebase(userKey);
+    }
 }
 
 /**
@@ -2221,7 +2207,7 @@ async function getUserRankingPosition(userScore) {
     players.sort((a, b) => b.cumulativeScore - a.cumulativeScore);
     
     // 동일 점수 처리를 포함한 랭킹 계산
-    const rankingPosition = players.findIndex(player => 
+    const rankingPosition = players.findIndex(player =>
       player.cumulativeScore <= userScore) + 1;
     
     return rankingPosition || players.length + 1;
@@ -2815,55 +2801,40 @@ async function initNickname() {
 }
 
 // 게임센터에서 닉네임을 받아서 처리하는 함수 수정
-window.updateNicknameFromGameCenter = async function(gameCenterNickname) {
-  if (gameCenterNickname) {
-    // 게임센터 닉네임이 있는 경우
-    const userKey = localStorage.getItem("userKey");
+window.updateNicknameFromGameCenter = async function(response) {
+    const { nickname, isAuthenticated } = JSON.parse(response);
+    const gameCenterBadge = document.getElementById("gameCenterBadge");
     
-    try {
-      // 1. 닉네임 업데이트
-      document.getElementById("nickname").textContent = gameCenterNickname;
-      
-      // 2. Firebase에 게임센터 닉네임 업데이트
-      if (userKey) {
-        const userRef = firebase.database().ref(`nicknames/${userKey}`);
-        await userRef.update({
-          nickname: gameCenterNickname,
-          isGameCenter: true
-        });
+    if (isAuthenticated && nickname) {
+        // 1. 닉네임 업데이트
+        document.getElementById("nickname").textContent = nickname;
         
-        // 3. 유저 데이터 가져오기
-        const snapshot = await userRef.once('value');
-        if (snapshot.exists()) {
-          const userData = snapshot.val();
-          
-          // 4. 누적 점수 표시 업데이트
-          showCumulativeScore(userData.cumulativeScore || 0);
-          
-          // 5. 랭킹 정보 업데이트
-          const rankingPosition = await getUserRankingPosition(userData.cumulativeScore || 0);
-          showRankingPosition(rankingPosition);
+        // 2. 게임센터 뱃지 표시
+        gameCenterBadge.style.display = "inline-flex";
+        
+        // 3. Firebase 업데이트
+        const userKey = localStorage.getItem("userKey");
+        if (userKey) {
+            const userRef = firebase.database().ref(`nicknames/${userKey}`);
+            await userRef.update({
+                nickname: nickname,
+                isGameCenter: true,
+                lastUpdated: Date.now()
+            });
         }
-      }
-      
-      // 6. 닉네임 변경 버튼 비활성화 (게임센터 사용자는 변경 불가)
-      const nicknameChangeBtn = document.getElementById("nickname-change-btn");
-      if (nicknameChangeBtn) {
-        nicknameChangeBtn.style.display = "none";
-      }
-      
-      // 7. 토스트 메시지 표시
-      showIOSToastMessage(translations[currentLanguage].gameCenterConnected || "게임센터와 연동되었습니다");
-      
-    } catch (error) {
-      console.error("게임센터 닉네임 업데이트 실패:", error);
-      handleNicknameChange(); // 실패시 일반 닉네임 변경 모달 표시
+        
+        // 4. 닉네임 변경 버튼 비활성화
+        const changeNicknameBtn = document.querySelector('.open-modal-btn[data-modal="changeNicknameModal"]');
+        if (changeNicknameBtn) {
+            changeNicknameBtn.style.display = "none";
+        }
+        
+        showIOSToastMessage(translations[currentLanguage].gameCenterConnected);
+    } else {
+        gameCenterBadge.style.display = "none";
+        await loadNicknameFromFirebase(localStorage.getItem("userKey"));
     }
-  } else {
-    // 게임센터 닉네임이 없는 경우 일반 닉네임 변경 모달 표시
-    handleNicknameChange();
-  }
-}
+};
 
 async function loadNicknameFromFirebase(userKey) {
   if (!userKey) return;
@@ -2932,64 +2903,16 @@ async function getUserBestScore(targetSum) {
 
 // 게임센터 메뉴 클릭 핸들러
 function handleGameCenterClick() {
-  // iOS 환경인지 확인
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  
-  if (isIOS && window.webkit && window.webkit.messageHandlers.showGameCenter) {
-    // iOS 게임센터 모달 표시
-    window.webkit.messageHandlers.showGameCenter.postMessage("");
-  } else {
-    // 웹 환경에서는 기본 랭킹 모달 표시
-    document.getElementById('rankingModal').style.display = 'block';
-  }
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
+        window.webkit.messageHandlers.showGameCenter.postMessage("");
+    } else {
+        // 웹 환경에서는 기본 랭킹 모달 표시
+        document.getElementById('rankingModal').style.display = 'block';
+    }
 }
 
-// DOMContentLoaded 이벤트에 게임센터 메뉴 초기화 추가
-document.addEventListener("DOMContentLoaded", function() {
-  // ... 기존 초기화 코드 ...
-
-  // 게임센터 메뉴 추가
-  const gameCenterMenu = document.createElement('div');
-  gameCenterMenu.className = 'menu-item';
-  gameCenterMenu.setAttribute('data-i18n', 'gameCenter');
-  gameCenterMenu.textContent = translations[currentLanguage].gameCenter;
-  gameCenterMenu.addEventListener('click', handleGameCenterClick);
-
-  // GNB에 게임센터 메뉴 추가
-  const gnbMenus = document.querySelector('.gnb-menus');
-  if (gnbMenus) {
-    gnbMenus.insertBefore(gameCenterMenu, gnbMenus.firstChild);
-  }
-
-  // 언어 변경 시 게임센터 메뉴 텍스트도 업데이트되도록 수정
-  const originalApplyTranslations = applyTranslations;
-  applyTranslations = function() {
-    originalApplyTranslations();
-    if (gameCenterMenu) {
-      gameCenterMenu.textContent = translations[currentLanguage].gameCenter;
-    }
-  };
-
-  // 게임센터 메뉴 아이콘 추가 (헤더 우상단)
-  const iconMenus = document.querySelectorAll('.icon-menu, .right-group');
-  iconMenus.forEach(menu => {
-    const gameCenterBtn = document.createElement('button');
-    gameCenterBtn.className = 'open-modal-btn';
-    gameCenterBtn.innerHTML = '<i class="fi fi-rr-trophy"></i>';
-    gameCenterBtn.addEventListener('click', handleGameCenterClick);
-    
-    // 첫 번째 버튼 앞에 삽입
-    menu.insertBefore(gameCenterBtn, menu.firstChild);
-  });
+// 게임센터 버튼에 이벤트 리스너 연결
+document.querySelectorAll('.open-modal-btn[data-modal="gameCenter"]').forEach(btn => {
+    btn.addEventListener('click', handleGameCenterClick);
 });
-
-// iOS 게임센터 관련 콜백 함수들
-window.onGameCenterAuthSuccess = function() {
-  console.log("Game Center 인증 성공");
-};
-
-window.onGameCenterAuthFail = function(error) {
-  console.log("Game Center 인증 실패:", error);
-  // 인증 실패 시 웹 랭킹으로 폴백
-  document.getElementById('rankingModal').style.display = 'block';
-};

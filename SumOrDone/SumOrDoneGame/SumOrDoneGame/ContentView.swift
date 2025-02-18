@@ -7,8 +7,10 @@ struct ContentView: View {
         WebView(gameCenterManager: gameCenterManager)
             .edgesIgnoringSafeArea(.all)
             .onAppear {
-                if gameCenterManager.isAuthenticated {
-                    print("Game Center 인증 완료")
+                // 현재 뷰 컨트롤러 설정
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let viewController = windowScene.windows.first?.rootViewController {
+                    gameCenterManager.setViewController(viewController)
                 }
             }
     }

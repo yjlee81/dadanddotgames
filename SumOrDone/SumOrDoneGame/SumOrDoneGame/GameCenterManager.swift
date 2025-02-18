@@ -10,30 +10,90 @@ enum GameCenterAchievement: String {
 
 class GameCenterManager: NSObject, ObservableObject, GKGameCenterControllerDelegate {
     @Published var isAuthenticated: Bool = false
+    weak var webView: WKWebView?
+    weak var viewController: UIViewController?
+    
+    // 추가: 게임센터 상태 변경 알림을 위한 NotificationCenter 키
+    static let gameCenterStatusChanged = Notification.Name("GameCenterStatusChanged")
     
     static let shared = GameCenterManager()
     
     override init() {
         super.init()
         authenticatePlayer()
+        
+        // 앱이 포그라운드로 돌아올 때마다 게임센터 상태 확인
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(checkAuthenticationStatus),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
     }
     
+    // 추가: authenticatePlayer 메서드
     func authenticatePlayer() {
         GKLocalPlayer.local.authenticateHandler = { [weak self] viewController, error in
+            guard let self = self else { return }
+            
             if let viewController = viewController {
                 // 인증 화면이 필요한 경우
-                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                   let rootViewController = windowScene.windows.first?.rootViewController {
-                    rootViewController.present(viewController, animated: true)
+                DispatchQueue.main.async {
+                    if let rootViewController = self.viewController {
+                        rootViewController.present(viewController, animated: true)
+                    }
                 }
-            } else if error != nil {
+            } else if let error = error {
                 // 인증 실패
-                self?.isAuthenticated = false
+                print("Game Center 인증 실패: \(error.localizedDescription)")
+                self.isAuthenticated = false
+                self.notifyGameCenterStatus(false)
             } else {
                 // 인증 성공
-                self?.isAuthenticated = true
-                // 게임센터 닉네임으로 UI 업데이트
-                self?.updateGameCenterNickname()
+                print("Game Center 인증 성공")
+                self.isAuthenticated = true
+                self.updateGameCenterNickname()
+                self.notifyGameCenterStatus(true)
+            }
+        }
+    }
+    
+    // 뷰 컨트롤러 설정 메서드 추가
+    func setViewController(_ controller: UIViewController) {
+        self.viewController = controller
+    }
+    
+    @objc private func checkAuthenticationStatus() {
+        if GKLocalPlayer.local.isAuthenticated {
+            self.isAuthenticated = true
+            self.updateGameCenterNickname()
+        } else {
+            self.isAuthenticated = false
+            self.notifyGameCenterStatus(false)
+        }
+    }
+    
+    private func notifyGameCenterStatus(_ isAuthenticated: Bool) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self,
+                  let webView = self.webView else { return }
+            
+            let status = isAuthenticated ? "authenticated" : "failed"
+            let nickname = isAuthenticated ? GKLocalPlayer.local.displayName : ""
+            
+            let response = [
+                "status": status,
+                "nickname": nickname,
+                "isAuthenticated": isAuthenticated
+            ]
+            
+            if let jsonData = try? JSONSerialization.data(withJSONObject: response),
+               let jsonString = String(data: jsonData, encoding: .utf8) {
+                webView.evaluateJavaScript("window.onGameCenterStatus('\(jsonString)')") { _, error in
+                    if let error = error {
+                        print("게임센터 상태 알림 실패:", error)
+                    }
+                }
             }
         }
     }
@@ -41,27 +101,37 @@ class GameCenterManager: NSObject, ObservableObject, GKGameCenterControllerDeleg
     private func updateGameCenterNickname() {
         let localPlayer = GKLocalPlayer.local
         if localPlayer.isAuthenticated {
-            DispatchQueue.main.async {
-                // 모든 WebView 인스턴스에 JavaScript 실행
-                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                   let rootViewController = windowScene.windows.first?.rootViewController {
-                    for case let webView as WKWebView in rootViewController.view.subviews {
-                        let jsCallback = "window.updateNicknameFromGameCenter('\(localPlayer.displayName)');"
-                        webView.evaluateJavaScript(jsCallback, completionHandler: nil)
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self,
+                      let webView = self.webView else { return }
+                
+                let response = [
+                    "nickname": localPlayer.displayName,
+                    "isAuthenticated": true,
+                    "photoURL": "" // 프로필 이미지 URL (필요한 경우 추가)
+                ]
+                
+                if let jsonData = try? JSONSerialization.data(withJSONObject: response),
+                   let jsonString = String(data: jsonData, encoding: .utf8) {
+                    webView.evaluateJavaScript("window.updateNicknameFromGameCenter('\(jsonString)')") { _, error in
+                        if let error = error {
+                            print("닉네임 업데이트 실패:", error)
+                        }
                     }
                 }
             }
         }
     }
     
-    func submitScore(score: Int, leaderboardID: String) {
-        if isAuthenticated {
-            GKLeaderboard.submitScore(score, context: 0, player: GKLocalPlayer.local, leaderboardIDs: ["com.dadanddot.SumOrDoneGame.leaderboard"]) { error in
-                if let error = error {
-                    print("점수 제출 실패: \(error.localizedDescription)")
-                } else {
-                    print("점수 제출 성공")
-                }
+    func submitScore(_ score: Int, forTarget target: Int) {
+        guard isAuthenticated else { return }
+        
+        let leaderboardID = LeaderboardID.forTarget(target)
+        GKLeaderboard.submitScore(score, context: 0, player: GKLocalPlayer.local, leaderboardIDs: [leaderboardID]) { error in
+            if let error = error {
+                print("점수 제출 실패: \(error.localizedDescription)")
+            } else {
+                print("점수 제출 성공 - 리더보드: \(leaderboardID)")
             }
         }
     }
@@ -146,6 +216,43 @@ class GameCenterManager: NSObject, ObservableObject, GKGameCenterControllerDeleg
             } else {
                 print("업적 해제 성공: \(identifier)")
             }
+        }
+    }
+    
+    // checkGameCenterStatus 수정
+    func checkGameCenterStatus() {
+        GKLocalPlayer.local.authenticateHandler = { [weak self] viewController, error in
+            guard let self = self else { return }
+            
+            if let viewController = viewController {
+                // 인증 필요 - 게임센터 로그인 화면 표시
+                DispatchQueue.main.async {
+                    self.viewController?.present(viewController, animated: true)
+                }
+            } else if error != nil {
+                // 인증 실패
+                self.webView?.evaluateJavaScript("window.onGameCenterStatus('failed')")
+            } else {
+                // 인증 성공
+                let nickname = GKLocalPlayer.local.displayName
+                self.webView?.evaluateJavaScript("window.onGameCenterStatus('authenticated', '\(nickname)')")
+            }
+        }
+    }
+}
+
+// 리더보드 ID 관리 개선
+enum LeaderboardID: String {
+    case target10 = "com.dadanddot.SumOrDoneGame.target10"
+    case target15 = "com.dadanddot.SumOrDoneGame.target15"
+    case target20 = "com.dadanddot.SumOrDoneGame.target20"
+    
+    static func forTarget(_ target: Int) -> String {
+        switch target {
+        case 10...14: return LeaderboardID.target10.rawValue
+        case 15...19: return LeaderboardID.target15.rawValue
+        case 20: return LeaderboardID.target20.rawValue
+        default: return LeaderboardID.target10.rawValue
         }
     }
 } 

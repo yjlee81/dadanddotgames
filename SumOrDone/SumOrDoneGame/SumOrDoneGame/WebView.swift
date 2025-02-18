@@ -32,7 +32,7 @@ struct WebView: UIViewRepresentable {
         webViewConfig.userContentController = contentController
 
         let webView = WKWebView(
-            frame: .zero, 
+            frame: .zero,
             configuration: webViewConfig
         )
 
@@ -41,8 +41,8 @@ struct WebView: UIViewRepresentable {
 
         // 파일 로드 시 반드시 디렉토리 접근 권한 부여
         if let htmlPath = Bundle.main.path(
-            forResource: "index", 
-            ofType: "html", 
+            forResource: "index",
+            ofType: "html",
             inDirectory: "SumOrDoneGame"
         ) {
             let url = URL(fileURLWithPath: htmlPath)
@@ -67,7 +67,7 @@ struct WebView: UIViewRepresentable {
         Coordinator(self, gameCenterManager: gameCenterManager)
     }
 
-    class Coordinator: NSObject, WKScriptMessageHandler {
+    class Coordinator: NSObject, WKScriptMessageHandler, GKGameCenterControllerDelegate {
         var parent: WebView
         var gameCenterManager: GameCenterManager
         var modalVC: UIViewController?
@@ -76,6 +76,35 @@ struct WebView: UIViewRepresentable {
         init(_ parent: WebView, gameCenterManager: GameCenterManager) {
             self.parent = parent
             self.gameCenterManager = gameCenterManager
+            super.init()
+            
+            // GameCenter 상태 변경 알림 구독
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(handleGameCenterStatusChange),
+                name: GameCenterManager.gameCenterStatusChanged,
+                object: nil
+            )
+        }
+
+        @objc private func handleGameCenterStatusChange(_ notification: Notification) {
+            if let userInfo = notification.userInfo,
+               let isAuthenticated = userInfo["isAuthenticated"] as? Bool {
+                updateGameCenterUI(isAuthenticated: isAuthenticated)
+            }
+        }
+        
+        private func updateGameCenterUI(isAuthenticated: Bool) {
+            guard let webView = self.webView else { return }
+            
+            let script = """
+                document.getElementById('gameCenterBadge').style.display = '\(isAuthenticated ? "inline-flex" : "none")';
+                document.querySelector('.open-modal-btn[data-modal="changeNicknameModal"]').style.display = '\(isAuthenticated ? "none" : "block")';
+            """
+            
+            DispatchQueue.main.async {
+                webView.evaluateJavaScript(script, completionHandler: nil)
+            }
         }
 
         func userContentController(_ userContentController: WKUserContentController,
@@ -84,8 +113,12 @@ struct WebView: UIViewRepresentable {
                 if let type = message.body as? String {
                     handleHapticFeedback(type: type)
                 }
-            } else if message.name == "submitScore", let score = message.body as? Int {
-                gameCenterManager.submitScore(score: score, leaderboardID: "com.dadanddot.SumOrDoneGame.leaderboard")
+            } else if message.name == "submitScore" {
+                if let scoreData = message.body as? [String: Any],
+                   let score = scoreData["score"] as? Int,
+                   let target = scoreData["target"] as? Int {
+                    gameCenterManager.submitScore(score, forTarget: target)
+                }
             } else if message.name == "openModal" {
                 showNicknameChangeModal()
             } else if message.name == "getGameCenterNickname" {
@@ -336,17 +369,20 @@ struct WebView: UIViewRepresentable {
         }
 
         private func showGameCenter() {
-            let gameCenterVC = GKGameCenterViewController()
-            gameCenterVC.gameCenterDelegate = self
-            if let rootViewController = UIApplication.shared.windows.first?.rootViewController {
+            DispatchQueue.main.async {
+                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                      let rootViewController = windowScene.windows.first?.rootViewController else {
+                    return
+                }
+                
+                let gameCenterVC = GKGameCenterViewController(state: .default)
+                gameCenterVC.gameCenterDelegate = self
                 rootViewController.present(gameCenterVC, animated: true)
             }
         }
-    }
-}
 
-extension WebView.Coordinator: GKGameCenterControllerDelegate {
-    func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController) {
-        gameCenterViewController.dismiss(animated: true)
+        func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController) {
+            gameCenterViewController.dismiss(animated: true)
+        }
     }
 }

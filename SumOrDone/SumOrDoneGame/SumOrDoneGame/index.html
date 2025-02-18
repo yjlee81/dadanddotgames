@@ -70,7 +70,7 @@
     gtag('config', 'G-4F9B3DMB67');
   </script>
 
-  <!-- Prerender.io 설정 
+  <!-- Prerender.io 설정
   <script>
     window.prerender = {
       prerenderHost: 'https://service.prerender.io/',
@@ -105,6 +105,11 @@
     gtag('js', new Date());
     gtag('config', 'G-4F9B3DMB67'); // 실제 측정ID 사용
   </script>
+
+  <!-- Google Fonts - Nunito -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <!-- AMP 광고 삽입 -->
@@ -118,10 +123,20 @@
  <!-- [1] 메인 헤더 (title-screen 용) -->
  <header class="main-header">
   <div class="header-left">
-    <i class="fi fi-rr-circle-user"></i>
-    <span id="nickname">닉네임</span> <i id="nickname-change-btn" class="fi fi-rr-rotate-right" 
-    style="font-size: 16px;" 
-    data-modal="changeNicknameModal"></i>
+    <i class="fi fi-rr-circle-user open-modal-btn" data-modal="changeNicknameModal"></i>
+    <div class="nickname-container">
+        <span id="nickname">닉네임</span>
+        <span class="game-center-badge" id="gameCenterBadge" style="display: none;">
+            <i class="fi fi-rr-trophy"></i>
+        </span>
+    </div>
+    <div class="score-display">
+      <span id="cumulative-score">0</span>
+      <span class="pts">pts</span>
+    </div>
+    <!-- <i class="fi fi-rr-rotate-right"
+    style="font-size: 16px;"
+    data-modal="changeNicknameModal"></i> -->
   </div>
   <div class="header-right">
     <nav class="icon-menu">
@@ -142,19 +157,18 @@
 
   <!-- [2] 타이틀 화면 -->
 <div id="title-screen" data-route="home">
-    <div class="score-display">
-      <span id="cumulative-score">0</span>
-      <span class="pts">pts</span>
-    </div>
-    <div class="title-container">
-<img src="https://dadanddot.com/images/sd_title_bg1.png" alt="Sumordone" class="title-logo">
-<div class="title-logo-text">
-  <h1>Sum? or Done!</h1>
-  <p>Find numbers & Hit Done to win</p>
-</div>
-</div>
+   
+    
+      
 
-    <div class="round-selector">
+    <div class="title-container">
+      <img src="https://dadanddot.com/images/sd_title_bg1.png" alt="Sumordone" class="title-bg">
+      <button class="title-logo"> <span class="title-logo-text">?!</span></button>
+      <h1>Sum? or Done!</h1>
+      <p>Find numbers, hit Done to win</p>
+    </div>
+    
+    <div class="game-controls-container">
       <select id="round-select">
         <option value="10">Round 1: 10</option>
         <option value="11">Round 2: 11</option>
@@ -168,10 +182,8 @@
         <option value="19">Round 10: 19</option>
         <option value="20">Final Round: 20</option>
       </select>
-      <i class="fi fi-rr-angles-up-down selector-icon"></i>
+      <button id="start-game-btn">Get started!</button>
     </div>
-
-    <button id="start-game-btn">Get started!</button>  
   </div>
 </div>
 
@@ -182,7 +194,7 @@
 
 </div>
   
-  <!-- [4] 게임방법 화면 -->  
+  <!-- [4] 게임방법 화면 -->
 <div id="tutorial"  style="display: none;">
   <!-- How to Play -->
   <section id="tutorial-section">
@@ -204,7 +216,7 @@
   </div>
   </section>
 
-</div>  
+</div>
 <!-- 설정 화면 -->
 <div id="settings" style="display: none;">
   <h3 data-i18n="settings" style="text-align: center;">설정</h3>
@@ -214,8 +226,10 @@
 <!-- [5] 카운트다운 오버레이 -->
 <div id="countdown-overlay">
   <div id="goal-container">
+    <button class="title-logo"> <span id="goal-value" class="title-logo-text">?!</span>
+      <!-- <img src="https://dadanddot.com/images/sd_box.png" alt="Sumordone" class="title-logo"></img> -->
+      </button>
     <div id="goal-label" data-i18n="goal">목표합</div>
-    <div id="goal-value">99</div>
   </div>
   
   <div id="guideMessage" class="guide-message" data-i18n="gameInstruction">숫자들을 드래그해 위의 목표합을 만드세요</div>
@@ -234,10 +248,13 @@
       <button id="back-button" onclick="backToTitleScreen()">
         <i class="fi fi-rr-angle-left"></i>
       </button>
-      <p>
-        <span class="label" id="target-label">목표합</span>
-        <span class="data" id="target-number">10</span>
-      </p>
+      
+      <button class="title-logo-small"> <span id="goal-value" class="title-logo-text-small"><span class="data" id="target-number">10</span></span>
+        <!-- <img src="https://dadanddot.com/images/sd_box.png" alt="Sumordone" class="title-logo"></img> -->
+        </button>
+        <!-- <span class="label" id="target-label">목표합</span>
+         -->
+      
     </div>
     <div class="right-group">
       <!-- 게임센터 버튼 추가 -->
@@ -260,14 +277,19 @@
   <!-- 보드컨테이너 -->
   <div class="board-container">
     <div class="game-info-container">
-      <div class="game-score" id="score-box">
-        점수 <span id="score">0</span>
+      <div class="score-wrapper">
+        <i class="fi fi-rr-target"></i>
+        <div class="game-score" id="score-box">
+          <span id="score">0</span>
+        </div>
       </div>
-      <div class="game-timer" id="timer-box">
-        <!-- 남은 시간 텍스트(항상 한 줄로 표시됨, 바와 별도 표시) -->
-        <span id="timer" class="timer-text"></span>
-        <!-- 타이머 바(배경 위에 채워지는 부분) -->
-        <div class="timer-bar" id="timer-bar"></div>
+
+      <div class="timer-wrapper">
+        <i class="fi fi-rr-hourglass-end"></i>
+        <div class="game-timer" id="timer-box">
+          <span id="timer" class="timer-text"></span>
+          <div class="timer-bar" id="timer-bar"></div>
+        </div>
       </div>
     </div>
     
@@ -393,7 +415,7 @@
       <div class="tutorial-card" >
         <h3 data-i18n="howToPlayHeader1">Drag & Select</h3>
         <p data-i18n="howToPlayDetail1">Swipe horizontally, vertically, or diagonally to connect numbers</p>
-        <img src="https://dadanddot.com/images/tut1.gif" class="tutorial-gif" alt="Drag demonstration">
+        <img src="https://dadanddot.com/images/tut1.png" class="tutorial-gif" alt="Drag demonstration">
       </div>
 
       <!-- Step 2 -->
@@ -450,7 +472,10 @@
           </p>
         </div>
       </div>
-      <span data-i18n="footerText">© 2025 Dadanddot.com</span>
+
+      <div class="footer">
+        <p data-i18n="footerText">© 2025 Dadanddot.com</p>
+      </div>
     </div>
   </div>
 </div>
@@ -458,20 +483,44 @@
 
 <div id="changeNicknameModal" class="modal-scrim" style="display:none;">
   <div class="modal-container">
-    <h2 data-i18n="editNicknameTitle">닉네임 수정</h2>
-    <input
-      type="text"
-      id="newNicknameInput"
-      data-i18n-placeholder="newNicknamePlaceholder"
-      placeholder="새 닉네임"
-      style="width: 80%; padding: 8px;"
-    />
-    <div style="margin-top: 10px;">
-      <button id="saveNicknameBtn" style="margin-right: 8px;" data-i18n="saveButton">확인</button>
-      <button class="close-modal-btn" data-i18n="cancelButton">취소</button>
+    <div class="modal-header">
+      <h2 class="modal-title" data-i18n="editNicknameTitle">닉네임 수정</h2>
+      <button class="modal-close-btn"><i class="fi fi-rr-cross-small"></i></button>
+    </div>
+    <div class="modal-content">
+      <input
+        type="text"
+        id="newNicknameInput"
+        data-i18n-placeholder="newNicknamePlaceholder"
+        placeholder="새 닉네임"
+        maxlength="12"
+        class="nickname-input"
+      />
+      <div class="modal-buttons">
+        <button id="saveNicknameBtn" class="primary-button" data-i18n="saveButton">확인</button>
+        <button class="secondary-button close-modal-btn" data-i18n="cancelButton">취소</button>
+      </div>
     </div>
   </div>
 </div>
+
+<script>
+// iOS 게임센터 닉네임 변경 처리
+function handleNicknameChange() {
+  if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.gameCenter) {
+    // iOS 게임센터 닉네임 변경 인터페이스 호출
+    window.webkit.messageHandlers.gameCenter.postMessage({
+      action: "showNicknameChange"
+    });
+  } else {
+    // 일반 모달 표시
+    document.getElementById('changeNicknameModal').style.display = 'flex';
+  }
+}
+
+// 닉네임 변경 버튼 클릭 이벤트에 연결
+document.querySelector('.open-modal-btn[data-modal="changeNicknameModal"]').addEventListener('click', handleNicknameChange);
+</script>
 
 </body>
 </html>
