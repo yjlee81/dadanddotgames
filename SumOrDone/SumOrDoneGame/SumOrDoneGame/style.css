@@ -449,16 +449,6 @@ html, body {
     }
   }
 
-  .title-container {
-    width: 100%;
-    max-width: 600px;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--spacing-lg);
-    padding: var(--spacing-xl) 0;
-  }
 
   /* 로고 컨테이너 */
   .title-logo {
@@ -607,6 +597,14 @@ html, body {
     border-color: var(--accent-color);
     box-shadow: 0 0 4px rgba(0, 122, 255, 0.3);
   }
+
+  .game-controls-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20%;
+  }
+
   #start-game-btn {
     padding: 10px 20px;
     background-color: var(--success-color);
@@ -1493,14 +1491,13 @@ font-weight: bold;
   flex-wrap: wrap;
   gap: 8px;
 }
-
 .title-container {
   display: flex;
   justify-content: center;
   align-items: center;
   align-content: center;
   flex-direction: column;
-  margin: 20px 0 10px 0;
+  /* margin: 20px 0 10px 0; */
   min-height: 500px;
   gap: 8px;
   z-index: 5;
@@ -2404,10 +2401,10 @@ button.open-modal-btn i {
 
 .tutorial-card {
   flex: 0 0 auto;
-  width: 80%;
+  width: 70%;
   background-color: var(--color-accent);
-  padding: 30px;
-  margin: 20px;
+  padding: 40px;
+  margin: 10px;
   border-radius: var(--radius-lg);
 }
 
@@ -2750,11 +2747,6 @@ button.open-modal-btn i {
   font-weight: 500;
 }
 
-.modal-container {
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
-}
 .modal-content {
   flex: 1;
   display: flex;
@@ -2873,4 +2865,193 @@ input, button, select, textarea {
   outline: none;
   border-color: #007AFF;
   box-shadow: 0 0 0 2px rgba(0,122,255,0.2);
+}
+
+/* 오버레이 개선 스타일 */
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+#overlay.final-round {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+#overlay-message {
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  padding: 24px;
+  max-width: 90%;
+  width: 320px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.overlay-content {
+  position: relative;
+  z-index: 2;
+}
+
+.overlay-content h2 {
+  margin-top: 0;
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.point-change {
+  font-size: 32px;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.point-change.bonus {
+  color: #4caf50;
+}
+
+.point-change.penalty {
+  color: #f44336;
+}
+
+.current-score-container {
+  font-size: 20px;
+  margin: 15px 0;
+  color: #333;
+}
+
+#animated-score {
+  font-weight: bold;
+  font-size: 24px;
+  color: #2196f3;
+}
+
+.overlay-buttons {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* 점수 요약 테이블 개선 */
+.score-summary {
+  background-color: #f5f5f5;
+  border-radius: 12px;
+  padding: 15px;
+  margin: 20px 0;
+}
+
+.score-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+.score-row.total {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 2px dashed #ddd;
+  font-weight: bold;
+  font-size: 20px;
+  color: #2196f3;
+}
+
+/* 랭킹 정보 스타일 */
+.ranking-info {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: #f0f8ff;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.ranking-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ff9800;
+  margin: 0 5px;
+}
+
+/* 팡파레 애니메이션 */
+.confetti-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  border-radius: 50%;
+  animation: confetti-fall 4s ease-out forwards;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(1000px) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* 최종 성공 스타일 */
+.overlay-content.final-success h2 {
+  color: #ff9800;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+/* 버튼 스타일 개선 */
+.primary-button {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.primary-button:hover {
+  background-color: #1976d2;
+}
+
+.secondary-button {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.secondary-button:hover {
+  background-color: #e0e0e0;
 }

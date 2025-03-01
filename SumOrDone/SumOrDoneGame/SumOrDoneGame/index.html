@@ -97,15 +97,6 @@
 
 
 
-  <!-- Firebase 스크립트 아래에 GA4 추가 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4F9B3DMB67"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-4F9B3DMB67'); // 실제 측정ID 사용
-  </script>
-
   <!-- Google Fonts - Nunito -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -123,28 +114,16 @@
  <!-- [1] 메인 헤더 (title-screen 용) -->
  <header class="main-header">
   <div class="header-left">
-    <i class="fi fi-rr-circle-user open-modal-btn" data-modal="changeNicknameModal"></i>
-    <div class="nickname-container">
-        <span id="nickname">닉네임</span>
-        <span class="game-center-badge" id="gameCenterBadge" style="display: none;">
-            <i class="fi fi-rr-trophy"></i>
-        </span>
-    </div>
-    <div class="score-display">
-      <span id="cumulative-score">0</span>
-      <span class="pts">pts</span>
-    </div>
-    <!-- <i class="fi fi-rr-rotate-right"
-    style="font-size: 16px;"
-    data-modal="changeNicknameModal"></i> -->
+    
   </div>
   <div class="header-right">
     <nav class="icon-menu">
-      <!-- 모달 열기 버튼들 (data-modal 속성으로 어떤 모달인지 구분) -->
-       <!--랭킹모달 숨김
+      <button class="open-modal-btn" onclick="handleGameCenterClick()">
+        GC
+      </button>
       <button class="open-modal-btn" data-modal="rankingModal">
-        <i class="fi fi-rr-crown"></i>
-      </button> -->
+        <i class="fi fi-rr-trophy"></i>
+      </button>
       <button class="open-modal-btn" data-modal="tutorialModal">
         <i class="fi fi-rr-interrogation"></i>
       </button>
@@ -160,12 +139,21 @@
    
     
       
-
+    <div class="user-info" id="info-section">
+      <span id="nickname">Guest</span>
+      <span data-i18n="welcome">님,</span>
+      <div class="score-display">
+        <span id="cumulative-score">0</span>
+        <span class="pts">pts</span>
+      </div>
+    </div>
+    
+    
     <div class="title-container">
       <img src="https://dadanddot.com/images/sd_title_bg1.png" alt="Sumordone" class="title-bg">
       <button class="title-logo"> <span class="title-logo-text">?!</span></button>
       <h1>Sum? or Done!</h1>
-      <p>Find numbers, hit Done to win</p>
+      <p data-i18n="gameInstruction">Find numbers, hit Done to win</p>
     </div>
     
     <div class="game-controls-container">
@@ -326,7 +314,7 @@
 
 <!-- [7] 토스트 메시지 -->
 <div id="toast-message"></div>
-
+<!--
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
@@ -343,6 +331,7 @@
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
 </script>
+-->
 
 <script type="application/ld+json">
 {
@@ -362,7 +351,9 @@
   <div class="modal-container">
     <div class="modal-header">
       <h2 class="modal-title" data-i18n="scoreboards">스코어보드</h2>
-      <button class="modal-close-btn" onclick="closeModal('rankingModal')"><i class="fi fi-rr-cross-small"></i></button>
+      <!-- <button class="modal-close-btn" data-modal="rankingModal">
+        <i class="fi fi-rr-cross-small"></i>
+      </button> -->
     </div>
     <div class="modal-content">
       <!-- 탭 필터 -->
@@ -408,8 +399,12 @@
   <div class="modal-container">
     <div class="modal-header">
       <h2 class="modal-title">Master the Game</h2>
-      <button class="modal-close-btn" onclick="closeModal('tutorialModal')"><i class="fi fi-rr-cross-small"></i></button>
-    </div>
+      <!-- 
+      <button class="modal-close-btn" data-modal="tutorialModal">
+        <i class="fi fi-rr-cross-small"></i>
+      </button>
+      -->
+    </div>  
     <div class="tutorial-steps" >
       <!-- Step 1 -->
       <div class="tutorial-card" >
@@ -439,7 +434,11 @@
   <div class="modal-container">
     <div class="modal-header">
       <h2 class="modal-title" data-i18n="settingsTitle">설정</h2>
-      <button class="modal-close-btn" onclick="closeModal('settingsModal')"><i class="fi fi-rr-cross-small"></i></button>
+      <!-- 
+      <button class="modal-close-btn" data-modal="settingsModal">
+        <i class="fi fi-rr-cross-small"></i>
+      </button>
+      -->
     </div>
     <div class="modal-content">
 
@@ -458,8 +457,8 @@
       <div class="setting-item">
         <span class="setting-label" data-i18n="termsPrivacyLabel">약관 및 개인정보</span>
         <div class="setting-value">
-          <a href="#" data-link="tos" class="terms-link" data-i18n="tos">이용약관</a>
-          <a href="#" data-link="privacy" class="terms-link" data-i18n="privacyPolicy">개인정보처리방침</a>
+          <a href="https://www.dadanddot.com/tos.html" target="_blank" class="terms-link" data-i18n="tos">이용약관</a>
+          <a href="https://www.dadanddot.com/pp.html" target="_blank" class="terms-link" data-i18n="privacyPolicy">개인정보처리방침</a>
         </div>
       </div>
 
@@ -479,48 +478,6 @@
     </div>
   </div>
 </div>
-
-
-<div id="changeNicknameModal" class="modal-scrim" style="display:none;">
-  <div class="modal-container">
-    <div class="modal-header">
-      <h2 class="modal-title" data-i18n="editNicknameTitle">닉네임 수정</h2>
-      <button class="modal-close-btn"><i class="fi fi-rr-cross-small"></i></button>
-    </div>
-    <div class="modal-content">
-      <input
-        type="text"
-        id="newNicknameInput"
-        data-i18n-placeholder="newNicknamePlaceholder"
-        placeholder="새 닉네임"
-        maxlength="12"
-        class="nickname-input"
-      />
-      <div class="modal-buttons">
-        <button id="saveNicknameBtn" class="primary-button" data-i18n="saveButton">확인</button>
-        <button class="secondary-button close-modal-btn" data-i18n="cancelButton">취소</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-// iOS 게임센터 닉네임 변경 처리
-function handleNicknameChange() {
-  if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.gameCenter) {
-    // iOS 게임센터 닉네임 변경 인터페이스 호출
-    window.webkit.messageHandlers.gameCenter.postMessage({
-      action: "showNicknameChange"
-    });
-  } else {
-    // 일반 모달 표시
-    document.getElementById('changeNicknameModal').style.display = 'flex';
-  }
-}
-
-// 닉네임 변경 버튼 클릭 이벤트에 연결
-document.querySelector('.open-modal-btn[data-modal="changeNicknameModal"]').addEventListener('click', handleNicknameChange);
-</script>
 
 </body>
 </html>

@@ -33,27 +33,20 @@ class GameCenterManager: NSObject, ObservableObject, GKGameCenterControllerDeleg
     
     // 추가: authenticatePlayer 메서드
     func authenticatePlayer() {
-        GKLocalPlayer.local.authenticateHandler = { [weak self] viewController, error in
+        GKLocalPlayer.local.authenticateHandler = { [weak self] vc, error in
             guard let self = self else { return }
-            
-            if let viewController = viewController {
-                // 인증 화면이 필요한 경우
+            if let vc = vc {
                 DispatchQueue.main.async {
-                    if let rootViewController = self.viewController {
-                        rootViewController.present(viewController, animated: true)
-                    }
+                    self.viewController?.present(vc, animated: true)
                 }
             } else if let error = error {
-                // 인증 실패
                 print("Game Center 인증 실패: \(error.localizedDescription)")
                 self.isAuthenticated = false
-                self.notifyGameCenterStatus(false)
+                self.notifyGameCenterStatus(authenticated: false)
             } else {
-                // 인증 성공
                 print("Game Center 인증 성공")
                 self.isAuthenticated = true
                 self.updateGameCenterNickname()
-                self.notifyGameCenterStatus(true)
             }
         }
     }
@@ -69,31 +62,23 @@ class GameCenterManager: NSObject, ObservableObject, GKGameCenterControllerDeleg
             self.updateGameCenterNickname()
         } else {
             self.isAuthenticated = false
-            self.notifyGameCenterStatus(false)
+            self.notifyGameCenterStatus(authenticated: false)
         }
     }
     
-    private func notifyGameCenterStatus(_ isAuthenticated: Bool) {
+    private func notifyGameCenterStatus(authenticated: Bool) {
         DispatchQueue.main.async { [weak self] in
-            guard let self = self,
-                  let webView = self.webView else { return }
-            
-            let status = isAuthenticated ? "authenticated" : "failed"
-            let nickname = isAuthenticated ? GKLocalPlayer.local.displayName : ""
-            
-            let response = [
+            guard let self = self, let webView = self.webView else { return }
+            let status = authenticated ? "authenticated" : "failed"
+            let nickname = authenticated ? GKLocalPlayer.local.displayName : ""
+            let response: [String: Any] = [
                 "status": status,
                 "nickname": nickname,
-                "isAuthenticated": isAuthenticated
+                "isAuthenticated": authenticated
             ]
-            
             if let jsonData = try? JSONSerialization.data(withJSONObject: response),
                let jsonString = String(data: jsonData, encoding: .utf8) {
-                webView.evaluateJavaScript("window.onGameCenterStatus('\(jsonString)')") { _, error in
-                    if let error = error {
-                        print("게임센터 상태 알림 실패:", error)
-                    }
-                }
+                webView.evaluateJavaScript("window.onGameCenterStatus('\(jsonString.jsonStringEscaped)')", completionHandler: nil)
             }
         }
     }
@@ -123,15 +108,14 @@ class GameCenterManager: NSObject, ObservableObject, GKGameCenterControllerDeleg
         }
     }
     
-    func submitScore(_ score: Int, forTarget target: Int) {
+    func submitScore(_ score: Int) {
         guard isAuthenticated else { return }
-        
-        let leaderboardID = LeaderboardID.forTarget(target)
+        let leaderboardID = "com.dadanddot.SumOrDoneGame.leaderboard"
         GKLeaderboard.submitScore(score, context: 0, player: GKLocalPlayer.local, leaderboardIDs: [leaderboardID]) { error in
             if let error = error {
                 print("점수 제출 실패: \(error.localizedDescription)")
             } else {
-                print("점수 제출 성공 - 리더보드: \(leaderboardID)")
+                print("점수 제출 성공")
             }
         }
     }

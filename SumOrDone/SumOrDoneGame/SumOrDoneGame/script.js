@@ -13,8 +13,18 @@ const firebaseConfig = {
   appId: "1:205533056842:web:059897d5da4ab626c6bbb3",
   measurementId: "G-4F9B3DMB67"
 };
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+
+let db; // 전역 변수로 선언
+try {
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    db = firebase.database(); // 전역 변수에 할당
+    console.log("Firebase initialized successfully");
+} catch (error) {
+    console.error("Firebase 초기화 실패:", error);
+    showIOSToastMessage("서비스 연결에 실패했습니다. 앱을 재시작 해주세요");
+}
 
 /***************************************************
  * i18n (다국어 설정)
@@ -60,7 +70,8 @@ const translations = {
     howToPlayDetail2: "Longer chains = More bonuses! Empty tiles add extra points",
     howToPlayHeader3: "3) Done! to Finish",
     howToPlayDetail3: "Press Done! when you can't find more combinations",
-    gameInstruction: "Drag to select numbers to find the TargetSum, and press Done! if you cannot make it.",
+    gameInstruction: "Drag to select numbers to find the TargetSum",
+    hintMessage: "Drag to select numbers to find the TargetSum, and press Done! if you cannot make it.",
     // 새로 추가된 tos 관련 항목
     tos_consent1: "By selecting the \"Start Now >\" button above,",
     tos: "Terms of Service",
@@ -71,7 +82,6 @@ const translations = {
     nickname: "Name",
     cumulativeScore: "Total Score",
     aboutDetail: "Dadanddot is a game development company that creates fun and engaging games for all ages.",
-    gameInstruction: "Drag to select numbers to find the TargetSum, and press Done! if you cannot make it.",
     finalRoundTitle: "🎉 Congratulations! 🎉",
     finalRoundMessage: "You succeeded in the final round!",
     roundSuccessTitle: "Success!",
@@ -127,6 +137,11 @@ const translations = {
     leaderboard: "Leaderboard",
     achievements: "Achievements",
     gameCenterConnected: "Connected with Game Center",
+    authRequiredTitle: "Authentication Required",
+    authRequiredMessage: "Please sign in to save your score",
+    signInWithGoogle: "Sign in with Google",
+    signInWithGC: "Sign in with Game Center",
+    saveError: "Failed to save score",
   },
   ko: {
     mainTitle: "숫자 결합",
@@ -181,7 +196,6 @@ const translations = {
     nickname: "이름",
     cumulativeScore: "누적점수",
     aboutDetail: "Dadanddot는 모든 연령대를 위한 재미있고 몰입감 있는 게임을 제작하는 게임 개발 회사입니다.",
-    gameInstruction: "숫자들을 드래그해 목표합을 찾고, 더이상 없으면 결!을 눌러요.",
     finalRoundTitle: "🎉 축하합니다! 🎉",
     finalRoundMessage: "마지막 라운드에서 성공했어요!",
     roundSuccessTitle: "성공!",
@@ -239,6 +253,11 @@ const translations = {
     leaderboard: "리더보드",
     achievements: "도전과제",
     gameCenterConnected: "게임센터와 연동되었습니다",
+    authRequiredTitle: "로그인이 필요합니다",
+    authRequiredMessage: "점수 저장을 위해 로그인 해주세요",
+    signInWithGoogle: "Google로 로그인",
+    signInWithGC: "Game Center로 연결",
+    saveError: "Failed to save score",
   },
   ja: {
     mainTitle: "数字結合ゲーム",
@@ -350,6 +369,11 @@ const translations = {
     leaderboard: "リーダーボード",
     achievements: "実績",
     gameCenterConnected: "ゲームセンターと連携しました",
+    authRequiredTitle: "Authentication Required",
+    authRequiredMessage: "Please sign in to save your score",
+    signInWithGoogle: "Sign in with Google",
+    signInWithGC: "Sign in with Game Center",
+    saveError: "Failed to save score",
   },
   zh: {
     mainTitle: "数字合并游戏",
@@ -460,6 +484,11 @@ const translations = {
     leaderboard: "排行榜",
     achievements: "成就",
     gameCenterConnected: "游戏中心与平台连接",
+    authRequiredTitle: "Authentication Required",
+    authRequiredMessage: "Please sign in to save your score",
+    signInWithGoogle: "Sign in with Google",
+    signInWithGC: "Sign in with Game Center",
+    saveError: "Failed to save score",
   },
   
 };
@@ -657,32 +686,140 @@ function filterScoresByGoal(goal) {
   updateCompositeFiltering();
 }
 
-// 점수 저장
-function saveScoreToFirebase(score, diff, target) {
-  // 게임 기록 데이터 구성
-  const newRecord = {
-    nickname: currentNickname ? currentNickname : "Guest",
-    score: score,
-    diff: diff,
-    target: target,
-    timestamp: Date.now()
-  };
-  
-  // 1. 일반 점수 저장
-  db.ref("scores").push(newRecord)
-    .then(() => {
-      console.log("점수 저장 성공:", newRecord);
-      
-      // 2. 누적 점수 업데이트 (파라미터 수정)
-      return updateCumulativeScore(score); // 닉네임 파라미터 제거
-    })
-    .then(newScore => {
-      console.log("새로운 누적점수:", newScore);
-      showCumulativeScore(newScore); // UI 업데이트
-    })
-    .catch((error) => {
-      console.error("점수 저장 실패:", error);
+// 수정된 saveScoreToFirebase 함수
+async function saveScoreToFirebase(score, diff, target) {
+    try {
+        // 1. userKey 확인 및 생성
+        let userKey = localStorage.getItem("userKey");
+        let nickname = localStorage.getItem("myNickname");
+        
+        if (!userKey || !nickname) {
+            userKey = generateUUID();
+            nickname = generateRandomNickname();
+            localStorage.setItem("userKey", userKey);
+            localStorage.setItem("myNickname", nickname);
+            
+            // nicknames에 새 사용자 추가
+            await db.ref(`nicknames/${userKey}`).set({
+                nickname: nickname,
+                cumulativeScore: 0,
+                createdAt: Date.now()
+            });
+        }
+
+        // 2. 스코어 데이터 준비
+        const newRecord = {
+            nickname: nickname,
+            score: Number(score),
+            diff: Number(diff),
+            target: Number(target),
+            timestamp: Date.now(),
+            userKey: userKey
+        };
+
+        // 3. 스코어 저장 시도
+        const newScoreRef = await db.ref("scores").push();
+        await newScoreRef.set(newRecord);
+
+        // 4. 누적 점수 업데이트
+        const userRef = db.ref(`nicknames/${userKey}`);
+        await userRef.update({
+            cumulativeScore: firebase.database.ServerValue.increment(Number(score)),
+            lastUpdated: Date.now()
+        });
+
+        // 5. 게임센터 점수 제출
+        if (window.webkit?.messageHandlers?.submitScore) {
+            window.webkit.messageHandlers.submitScore.postMessage({
+                score: newRecord.score,
+                target: newRecord.target
+            });
+        }
+
+        // 6. 업적 체크
+        if (newRecord.score >= 1000) {
+            window.webkit?.messageHandlers?.unlock1000PointsAchievement?.postMessage({});
+        }
+
+        console.log("점수 저장 성공:", newRecord);
+        return true;
+
+    } catch (error) {
+        console.error("점수 저장 실패:", error);
+        // 오류 발생 시 재시도
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // 1초 대기
+            return await saveScoreToFirebase(score, diff, target); // 재시도
+        } catch (retryError) {
+            console.error("점수 저장 재시도 실패:", retryError);
+            showIOSToastMessage("점수 저장에 실패했습니다. 네트워크를 확인해주세요.");
+            return false;
+        }
+    }
+}
+
+// 사용자 초기화 함수 추가
+async function initializeUser() {
+    const userKey = generateUUID();
+    const nickname = generateRandomNickname();
+    
+    try {
+        const userRef = db.ref(`nicknames/${userKey}`);
+        await userRef.set({
+            nickname: nickname,
+            cumulativeScore: 0,
+            createdAt: Date.now()
+        });
+        
+        localStorage.setItem("userKey", userKey);
+        localStorage.setItem("myNickname", nickname);
+        
+        return userKey;
+    } catch (error) {
+        console.error("사용자 초기화 실패:", error);
+        throw error;
+    }
+}
+
+// UUID 생성 함수
+function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
     });
+}
+
+// 랜덤 닉네임 생성 함수
+function generateRandomNickname() {
+    const adjectives = ["행복한", "즐거운", "신나는", "열정적인", "도전하는"];
+    const nouns = ["플레이어", "게이머", "도전자", "챔피언", "마스터"];
+    const number = Math.floor(1000 + Math.random() * 9000);
+    
+    const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+    const noun = nouns[Math.floor(Math.random() * nouns.length)];
+    
+    return `${adj}${noun}${number}`;
+}
+
+// 새로 추가할 인증 요청 모달 함수
+function showAuthRequiredModal() {
+    const modalContent = `
+        <h2 data-i18n="authRequiredTitle"></h2>
+        <p data-i18n="authRequiredMessage"></p>
+        <div class="auth-buttons">
+            <button class="auth-button google" onclick="signInWithGoogle()">
+                <i class="icon-google"></i>
+                <span data-i18n="signInWithGoogle"></span>
+            </button>
+            ${isIOS ? `
+            <button class="auth-button gamecenter" onclick="signInWithGameCenter()">
+                <i class="icon-gamecenter"></i>
+                <span data-i18n="signInWithGC"></span>
+            </button>` : ''}
+        </div>
+    `;
+    showCustomModal(modalContent, {disableClose: true});
 }
 
 // 스코어보드 렌더링
@@ -829,7 +966,36 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 기존 displayCurrentUserScore(), onGameOver() 등...
+  // 모달 열기 버튼들에 이벤트 리스너 추가
+  document.querySelectorAll('.open-modal-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const modalId = this.getAttribute('data-modal');
+      if (modalId) {
+        openModal(modalId);
+      }
+    });
+  });
+  
+// 모달 닫기 버튼들에 이벤트 리스너 추가
+document.querySelectorAll('.modal-close-btn').forEach(button => {
+  button.addEventListener('click', function(event) {
+      event.stopPropagation();  // 이벤트 버블링 방지
+      const modalScrim = this.closest('.modal-scrim');
+      if (modalScrim && modalScrim.classList.contains('modal-scrim')) {
+          modalScrim.style.display = 'none';
+      }
+  });
+});
+
+
+  // 모달 외부 클릭시 닫기
+  document.querySelectorAll('.modal-scrim').forEach(modal => {
+    modal.addEventListener('click', function(event) {
+      if (event.target === this) {
+        closeModal(this.id);
+      }
+    });
+  });
 });
 
 /***************************************************
@@ -1650,75 +1816,59 @@ function animateNumber(element, startValue, endValue, duration, callback) {
  * 최종 성공 시 (showFinalSuccessOverlay)
  ***************************************************/
 async function showFinalSuccessOverlay(timeBonus, isFinalRound = false) {
-  const overlayEl = document.getElementById("overlay");
-  const overlayMsgEl = document.getElementById("overlay-message");
-
-  const baseScore = totalScore - 100;
-  const previousBestScore = await getUserBestScore(targetSum);
-  const isNewRecord = totalScore > previousBestScore;
-  
-  if (isFinalRound) {
-    // 마지막 라운드인 경우
-    overlayEl.classList.add('final-round');
-    overlayMsgEl.innerHTML = `
-      <h2 data-i18n="finalRoundTitle">🎉 축하합니다! 🎉</h2>
-      <p data-i18n="finalRoundMessage">마지막 라운드에서 성공했어요!</p>
-      <table id="score-summary-table">
-        <tbody>
-          <tr><th data-i18n="baseScoreLabel">기본 점수</th><td>${baseScore}</td></tr>
-          <tr><th data-i18n="bonusScoreLabel">결 성공 보너스</th><td>+ 100</td></tr>
-          <tr><th data-i18n="timeBonusLabel">남은 시간 보너스</th><td>+ <span id="time-bonus-anim">0</span></td></tr>
-          <tr class="final-row">
-            <th data-i18n="earnedScoreLabel">최종 획득 점수</th>
-            <td>
-              <span id="finalScoreValue">${totalScore}</span>
-              ${isNewRecord ? `<span class="new-record-badge" data-i18n="newRecord">New Record!</span>` : ''}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="game-over-buttons">
-        <button id="home-button" class="tertiary-button" onclick="backToTitleScreen()" data-i18n="homeButton">홈으로</button>
-        <button class="modal-button" onclick="restartGame()" data-i18n="continueButton">계속 더 진행하기</button>
-      </div>
-    `;
-  } else {
-    // 일반 라운드인 경우
-    overlayEl.classList.remove('final-round');
-    overlayMsgEl.innerHTML = `
-      <h2 data-i18n="roundSuccessTitle">성공!</h2>
-      <table id="score-summary-table">
-        <tbody>
-          <tr><th data-i18n="baseScoreLabel">기본 점수</th><td>${baseScore}</td></tr>
-          <tr><th data-i18n="bonusScoreLabel">결 성공 보너스</th><td>+ 100</td></tr>
-          <tr><th data-i18n="timeBonusLabel">남은 시간 보너스</th><td>+ <span id="time-bonus-anim">0</span></td></tr>
-          <tr class="final-row">
-            <th data-i18n="earnedScoreLabel">최종 획득 점수</th>
-            <td>
-              <span id="finalScoreValue">${totalScore}</span>
-              ${isNewRecord ? `<span class="new-record-badge" data-i18n="newRecord">신기록!</span>` : ''}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="game-over-buttons">
-        <button id="home-button" class="tertiary-button" onclick="backToTitleScreen()" data-i18n="homeButton">홈으로</button>
-        <button class="modal-button" onclick="nextRound()" data-i18n="nextRoundButton">다음 라운드</button>
-      </div>
-    `;
-  }
-
-  overlayEl.style.display = "flex";
-
-  // 시간 보너스 애니메이션
-  const timeBonusEl = document.getElementById("time-bonus-anim");
-  animateNumber(timeBonusEl, 0, timeBonus, 1000, () => {
-    totalScore += timeBonus;
-    const finalScoreEl = document.getElementById("finalScoreValue");
-    if (finalScoreEl) {
-      finalScoreEl.textContent = totalScore;
+    try {
+        const baseScore = totalScore - 100;
+        const finalScore = totalScore + timeBonus;
+        
+        // 점수 저장 시도
+        const saveSuccess = await saveScoreToFirebase(finalScore, BOARD_ROWS, targetSum);
+        
+        if (!saveSuccess) {
+            console.warn("점수 저장에 실패했습니다.");
+            showIOSToastMessage("점수 저장에 실패했습니다. 네트워크를 확인해주세요.");
+        }
+        
+        // UI 업데이트는 저장 성공 여부와 관계없이 진행
+        const overlayEl = document.getElementById("overlay");
+        const overlayMsgEl = document.getElementById("overlay-message");
+        
+        // 오버레이 내용 구성 및 표시
+        overlayMsgEl.innerHTML = `
+            <h2>${translations[currentLanguage].roundSuccessTitle}</h2>
+            <div class="score-summary">
+                <div class="score-row">
+                    <span>${translations[currentLanguage].baseScoreLabel}</span>
+                    <span>+${baseScore}</span>
+                </div>
+                <div class="score-row">
+                    <span>${translations[currentLanguage].bonusScoreLabel}</span>
+                    <span>+100</span>
+                </div>
+                <div class="score-row">
+                    <span>${translations[currentLanguage].timeBonusLabel}</span>
+                    <span>+${timeBonus}</span>
+                </div>
+                <div class="score-row total">
+                    <span>${translations[currentLanguage].finalScoreLabel}</span>
+                    <span>${finalScore}</span>
+                </div>
+            </div>
+            <div class="overlay-buttons">
+                <button onclick="backToTitleScreen()" class="secondary-button">
+                    ${translations[currentLanguage].homeButton}
+                </button>
+                <button onclick="nextRound()" class="primary-button">
+                    ${translations[currentLanguage].nextRoundButton}
+                </button>
+            </div>
+        `;
+        
+        overlayEl.style.display = "flex";
+        
+    } catch (error) {
+        console.error("최종 점수 처리 중 오류:", error);
+        showIOSToastMessage("점수 처리 중 오류가 발생했습니다.");
     }
-  });
 }
 
 function restartGame() {
@@ -2060,7 +2210,7 @@ async function saveNicknameToFirebase(nickname) {
 /**
  * 페이지 로드시 닉네임 초기화
  *  1) localStorage에서 닉네임을 꺼냄.
- *  2) 만약 없으면 새 닉네임 생성 후 Firebase & localStorage에 저장.
+ *  2) 만약 없으면 새 닉네임 생성 후 Firebase · localStorage에 저장.
  */
 async function initializeNickname() {
     const userKey = localStorage.getItem("userKey");
@@ -2190,30 +2340,56 @@ async function updateCumulativeScore(additionalScore) {
  */
 async function getUserRankingPosition(userScore) {
   try {
-    const playersRef = firebase.database().ref('nicknames');
-    const snapshot = await playersRef.orderByChild('cumulativeScore').once('value');
+    // 1. scores 컬렉션에서 모든 점수 데이터 가져오기
+    const scoresRef = db.ref('scores');
+    const snapshot = await scoresRef.once('value');
     
-    const players = [];
+    // 2. 점수 배열 생성
+    const scores = [];
     snapshot.forEach((childSnapshot) => {
-      const playerData = childSnapshot.val();
-      if (playerData && playerData.cumulativeScore !== undefined) {
-        players.push({
-          cumulativeScore: Number(playerData.cumulativeScore) || 0
+      const scoreData = childSnapshot.val();
+      if (scoreData && scoreData.score) {
+        scores.push({
+          score: Number(scoreData.score)
         });
       }
     });
-
-    // 내림차순 정렬
-    players.sort((a, b) => b.cumulativeScore - a.cumulativeScore);
     
-    // 동일 점수 처리를 포함한 랭킹 계산
-    const rankingPosition = players.findIndex(player =>
-      player.cumulativeScore <= userScore) + 1;
+    // 3. 점수 내림차순 정렬
+    scores.sort((a, b) => b.score - a.score);
     
-    return rankingPosition || players.length + 1;
+    // 4. 동일 점수 처리를 포함한 랭킹 계산
+    let rank = 1;
+    let prevScore = -1;
+    let sameRankCount = 0;
+    
+    for (let i = 0; i < scores.length; i++) {
+      const currentScore = scores[i].score;
+      
+      // 이전 점수와 다르면 순위 업데이트
+      if (currentScore !== prevScore) {
+        rank += sameRankCount;
+        sameRankCount = 1;
+        prevScore = currentScore;
+      } else {
+        sameRankCount++;
+      }
+      
+      // 현재 점수가 사용자 점수보다 크면 계속 진행
+      if (currentScore > userScore) {
+        continue;
+      }
+      
+      // 현재 점수가 사용자 점수와 같거나 작으면 현재 랭킹 반환
+      return rank;
+    }
+    
+    // 모든 점수보다 낮은 경우는 마지막 순위 + 1 반환
+    return scores.length + 1;
+    
   } catch (error) {
     console.error('랭킹 위치 조회 실패:', error);
-    return '-';
+    return 0; // 오류 시 0 반환 (UI에서는 1위로 표시됨)
   }
 }
 
@@ -2670,11 +2846,11 @@ function fetchPlayersData(callback) {
           });
         }
       });
-      callback(players);
+      callback({ players }); // players 객체로 감싸서 전달
     })
     .catch((error) => {
       console.error('Firebase 플레이어 데이터 가져오기 실패:', error);
-      callback([]);  // 에러 시 빈 배열 전달
+      callback({ players: [] });  // 에러 시 빈 배열 전달
     });
 }
 
@@ -2709,8 +2885,10 @@ function displayScores(scoresData) {
   const currentUserNickname = localStorage.getItem('myNickname');
   const currentUserCumulativeScore = parseInt(localStorage.getItem('cumulativeScore') || '0');
 
+  // Players 탭과 Rounds 탭을 구분하여 처리
+  if (scoresData.hasOwnProperty('players')) {
   // Players 탭 데이터 처리
-  const sortedPlayers = playersData
+    const sortedPlayers = scoresData.players
     .filter(player => player && player.nickname && player.cumulativeScore !== undefined)
     .sort((a, b) => b.cumulativeScore - a.cumulativeScore);
   
@@ -2718,12 +2896,12 @@ function displayScores(scoresData) {
   const userRankingIndex = sortedPlayers.findIndex(player => player.nickname === currentUserNickname);
   const userRanking = userRankingIndex + 1;
   
-  // 표시할 데이터 준비 (상위 10개)
+    // 표시할 데이터 준비 (상위 30개)
   let displayPlayers = sortedPlayers.slice(0, 30);
   
-  // 사용자가 10위 밖이면 마지막 항목을 사용자 데이터로 교체
-  if (userRanking > 10) {
-    displayPlayers[9] = {
+    // 사용자가 30위 밖이면 마지막 항목을 사용자 데이터로 교체
+    if (userRanking > 30 && userRankingIndex !== -1) {
+      displayPlayers[29] = {
       nickname: currentUserNickname,
       cumulativeScore: currentUserCumulativeScore,
       ranking: userRanking
@@ -2743,6 +2921,7 @@ function displayScores(scoresData) {
     `;
   }).join('');
 
+  } else {
   // Rounds 탭 데이터 처리
   const sortedScores = scoresData
     .filter(score => score && score.nickname && score.score !== undefined && score.target !== undefined)
@@ -2753,12 +2932,12 @@ function displayScores(scoresData) {
   const userScoreRankingIndex = sortedScores.findIndex(score => score.nickname === currentUserNickname);
   const userScoreRanking = userScoreRankingIndex + 1;
   
-  // 표시할 데이터 준비 (상위 10개)
+    // 표시할 데이터 준비 (상위 30개)
   let displayScores = sortedScores.slice(0, 30);
   
-  // 사용자가 10위 밖이면 마지막 항목을 사용자 데이터로 교체
-  if (userScoreRanking > 10 && userBestScore) {
-    displayScores[9] = {
+    // 사용자가 30위 밖이면 마지막 항목을 사용자 데이터로 교체
+    if (userScoreRanking > 30 && userBestScore) {
+      displayScores[29] = {
       ...userBestScore,
       ranking: userScoreRanking
     };
@@ -2772,11 +2951,14 @@ function displayScores(scoresData) {
       <tr class="${isCurrentUser ? 'current-user-row' : ''}">
         <td>${rankingNumber}</td>
         <td>${score.nickname} ${isCurrentUser ? '<span class="player-chip">ME</span>' : ''}</td>
-        <td>${score.score}</td>
-        <td>${score.target}</td>
+          <td>
+            <span class="score-value">${score.score}</span>
+            <span class="target-badge">${score.target}</span>
+          </td>
       </tr>
     `;
   }).join('');
+  }
 }
 
 // 닉네임 관련 함수들 수정
@@ -2916,3 +3098,587 @@ function handleGameCenterClick() {
 document.querySelectorAll('.open-modal-btn[data-modal="gameCenter"]').forEach(btn => {
     btn.addEventListener('click', handleGameCenterClick);
 });
+
+// 모달 열기 함수
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = 'block';
+    
+    // 랭킹 모달인 경우 데이터 로드
+    if (modalId === 'rankingModal') {
+      // 기본적으로 Players 탭 활성화
+      setMainTab('players');
+    }
+  }
+}
+
+// 모달 닫기 함수
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+// 탭 전환 함수
+function setMainTab(tabName) {
+  // 모든 탭 컨텐츠와 버튼 비활성화
+  const tables = document.querySelectorAll('.ranking-table');
+  tables.forEach(table => table.style.display = 'none');
+  
+  const tabLinks = document.querySelectorAll('.tab-link');
+  tabLinks.forEach(link => link.classList.remove('active'));
+  
+  // 선택된 탭 활성화
+  if (tabName === 'players') {
+    document.getElementById('rankingTable').style.display = 'table';
+    document.querySelector('[data-period="players"]').classList.add('active');
+    fetchPlayersData(displayScores);
+  } else {
+    document.getElementById('scoreTable').style.display = 'table';
+    document.querySelector('[data-period="round"]').classList.add('active');
+    fetchScoresData(displayScores);
+  }
+}
+
+// 전역 스코프에 함수 추가
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.setMainTab = setMainTab;
+
+// 닉네임과 누적 점수를 화면에 표시하는 함수 수정
+function displayCurrentUserInfo() {
+  const userKey = localStorage.getItem("userKey");
+  const cachedNickname = localStorage.getItem("myNickname");
+  
+  if (!userKey) return;
+
+  const userRef = firebase.database().ref(`nicknames/${userKey}`);
+  userRef.once('value')
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        const userData = snapshot.val();
+        
+        // Firebase의 닉네임과 로컬 캐시된 닉네임이 다르면 Firebase 값을 우선
+        if (userData.nickname !== cachedNickname) {
+          localStorage.setItem('myNickname', userData.nickname);
+        }
+        
+        // 닉네임 표시
+        const nicknameEl = document.getElementById("nickname");
+        if (nicknameEl) {
+          nicknameEl.textContent = userData.nickname || 'Guest';
+        }
+        
+        // 누적 점수 표시
+        const cumulativeScore = Number(userData.cumulativeScore) || 0;
+        const scoreEl = document.getElementById("cumulative-score");
+        if (scoreEl) {
+          scoreEl.textContent = cumulativeScore.toLocaleString();
+        }
+
+        localStorage.setItem('cumulativeScore', cumulativeScore);
+      }
+    })
+    .catch(error => {
+      console.error('사용자 정보 로드 실패:', error);
+    });
+}
+
+// DOMContentLoaded 이벤트 핸들러 수정
+document.addEventListener("DOMContentLoaded", async () => {
+  await initNickname();
+  setupNicknameChangeEvent();
+  displayCurrentUserInfo(); // 닉네임과 누적 점수 표시
+});
+
+// 점수 업데이트 후에도 화면 갱신
+async function updateCumulativeScore(additionalScore) {
+  const userKey = localStorage.getItem("userKey");
+  if (!userKey) return 0;
+
+  const userRef = firebase.database().ref(`nicknames/${userKey}`);
+  
+  try {
+    // 누적 점수 업데이트
+    const newScore = await new Promise((resolve, reject) => {
+      userRef.child('cumulativeScore').transaction((currentScore) => {
+        const current = Number(currentScore) || 0;
+        const additional = Number(additionalScore) || 0;
+        return current + additional;
+      }, (error, committed, snapshot) => {
+        if (error) {
+          console.error('누적 점수 업데이트 실패:', error);
+          reject(error);
+        } else if (committed) {
+          resolve(Number(snapshot.val()) || 0);
+        }
+      });
+    });
+
+    // 로컬 스토리지 업데이트
+    localStorage.setItem('cumulativeScore', newScore);
+    
+    // 화면 표시 업데이트
+    const scoreEl = document.getElementById('cumulative-score');
+    if (scoreEl) {
+      scoreEl.textContent = newScore.toLocaleString();
+    }
+    
+    // 1000점 이상 달성 시 업적 호출
+    if (newScore >= 1000) {
+      console.log("1000점 달성 - 업적 호출");
+      window.webkit.messageHandlers.unlock1000PointsAchievement.postMessage({});
+    }
+    
+    // 랭킹 위치 업데이트
+    const newRankingPosition = await getUserRankingPosition(newScore);
+    showRankingPosition(newRankingPosition);
+
+    return newScore;
+  } catch (error) {
+    console.error('점수 업데이트 중 오류 발생:', error);
+    return 0;
+  }
+}
+
+// index.html의 헤더 부분에 닉네임 표시 영역 추가가 필요합니다.
+// 다음 HTML을 .header-left 내부 score-display 앞에 추가해주세요:
+/*
+<div class="user-info">
+  <span id="nickname">Guest</span>
+  <span data-i18n="welcome">님,</span>
+</div>
+*/
+
+// 사용자 식별 관련 함수들
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+async function initializeUser() {
+  let userKey = localStorage.getItem('userKey');
+  
+  if (!userKey) {
+    // 새로운 사용자인 경우
+    userKey = generateUUID();
+    localStorage.setItem('userKey', userKey);
+    
+    // Firebase에 새 사용자 정보 생성
+    const userRef = firebase.database().ref(`nicknames/${userKey}`);
+    const randomNickname = generateRandomNickname();
+    
+    await userRef.set({
+      nickname: randomNickname,
+      cumulativeScore: 0,
+      createdAt: Date.now(),
+      lastLogin: Date.now()
+    });
+    
+    localStorage.setItem('myNickname', randomNickname);
+  } else {
+    // 기존 사용자인 경우 마지막 로그인 시간 업데이트
+    const userRef = firebase.database().ref(`nicknames/${userKey}`);
+    await userRef.update({
+      lastLogin: Date.now()
+    });
+  }
+  
+  return userKey;
+}
+
+// DOMContentLoaded 이벤트 핸들러 수정
+document.addEventListener("DOMContentLoaded", async () => {
+  await initializeUser(); // 사용자 초기화 먼저 실행
+  await initNickname();
+  setupNicknameChangeEvent();
+  displayCurrentUserInfo();
+});
+
+// localStorage 동기화를 위한 이벤트 리스너 추가
+window.addEventListener('storage', function(e) {
+  if (e.key === 'userKey' || e.key === 'myNickname') {
+    displayCurrentUserInfo(); // 정보 갱신
+  }
+});
+
+// 닉네임 변경 시 모든 탭에 반영
+function updateNickname(newNickname) {
+  const userKey = localStorage.getItem("userKey");
+  if (!userKey) return;
+
+  const userRef = firebase.database().ref(`nicknames/${userKey}`);
+  return userRef.update({
+    nickname: newNickname,
+    lastUpdated: Date.now()
+  }).then(() => {
+    localStorage.setItem('myNickname', newNickname);
+    // storage 이벤트를 수동으로 발생시켜 다른 탭에 알림
+    window.dispatchEvent(new StorageEvent('storage', {
+      key: 'myNickname',
+      newValue: newNickname
+    }));
+  });
+}
+
+// 페이지 로드/포커스 시 정보 갱신
+window.addEventListener('focus', displayCurrentUserInfo);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    displayCurrentUserInfo();
+  }
+});
+
+// Firebase Authentication 관련 함수 추가
+async function initializeAuth() {
+  // 기존 userKey 확인
+  const userKey = localStorage.getItem('userKey');
+  
+  // iOS 환경 체크
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  
+  try {
+    if (isIOS) {
+      // iOS 게임센터 인증 시도
+      window.webkit.messageHandlers.getGameCenterNickname.postMessage({
+        callback: "handleGameCenterAuth"
+      });
+    } else {
+      // 웹 환경에서는 구글 로그인 제공
+      const googleProvider = new firebase.auth.GoogleAuthProvider();
+      const userCredential = await firebase.auth().signInWithPopup(googleProvider);
+      await handleGoogleAuth(userCredential.user);
+    }
+  } catch (error) {
+    console.log('소셜 인증 실패, 기존 방식으로 진행:', error);
+    if (!userKey) {
+      // 새 사용자 생성 (기존 로직 활용)
+      await initializeUser();
+    }
+  }
+}
+
+// 구글 인증 처리
+async function handleGoogleAuth(user) {
+  const userKey = user.uid;
+  localStorage.setItem('userKey', userKey);
+  
+  const userRef = firebase.database().ref(`nicknames/${userKey}`);
+  const snapshot = await userRef.once('value');
+  
+  if (!snapshot.exists()) {
+    // 새 사용자 정보 생성
+    await userRef.set({
+      nickname: user.displayName || generateRandomNickname(),
+      email: user.email,
+      cumulativeScore: 0,
+      createdAt: Date.now(),
+      lastLogin: Date.now(),
+      authProvider: 'google'
+    });
+  } else {
+    // 기존 사용자 정보 업데이트
+    await userRef.update({
+      lastLogin: Date.now(),
+      email: user.email,
+      authProvider: 'google'
+    });
+  }
+  
+  // 로컬 스토리지 업데이트
+  localStorage.setItem('myNickname', user.displayName);
+  displayCurrentUserInfo();
+}
+
+// 게임센터 인증 콜백 함수 수정
+window.handleGameCenterAuth = async function(response) {
+  const { nickname, playerId, isAuthenticated, score } = JSON.parse(response);
+  
+  if (isAuthenticated && playerId) {
+    const userKey = `gc_${playerId}`; // 게임센터 ID를 userKey로 사용
+    localStorage.setItem('userKey', userKey);
+    
+    const userRef = firebase.database().ref(`nicknames/${userKey}`);
+    const snapshot = await userRef.once('value');
+    
+    // 게임센터에서 받은 점수와 Firebase의 점수를 비교하여 높은 점수 사용
+    const existingScore = snapshot.exists() ? snapshot.val().cumulativeScore || 0 : 0;
+    const finalScore = Math.max(existingScore, score || 0);
+    
+    if (!snapshot.exists()) {
+      // 새 사용자 정보 생성
+      await userRef.set({
+        nickname: nickname,
+        cumulativeScore: finalScore,
+        createdAt: Date.now(),
+        lastLogin: Date.now(),
+        authProvider: 'gamecenter'
+      });
+    } else {
+      // 기존 사용자 정보 업데이트
+      await userRef.update({
+        lastLogin: Date.now(),
+        nickname: nickname,
+        cumulativeScore: finalScore,
+        authProvider: 'gamecenter'
+      });
+    }
+    
+    // title-screen의 user-info 업데이트
+    const titleNicknameEl = document.getElementById("nickname");
+    const titleScoreEl = document.getElementById("cumulative-score");
+    
+    if (titleNicknameEl) {
+      titleNicknameEl.textContent = nickname;
+    }
+    
+    if (titleScoreEl) {
+      titleScoreEl.textContent = finalScore.toLocaleString();
+    }
+    
+    // 로컬 스토리지 업데이트
+    localStorage.setItem('myNickname', nickname);
+    localStorage.setItem('cumulativeScore', finalScore.toString());
+    
+    // 게임센터 UI 업데이트
+    const gameCenterBadge = document.getElementById("gameCenterBadge");
+    if (gameCenterBadge) {
+      gameCenterBadge.style.display = "inline-flex";
+    }
+    
+    // 닉네임 변경 버튼 비활성화 (게임센터 사용자는 닉네임 변경 불가)
+    const changeNicknameBtn = document.querySelector('.open-modal-btn[data-modal="changeNicknameModal"]');
+    if (changeNicknameBtn) {
+      changeNicknameBtn.style.display = "none";
+    }
+    
+    showIOSToastMessage(translations[currentLanguage].gameCenterConnected);
+  } else {
+    // 인증 실패 시 기존 방식으로 진행
+    await initializeUser();
+  }
+};
+
+// DOMContentLoaded 이벤트 핸들러 수정
+document.addEventListener("DOMContentLoaded", async () => {
+  await initializeAuth(); // 인증 초기화 (게임센터 또는 구글)
+  setupNicknameChangeEvent();
+  displayCurrentUserInfo();
+});
+
+// 성공/실패 오버레이 개선 함수
+async function showOverlay(msg, isSuccess) {
+  const overlayEl = document.getElementById("overlay");
+  const overlayMsgEl = document.getElementById("overlay-message");
+
+  // 성공 시 팡파레 효과 추가
+  if (isSuccess) {
+    // 팡파레 컨테이너 추가
+    const confettiContainer = document.createElement('div');
+    confettiContainer.className = 'confetti-container';
+    overlayEl.appendChild(confettiContainer);
+    
+    // 색종이 요소 생성
+    for (let i = 0; i < 50; i++) {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.style.left = `${Math.random() * 100}%`;
+      confetti.style.animationDelay = `${Math.random() * 2}s`;
+      confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      confettiContainer.appendChild(confetti);
+    }
+    
+    // 성공 햅틱 피드백
+    triggerHapticFeedback('done');
+  }
+
+  // Firebase 랭킹 정보 가져오기
+  let rankingInfo = '';
+  if (isSuccess) {
+    try {
+      const rankPosition = await getUserRankingPosition(totalScore);
+      rankingInfo = `<div class="ranking-info">
+        <span class="ranking-label">${translations[currentLanguage].globalRanking}</span>
+        <span class="ranking-value">${rankPosition > 0 ? rankPosition : 1}</span>
+        <span class="ranking-suffix">${translations[currentLanguage].rankingSuffix}</span>
+      </div>`;
+    } catch (error) {
+      console.error("랭킹 정보 가져오기 실패:", error);
+      rankingInfo = `<div class="ranking-info">
+        <span class="ranking-label">${translations[currentLanguage].globalRanking}</span>
+        <span class="ranking-value">-</span>
+        <span class="ranking-suffix">${translations[currentLanguage].rankingSuffix}</span>
+      </div>`;
+    }
+  }
+
+  // 애니메이션 숫자를 위한 플레이스홀더 추가
+  const scoreToShow = isSuccess ? totalScore + 100 : totalScore - 50;
+  
+  overlayMsgEl.innerHTML = `
+    <div class="overlay-content ${isSuccess ? 'success' : 'failure'}">
+      <h2>${isSuccess ? translations[currentLanguage].roundSuccessTitle : "조합 남음!"}</h2>
+      <div class="point-change ${isSuccess ? 'bonus' : 'penalty'}">
+        ${isSuccess ? "+100" : "-50"} ${translations[currentLanguage].points}
+      </div>
+      <div class="current-score-container">
+        <span>${translations[currentLanguage].score}: </span>
+        <span id="animated-score">${totalScore}</span>
+      </div>
+      ${rankingInfo}
+      <div class="overlay-buttons">
+        <button class="primary-button" onclick="closeOverlay()">
+          ${translations[currentLanguage].continueButton}
+        </button>
+      </div>
+    </div>
+  `;
+  
+  overlayEl.style.display = "flex";
+
+  // 스코어 저장 및 점수 애니메이션
+  if (isSuccess) {
+    saveScoreToFirebase(totalScore, BOARD_ROWS, targetSum);
+    submitScoreToGameCenter(totalScore);
+    
+    // 숫자 증가 애니메이션
+    const scoreEl = document.getElementById("animated-score");
+    if (scoreEl) {
+      animateNumber(scoreEl, totalScore - 100, totalScore, 1000);
+    }
+  } else {
+    // 숫자 감소 애니메이션
+    const scoreEl = document.getElementById("animated-score");
+    if (scoreEl) {
+      animateNumber(scoreEl, totalScore + 50, totalScore, 1000);
+    }
+  }
+}
+
+// 최종 성공 시 오버레이 개선
+async function showFinalSuccessOverlay(timeBonus, isFinalRound = false) {
+  try {
+    const baseScore = totalScore - 100;
+    const finalScore = totalScore + timeBonus;
+    
+    // 점수 저장 시도
+    const saveSuccess = await saveScoreToFirebase(finalScore, BOARD_ROWS, targetSum);
+    
+    if (!saveSuccess) {
+      console.warn("점수 저장에 실패했습니다.");
+      showIOSToastMessage("점수 저장에 실패했습니다. 네트워크를 확인해주세요.");
+    }
+    
+    // 랭킹 정보 가져오기
+    let rankingInfo = '';
+    try {
+      const rankPosition = await getUserRankingPosition(finalScore);
+      rankingInfo = `<div class="ranking-info">
+        <span class="ranking-label">${translations[currentLanguage].globalRanking}</span>
+        <span class="ranking-value">${rankPosition > 0 ? rankPosition : 1}</span>
+        <span class="ranking-suffix">${translations[currentLanguage].rankingSuffix}</span>
+      </div>`;
+    } catch (error) {
+      console.error("랭킹 정보 가져오기 실패:", error);
+      rankingInfo = `<div class="ranking-info">
+        <span class="ranking-label">${translations[currentLanguage].globalRanking}</span>
+        <span class="ranking-value">-</span>
+        <span class="ranking-suffix">${translations[currentLanguage].rankingSuffix}</span>
+      </div>`;
+    }
+    
+    // 팡파레 효과 추가
+    const overlayEl = document.getElementById("overlay");
+    // 기존 팡파레 요소 제거
+    const oldConfetti = overlayEl.querySelector('.confetti-container');
+    if (oldConfetti) {
+      overlayEl.removeChild(oldConfetti);
+    }
+    
+    // 새 팡파레 컨테이너 추가
+    const confettiContainer = document.createElement('div');
+    confettiContainer.className = 'confetti-container';
+    overlayEl.appendChild(confettiContainer);
+    
+    // 색종이 요소 생성 (더 많이, 더 화려하게)
+    for (let i = 0; i < 100; i++) {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.style.left = `${Math.random() * 100}%`;
+      confetti.style.animationDelay = `${Math.random() * 3}s`;
+      confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      confettiContainer.appendChild(confetti);
+    }
+    
+    // UI 업데이트
+    const overlayMsgEl = document.getElementById("overlay-message");
+    overlayMsgEl.innerHTML = `
+      <div class="overlay-content final-success">
+        <h2>${isFinalRound ? translations[currentLanguage].finalRoundTitle : translations[currentLanguage].roundSuccessTitle}</h2>
+        
+        <div class="score-summary">
+          <div class="score-row">
+            <span>${translations[currentLanguage].baseScoreLabel}</span>
+            <span id="base-score-anim">${baseScore}</span>
+          </div>
+          <div class="score-row">
+            <span>${translations[currentLanguage].bonusScoreLabel}</span>
+            <span id="bonus-score-anim">100</span>
+          </div>
+          <div class="score-row">
+            <span>${translations[currentLanguage].timeBonusLabel}</span>
+            <span id="time-bonus-anim">0</span>
+          </div>
+          <div class="score-row total">
+            <span>${translations[currentLanguage].finalScoreLabel}</span>
+            <span id="final-score-anim">${baseScore + 100}</span>
+          </div>
+        </div>
+        
+        ${rankingInfo}
+        
+        <div class="overlay-buttons">
+          <button onclick="backToTitleScreen()" class="secondary-button">
+            ${translations[currentLanguage].homeButton}
+          </button>
+          <button onclick="nextRound()" class="primary-button">
+            ${translations[currentLanguage].nextRoundButton}
+          </button>
+        </div>
+      </div>
+    `;
+    
+    // 모달 표시
+    overlayEl.style.display = "flex";
+    overlayEl.classList.add('final-round');
+    
+    // 숫자 애니메이션 적용
+    setTimeout(() => {
+      // 시간 보너스 애니메이션
+      const timeBonusEl = document.getElementById("time-bonus-anim");
+      if (timeBonusEl) {
+        animateNumber(timeBonusEl, 0, timeBonus, 1500);
+      }
+      
+      // 최종 점수 애니메이션 (약간 지연시켜 순차적 효과)
+      setTimeout(() => {
+        const finalScoreEl = document.getElementById("final-score-anim");
+        if (finalScoreEl) {
+          animateNumber(finalScoreEl, baseScore + 100, finalScore, 1000);
+        }
+      }, 1000);
+    }, 500);
+    
+    // 성공 햅틱 피드백
+    triggerHapticFeedback('done');
+    
+  } catch (error) {
+    console.error("최종 점수 처리 중 오류:", error);
+    showIOSToastMessage("점수 처리 중 오류가 발생했습니다.");
+  }
+}

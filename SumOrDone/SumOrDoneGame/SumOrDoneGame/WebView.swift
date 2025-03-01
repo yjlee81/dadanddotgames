@@ -9,11 +9,17 @@ import SwiftUI
 import WebKit
 import GameKit
 
+// UIViewRepresentable: SwiftUI에서 UIKit의 UIView를 사용할 수 있게 해주는 프로토콜
 struct WebView: UIViewRepresentable {
+    // GameCenter 관련 기능을 관리하는 객체를 관찰 가능한 객체로 선언
     @ObservedObject var gameCenterManager: GameCenterManager
     
+    // UIView(여기서는 WKWebView)를 생성하고 초기 설정하는 메서드
     func makeUIView(context: Context) -> WKWebView {
+        // JavaScript와 Swift 간의 통신을 관리하는 컨트롤러
         let contentController = WKUserContentController()
+        
+        // JavaScript에서 호출할 수 있는 메시지 핸들러들을 등록
         contentController.add(context.coordinator, name: "hapticFeedback")
         contentController.add(context.coordinator, name: "submitScore")
         contentController.add(context.coordinator, name: "openModal")
@@ -22,7 +28,9 @@ struct WebView: UIViewRepresentable {
         contentController.add(context.coordinator, name: "unlock1000PointsAchievement")
         contentController.add(context.coordinator, name: "showGameCenter")
 
+        // WebView의 설정을 담당하는 객체
         let webViewConfig = WKWebViewConfiguration()
+        // 로컬 파일 접근 권한 설정
         webViewConfig.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
         webViewConfig.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
         webViewConfig.preferences.setValue(true, forKey: "developerExtrasEnabled")
@@ -31,8 +39,9 @@ struct WebView: UIViewRepresentable {
         // ⬇️ 'contentController'를 WKWebViewConfiguration에 연결
         webViewConfig.userContentController = contentController
 
+        // WKWebView 인스턴스 생성
         let webView = WKWebView(
-            frame: .zero,
+            frame: .zero, 
             configuration: webViewConfig
         )
 
@@ -41,8 +50,8 @@ struct WebView: UIViewRepresentable {
 
         // 파일 로드 시 반드시 디렉토리 접근 권한 부여
         if let htmlPath = Bundle.main.path(
-            forResource: "index",
-            ofType: "html",
+            forResource: "index", 
+            ofType: "html", 
             inDirectory: "SumOrDoneGame"
         ) {
             let url = URL(fileURLWithPath: htmlPath)
@@ -53,6 +62,7 @@ struct WebView: UIViewRepresentable {
         return webView
     }
 
+    // UIView가 업데이트될 때 호출되는 메서드
     func updateUIView(_ webView: WKWebView, context: Context) {
         if let path = Bundle.main.path(forResource: "index", ofType: "html") {
             let fileURL = URL(fileURLWithPath: path)
@@ -63,11 +73,13 @@ struct WebView: UIViewRepresentable {
         }
     }
 
+    // WebView와 JavaScript 간의 통신을 관리하는 Coordinator 생성
     func makeCoordinator() -> Coordinator {
         Coordinator(self, gameCenterManager: gameCenterManager)
     }
 
-    class Coordinator: NSObject, WKScriptMessageHandler, GKGameCenterControllerDelegate {
+    // WebView와 JavaScript 간의 통신을 처리하는 Coordinator 클래스
+    class Coordinator: NSObject, WKScriptMessageHandler {
         var parent: WebView
         var gameCenterManager: GameCenterManager
         var modalVC: UIViewController?
@@ -76,37 +88,9 @@ struct WebView: UIViewRepresentable {
         init(_ parent: WebView, gameCenterManager: GameCenterManager) {
             self.parent = parent
             self.gameCenterManager = gameCenterManager
-            super.init()
-            
-            // GameCenter 상태 변경 알림 구독
-            NotificationCenter.default.addObserver(
-                self,
-                selector: #selector(handleGameCenterStatusChange),
-                name: GameCenterManager.gameCenterStatusChanged,
-                object: nil
-            )
         }
 
-        @objc private func handleGameCenterStatusChange(_ notification: Notification) {
-            if let userInfo = notification.userInfo,
-               let isAuthenticated = userInfo["isAuthenticated"] as? Bool {
-                updateGameCenterUI(isAuthenticated: isAuthenticated)
-            }
-        }
-        
-        private func updateGameCenterUI(isAuthenticated: Bool) {
-            guard let webView = self.webView else { return }
-            
-            let script = """
-                document.getElementById('gameCenterBadge').style.display = '\(isAuthenticated ? "inline-flex" : "none")';
-                document.querySelector('.open-modal-btn[data-modal="changeNicknameModal"]').style.display = '\(isAuthenticated ? "none" : "block")';
-            """
-            
-            DispatchQueue.main.async {
-                webView.evaluateJavaScript(script, completionHandler: nil)
-            }
-        }
-
+        // JavaScript에서 보낸 메시지를 처리하는 메서드
         func userContentController(_ userContentController: WKUserContentController,
                                    didReceive message: WKScriptMessage) {
             if message.name == "hapticFeedback" {
@@ -114,10 +98,9 @@ struct WebView: UIViewRepresentable {
                     handleHapticFeedback(type: type)
                 }
             } else if message.name == "submitScore" {
-                if let scoreData = message.body as? [String: Any],
-                   let score = scoreData["score"] as? Int,
-                   let target = scoreData["target"] as? Int {
-                    gameCenterManager.submitScore(score, forTarget: target)
+                if let body = message.body as? [String: Any],
+                   let score = body["score"] as? Int {
+                    gameCenterManager.submitScore(score)
                 }
             } else if message.name == "openModal" {
                 showNicknameChangeModal()
@@ -142,9 +125,12 @@ struct WebView: UIViewRepresentable {
                 gameCenterManager.unlock1000PointsAchievement()
             } else if message.name == "showGameCenter" {
                 showGameCenter()
+            } else if message.name == "unlockIAPPointsAchievement" {
+                print("unlockIAPPointsAchievement 메서드가 GameCenterManager에 없습니다.")
             }
         }
 
+        // 햅틱 피드백을 처리하는 메서드
         func handleHapticFeedback(type: String) {
             switch type {
             case "selection":
@@ -164,6 +150,7 @@ struct WebView: UIViewRepresentable {
             }
         }
 
+        // 닉네임 변경 모달을 표시하는 메서드
         private func showNicknameChangeModal() {
             DispatchQueue.main.async {
                 guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -317,7 +304,7 @@ struct WebView: UIViewRepresentable {
             scrollView.contentInset = .zero
             scrollView.scrollIndicatorInsets = .zero
         }
-        
+
         @objc private func saveNickname() {
             guard let modalVC = modalVC,
                   let textField = modalVC.view.subviews.first(where: { $0 is UITextField }) as? UITextField,
@@ -369,20 +356,47 @@ struct WebView: UIViewRepresentable {
         }
 
         private func showGameCenter() {
-            DispatchQueue.main.async {
-                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                      let rootViewController = windowScene.windows.first?.rootViewController else {
-                    return
-                }
-                
-                let gameCenterVC = GKGameCenterViewController(state: .default)
-                gameCenterVC.gameCenterDelegate = self
+            let gameCenterVC = GKGameCenterViewController()
+            gameCenterVC.gameCenterDelegate = self
+            if let rootViewController = UIApplication.shared.windows.first?.rootViewController {
                 rootViewController.present(gameCenterVC, animated: true)
             }
         }
 
-        func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController) {
-            gameCenterViewController.dismiss(animated: true)
+        // GameCenter 인증 상태 체크 추가
+        func checkGameCenterAuthentication() {
+            GKLocalPlayer.local.authenticateHandler = { [weak self] (viewController, error) in
+                guard let self = self else { return }
+                
+                if let error = error {
+                    print("GameCenter Auth Error: \(error.localizedDescription)")
+                    self.sendAuthStatusToWeb(isAuthenticated: false)
+                    return
+                }
+                
+                if let vc = viewController {
+                    self.present(vc, animated: true)
+                } else {
+                    let isAuthenticated = GKLocalPlayer.local.isAuthenticated
+                    self.sendAuthStatusToWeb(isAuthenticated: isAuthenticated)
+                }
+            }
         }
+
+        private func sendAuthStatusToWeb(isAuthenticated: Bool) {
+            let script = "handleGameCenterAuth(\(isAuthenticated))"
+            webView.evaluateJavaScript(script) { _, error in
+                if let error = error {
+                    print("JavaScript 실행 오류: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+}
+
+// GameCenter 뷰컨트롤러 종료 처리를 위한 델리게이트
+extension WebView.Coordinator: GKGameCenterControllerDelegate {
+    func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController) {
+        gameCenterViewController.dismiss(animated: true)
     }
 }
